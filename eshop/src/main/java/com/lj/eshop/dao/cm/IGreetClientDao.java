@@ -17,7 +17,7 @@ import com.lj.eshop.dto.cm.FindGreetClientReturnDto;
  * <p>
  * 详细描述：
  *   
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 罗书明
  *   
  * CreateDate: 2017年6月21日

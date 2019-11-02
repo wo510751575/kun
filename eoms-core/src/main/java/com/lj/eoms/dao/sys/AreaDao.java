@@ -16,7 +16,7 @@ import com.lj.eoms.entity.sys.Area;
  * <p>
  * 详细描述：
  *   
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 段志鹏
  *   
  * CreateDate: 2017年7月28日

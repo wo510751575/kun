@@ -19,7 +19,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
  * <p>
  * 详细描述：
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author lhy
  * 
  *         CreateDate: 2017年9月2日

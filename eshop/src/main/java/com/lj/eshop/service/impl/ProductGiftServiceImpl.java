@@ -4,7 +4,7 @@ import java.util.Date;
 /**
  * Copyright &copy; 2018-2021  All rights reserved.
  *
- * Licensed under the 深圳市扬恩科技 License, Version 1.0 (the "License");
+ * Licensed under the 深圳市小坤 License, Version 1.0 (the "License");
  * 
  */
 import java.util.List;

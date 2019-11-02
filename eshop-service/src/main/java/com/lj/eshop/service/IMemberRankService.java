@@ -3,7 +3,7 @@ package com.lj.eshop.service;
 /**
  * Copyright &copy; 2017-2020  All rights reserved.
  *
- * Licensed under the 深圳市深圳扬恩科技 License, Version 1.0 (the "License");
+ * Licensed under the 深圳市小坤 License, Version 1.0 (the "License");
  * 
  */
 import com.lj.eshop.dto.MemberRankDto;
@@ -19,7 +19,7 @@ import java.util.List;
  * 
  * <p>
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 林进权
  * 
  *         CreateDate: 2017年8月30日 

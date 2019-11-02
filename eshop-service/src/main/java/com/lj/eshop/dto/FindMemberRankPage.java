@@ -7,7 +7,7 @@ import com.lj.base.core.pagination.PageParamEntity;
  * 
  * <p>
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 林进权
  * 
  *         CreateDate: 2017年8月30日 

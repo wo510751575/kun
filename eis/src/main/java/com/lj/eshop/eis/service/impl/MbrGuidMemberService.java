@@ -1,7 +1,7 @@
 /**
  * Copyright &copy; 2017-2020  All rights reserved.
  *
- * Licensed under the 深圳市深圳扬恩科技 License, Version 1.0 (the "License");
+ * Licensed under the 深圳市小坤 License, Version 1.0 (the "License");
  * 
  */
 package com.lj.eshop.eis.service.impl;
@@ -33,7 +33,7 @@ import com.lj.eshop.service.IShopService;
  * 
  * <p>
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author lhy
  * 
  *         CreateDate: 2017年9月20日

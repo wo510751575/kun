@@ -28,7 +28,7 @@ import com.lj.eshop.service.cm.IGreetClientService;
  * <p>
  * 详细描述：
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 彭阳
  * 
  *         CreateDate: 2017年9月22日

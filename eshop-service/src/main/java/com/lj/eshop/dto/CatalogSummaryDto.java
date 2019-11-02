@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 类说明：
  * 	分类统计
  * <p>
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 林进权
  * 
  *         CreateDate: 2017年9月13日

@@ -1,7 +1,7 @@
 /**
  * Copyright &copy; 2017-2020  All rights reserved.
  *
- * Licensed under the 深圳市深圳扬恩科技 License, Version 1.0 (the "License");
+ * Licensed under the 深圳市小坤 License, Version 1.0 (the "License");
  * 
  */
 package com.lj.eshop.emus;
@@ -13,7 +13,7 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：[0][1][...]是占位符，视情况自定义
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 林进权 CreateDate: 2017年8月23日
  */
 public enum MessageTemplate {

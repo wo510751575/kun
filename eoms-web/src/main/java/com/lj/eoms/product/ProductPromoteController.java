@@ -44,7 +44,7 @@ import com.lj.eshop.service.IProductSkuService;
  * <p>
  * 详细描述：
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author lhy
  * 
  *         CreateDate: 2017年8月26日

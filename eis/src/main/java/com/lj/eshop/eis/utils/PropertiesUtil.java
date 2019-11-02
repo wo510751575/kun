@@ -13,7 +13,7 @@ import java.util.Properties;
  * 
  * <p>
  * 
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 林进权
  * 
  *         CreateDate: 2017年9月26日

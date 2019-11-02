@@ -1,7 +1,7 @@
 /**
  * Copyright &copy; 2017-2020  All rights reserved.
  *
- * Licensed under the 深圳市深圳扬恩科技 License, Version 1.0 (the "License");
+ * Licensed under the 深圳市小坤 License, Version 1.0 (the "License");
  * 
  */
 package com.lj.eoms.utils.excel.annotation;
@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  * <p>
  * 详细描述：
  *   
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 段志鹏
  *   
  * CreateDate: 2017年7月14日

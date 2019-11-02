@@ -16,7 +16,7 @@ import com.lj.base.core.encryption.MD5;
  * 
  * <p>
  *   
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author lhy
  *   
  * CreateDate: 2017年9月4日

@@ -3,7 +3,7 @@ package com.lj.eshop.service.cm;
 /**
  * Copyright &copy; 2017-2020  All rights reserved.
  *
- * Licensed under the 深圳市深圳扬恩科技 License, Version 1.0 (the "License");
+ * Licensed under the 深圳市小坤 License, Version 1.0 (the "License");
  * 
  */
 import com.lj.base.exception.TsfaServiceException;
@@ -18,7 +18,7 @@ import com.lj.base.exception.TsfaServiceException;
  * <p>
  * 详细描述：
  *   
- * @Company: 深圳扬恩科技有限公司
+ * @Company: 小坤有限公司
  * @author 段志鹏
  *   
  * CreateDate: 2017年8月15日
