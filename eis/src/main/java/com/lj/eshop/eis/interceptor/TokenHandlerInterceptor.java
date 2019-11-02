@@ -26,7 +26,7 @@ import com.lj.eshop.eis.service.IUserLoginService;
  * 
  * <p>
  * 
- * @Company: 
+ * @Company:
  * @author lhy
  * 
  *         CreateDate: 2017年9月2日
@@ -107,13 +107,6 @@ public class TokenHandlerInterceptor implements HandlerInterceptor {
 			if (user == null) {// 需要登录未登录则提示(包含所有（B C 都需要登录的接口）)
 				throw new TsfaServiceException(ResponseCode.UN_LOGIN.getCode(), ResponseCode.UN_LOGIN.getMsg());
 			}
-			/*
-			 * if(user.getRole().equals(LoginRoleConstant.IS_B) && user.getGuidMbr()==
-			 * null){//兼容一期的token，小B没有导购则重新登录 userLoginService.logout();
-			 * logger.error("小B没有找到导购信息，退出登录,需要重新登录:"+user.getMember().getCode()); throw new
-			 * TsfaServiceException(ResponseCode.UN_LOGIN.getCode(),
-			 * ResponseCode.UN_LOGIN.getMsg()); }
-			 */
 			// 检测权限
 			checkPermission(url, permissionType, user.getRole());
 		} else {

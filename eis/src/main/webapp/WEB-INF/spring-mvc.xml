@@ -89,13 +89,13 @@
 			 	   	如果接口允许多个角色访问，则以value=多个角色值，以英文逗号分割 ，如value="1,2,3"
 			 	   	-->
 			 	   	<property name="permissions">
-		             	<map>
-		             		<entry key="/wx/login/again" value="1,2" />
+		             	 <map>
+		             		<!--<entry key="/wx/login/again" value="1,2" />
 		             		<entry key="/wx//openid/bind" value="1,2" />
-		             		<!-- BC可访问的 -->
+		             		BC可访问的
 		                 	<entry key="/product/evl/like" value="1,2" />
 		                 	
-		                 	<!-- 订单相关 -->
+		                 	订单相关
 		                 	<entry key="/order/createByCar" value="1,2" />
 		                 	<entry key="/order/create" value="1,2" />
 		                 	<entry key="/order/complete" value="1,2" />
@@ -113,12 +113,12 @@
 		                 	<entry key="/shop/openShopOne" value="1,2" />
 		                 	<entry key="/shop/openShopTwo" value="1,2" />
 		                 	
-		                 	<!-- 退货相关 -->
+		                 	退货相关
 		                 	<entry key="/order/retire/list" value="1,2" />
 		                 	<entry key="/order/retire/view" value="1,2" />
 		                 	<entry key="/order/retire/add" value="1,2" />
 		                 	
-		                 	<!-- 地址相关 -->
+		                 	地址相关
 		                 	<entry key="/addrs/list" value="1,2" />
 		                 	<entry key="/addrs/view" value="1,2" />
 		                 	<entry key="/addrs/add" value="1,2" />
@@ -127,12 +127,12 @@
 		                 	<entry key="/addrs/setDefault" value="1,2" />
 		                 	<entry key="/mbr/img/upd" value="1,2" />
 		                 	
-		                 	<!-- 我的消息 -->
+		                 	我的消息
 		                 	<entry key="/message/list" value="1,2,3" />
 		                 	<entry key="/message/unRead" value="1,2" />
-		                 	<!-- 支付相关 -->
+		                 	支付相关
 		                 	<entry key="/pay/unifiedorder" value="1,2" />
-		                 	<!-- 提现相关 -->
+		                 	提现相关
 		                 	<entry key="/acct/index" value="1,2" />
 		                 	<entry key="/bankcard/list" value="1,2" />
 		                 	<entry key="/bankcard/save" value="1,2" />
@@ -141,9 +141,9 @@
 		                 	<entry key="/acct/withdraw/detail" value="1,2" />
 		                 	<entry key="/acct/water/income/list" value="1,2" />
 		                 	<entry key="/acct/water/all/list" value="1,2" />
-		                 	<!-- 需要登录的，不限制BC端谁登录 END -->
+		                 	需要登录的，不限制BC端谁登录 END
 		                 	
-		                 	<!-- 需要B登录的 -->
+		                 	需要B登录的
 		                 	<entry key="/product/index" value="1,2,3" />
 		                 	<entry key="/product/list" value="1,2,3" />
 		                 	<entry key="/shop/myShop" value="1,2" />
@@ -169,20 +169,20 @@
 		                 	<entry key="/custOrder/update" value="1,2" />
 		                 	<entry key="/summary/index" value="1,2" />
 		                 	<entry key="/summary/list" value="1,2" />
-		             		<!-- 需要B登录的END -->
+		             		需要B登录的END
 		             		
-		             		<!-- 需要C登录的 value=2 -->
-		             		<!-- <entry key="请求地址" value="2" /> --> 
+		             		需要C登录的 value=2
+		             		<entry key="请求地址" value="2" /> 
 		                 	
-		             		<!-- 需要C登录的END -->
+		             		需要C登录的END
 		             		
-		             		<!-- 需要APP登录的 value=3 -->
+		             		需要APP登录的 value=3
 		             		<entry key="/mbr/seccnt/updpass" value="2" />
 		             		<entry key="/mbr/updpass/authcode" value="2" />
 		             		<entry key="/mbr/updpass" value="2" />
 		             		<entry key="/mbr/myinfo" value="2" />
 		             		<entry key="/mbr/myinfo/upd" value="2" />
-		             		<!-- <entry key="/message/unRead" value="2" /> -->
+		             		<entry key="/message/unRead" value="2" />
 		             		<entry key="/message/newMsg" value="2" />
 		             		
 		             		<entry key="/appmaterial/findMaterialTypesApp" value="2" />
@@ -201,8 +201,8 @@
 		             		<entry key="/member/changePmType" value="2" />
 		             		<entry key="/member/modifyMemberInfo" value="2" />
 		             		<entry key="/member/findPmInfo" value="2" /> 
-		             		<!-- 需要APP登录的END  -->
-		             	</map>
+		             		需要APP登录的END -->
+		             	</map> 
 	        		</property>
 			 </bean>
 		 </mvc:interceptor> 
