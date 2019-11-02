@@ -18,7 +18,7 @@ import java.util.Map;
  * 类说明： xml解析
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月8日

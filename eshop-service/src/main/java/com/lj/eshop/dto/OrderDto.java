@@ -516,7 +516,7 @@ public class OrderDto implements Serializable {
 	 * 方法说明：计算总提成价格（前端需要）
 	 *
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月19日
+	 * @author  CreateDate: 2017年9月19日
 	 *
 	 */
 	public BigDecimal getGapPrice() {

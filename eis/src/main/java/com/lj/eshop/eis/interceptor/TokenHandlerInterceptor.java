@@ -26,7 +26,7 @@ import com.lj.eshop.eis.service.IUserLoginService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年9月2日

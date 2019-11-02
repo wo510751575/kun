@@ -33,8 +33,8 @@ import com.lj.eshop.service.cm.IActivityService;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  * 
  *         CreateDate: 2017年8月1日
  */
@@ -58,7 +58,7 @@ public class ActivityController extends BaseController {
 	 * @param model
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月1日
+	 * @author  CreateDate: 2017年8月1日
 	 *
 	 */
 	@RequiresPermissions("cm:activity:view")
@@ -98,7 +98,7 @@ public class ActivityController extends BaseController {
 	 * @param model
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月1日
+	 * @author  CreateDate: 2017年8月1日
 	 *
 	 */
 	@RequiresPermissions("cm:activity:view")
@@ -126,7 +126,7 @@ public class ActivityController extends BaseController {
 	 * @param redirectAttributes
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年7月14日
+	 * @author  CreateDate: 2017年7月14日
 	 *
 	 */
 	@RequiresPermissions("cm:activity:edit")
@@ -154,7 +154,7 @@ public class ActivityController extends BaseController {
 	 * @param redirectAttributes
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年7月14日
+	 * @author  CreateDate: 2017年7月14日
 	 *
 	 */
 	@RequiresPermissions("cm:activity:edit")

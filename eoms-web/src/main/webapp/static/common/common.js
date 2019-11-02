@@ -121,7 +121,7 @@ function confirmx(mess, href, closed){
 			closed();
 		}
 	}});
-//段志鹏 2017-08-16注释，55PX会导致图标下移	top.$('.jbox-body .jbox-icon').css('top','55px');
+// 2017-08-16注释，55PX会导致图标下移	top.$('.jbox-body .jbox-icon').css('top','55px');
 	return false;
 }
 

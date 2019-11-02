@@ -32,7 +32,7 @@ import com.lj.eshop.service.IMbrbankService;
  * 类说明：银行卡管理。
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年9月4日

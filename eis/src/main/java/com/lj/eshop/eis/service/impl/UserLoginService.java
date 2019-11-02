@@ -27,7 +27,6 @@ import com.lj.eshop.dto.ShopDto;
 import com.lj.eshop.eis.constant.Constans;
 import com.lj.eshop.eis.constant.LoginRoleConstant;
 import com.lj.eshop.eis.dto.ConfigDto;
-import com.lj.eshop.eis.dto.GuidMbrDto;
 import com.lj.eshop.eis.dto.LoginUserDto;
 import com.lj.eshop.eis.dto.MobilePhoneLoginDto;
 import com.lj.eshop.eis.dto.ResponseCode;
@@ -57,7 +56,7 @@ import com.lj.eshop.service.IShopService;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company:
  * @author lhy
  * 
  *         CreateDate: 2017年9月2日
@@ -80,13 +79,6 @@ public class UserLoginService implements IUserLoginService {
 	@Autowired
 	private LocalCacheSystemParamsFromCC localCacheSystemParams;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.lj.eshop.eis.service.IUserLoginService#mobilePhoneLogin(com.lj.eshop.eis.
-	 * dto.MobilePhoneLoginDto)
-	 */
 	@Override
 	public TokenDto mobilePhoneLogin(MobilePhoneLoginDto dto) {
 		if (dto == null || StringUtils.isEmpty(dto.getMobilePhone()) || StringUtils.isEmpty(dto.getAuthCode())) {
@@ -106,49 +98,17 @@ public class UserLoginService implements IUserLoginService {
 		} else {
 			// 校验存在否以及 状态。
 			MemberDto loginMbr = ms.get(0);
-			/*
-			 * ShopDto findShop = new ShopDto(); findShop.setMbrCode(loginMbr.getCode());
-			 * FindShopPage findShopPage = new FindShopPage();
-			 * findShopPage.setParam(findShop)
-			 */;
-			/*
-			 * List<ShopDto> shops = shopService.findShops(findShopPage); if (shops == null
-			 * || shops.isEmpty()) { throw new
-			 * TsfaServiceException(ResponseCode.SHOP_NOT_FIND.getCode(),
-			 * ResponseCode.SHOP_NOT_FIND.getMsg()); }
-			 */
 			if (!MemberStatus.NORMAL.getValue().equals(loginMbr.getStatus())) {
 				throw new TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
 						ResponseCode.USER_UNNORMAL.getMsg());
 			}
-//			ShopDto loginShop = shops.get(0);
-			/*
-			 * if (ShopStatus.IN_APPLY.getValue().equals(loginShop.getStatus())) { throw new
-			 * TsfaServiceException(ResponseCode.SHOP_IN_APPLY.getCode(),
-			 * ResponseCode.SHOP_IN_APPLY.getMsg()); } if
-			 * (!ShopStatus.NORMAL.getValue().equals(loginShop.getStatus())) { throw new
-			 * TsfaServiceException(ResponseCode.SHOP_UNNORMAL.getCode(),
-			 * ResponseCode.SHOP_UNNORMAL.getMsg()); }
-			 */
-			// 微店检测导购
-//			GuidMbrDto guidMbrDto = findGuidMbrByMoblie(loginMbr.getPhone());
-			// 正常通过校验，则把token存到DB。
-			TokenDto token = login(LoginRoleConstant.IS_B, loginMbr, null, null);
+			TokenDto token = login(LoginRoleConstant.IS_C, loginMbr, null);
 			token.setHasOpenid(StringUtils.isBlank(loginMbr.getOpenId()) ? false : true);// 返回是否已绑定微信
 			token.setMerchantCode(loginMbr.getMerchantCode());
-//			if (ShopUnlogin.NEVER_LOGIN.getValue().equals(loginShop.getUnLogin())) {
-//				updateShopHasLogin(loginShop.getCode());// 更新已登录过
-//			}
 			return token;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.lj.eshop.eis.service.IUserLoginService#getCurrLoginUser(java.lang.String)
-	 */
 	@Override
 	public LoginUserDto getCurrLoginUser(String token) {
 		if (StringUtils.isBlank(token)) {
@@ -168,13 +128,6 @@ public class UserLoginService implements IUserLoginService {
 		return user;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.lj.eshop.eis.service.IUserLoginService#findMemberDtoByPhone(java.lang.
-	 * String)
-	 */
 	@Override
 	public MemberDto findMemberDtoByPhone(String phone) {
 		// 2.获取店铺及店主信息校验
@@ -204,7 +157,7 @@ public class UserLoginService implements IUserLoginService {
 	 * @return
 	 * @throws Exception
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月5日
+	 * @author CreateDate: 2017年9月5日
 	 *
 	 */
 	@Override
@@ -267,7 +220,7 @@ public class UserLoginService implements IUserLoginService {
 	 * @author lhy 2017年9月7日
 	 *
 	 */
-	private TokenDto login(String role, MemberDto member, ShopDto shop, GuidMbrDto guidMbrDto) {
+	private TokenDto login(String role, MemberDto member, ShopDto shop) {
 		// 注册完成后 登录。
 		LoginUserDto user = new LoginUserDto();
 		user.setRole(role);
@@ -322,7 +275,7 @@ public class UserLoginService implements IUserLoginService {
 		if (mbr == null) {// 1.如果未注册在系统，则注册，且登录
 			MemberDto regMbrRt = register(wxUser, merchantCode);
 			// 注册完成后 登录。
-			TokenDto token = login(LoginRoleConstant.IS_C, regMbrRt, null, null);
+			TokenDto token = login(LoginRoleConstant.IS_C, regMbrRt, null);
 			return ResponseDto.successResp(token);
 		} else {// 2.如果已注册在系统，则登录
 				// 有用户先检测用户状态
@@ -331,34 +284,9 @@ public class UserLoginService implements IUserLoginService {
 			}
 
 			// 新版电商没有已当前身份登录
-			TokenDto token = login(mbr.getType(), mbr, null, null);
+			TokenDto token = login(mbr.getType(), mbr, null);
 			return ResponseDto.successResp(token);
 
-			// 检测有无店铺
-			/*
-			 * ShopDto loginShop = getShopDtoByMbrCode(mbr.getCode()); if (loginShop ==
-			 * null) {// 无店则C登录 TokenDto token=login(LoginRoleConstant.IS_C, mbr,
-			 * null,null); return ResponseDto.successResp(token); }else if
-			 * (!ShopStatus.NORMAL.getValue().equals(loginShop.getStatus()))
-			 * {//不正常的B端，则以C端身份登录 TokenDto token=login(LoginRoleConstant.IS_C, mbr,
-			 * loginShop,null); ShopDto shopStatus=new ShopDto();//店铺不正常则把店铺的状态返回给前端，用于前端提示
-			 * shopStatus.setCode(loginShop.getCode());
-			 * shopStatus.setStatus(loginShop.getStatus());
-			 * shopStatus.setCloseReason(loginShop.getCloseReason());
-			 * token.setShop(shopStatus);//end return ResponseDto.successResp(token); }else{
-			 * GuidMbrDto guidMbrDto = findGuidMbrByMoblie(mbr.getPhone()); // 正常通过则B登录
-			 * TokenDto token=login(LoginRoleConstant.IS_B, mbr, loginShop,guidMbrDto);
-			 * //检测是否首次登录，首次登录则要提示其是否填写了收获地址，非首次则直接进B端主页 ShopDto shop=new
-			 * ShopDto();//店铺是否首次登录状态查出去，并把收获地址带过去，用于前端提示 shop.setCode(loginShop.getCode());
-			 * shop.setUnLogin(loginShop.getUnLogin());
-			 * shop.setShopProvide(loginShop.getShopProvide()==null?"":loginShop.
-			 * getShopProvide());
-			 * 
-			 * token.setShop(shop);//end
-			 * if(ShopUnlogin.NEVER_LOGIN.getValue().equals(loginShop.getUnLogin())){
-			 * updateShopHasLogin(loginShop.getCode());//更新已登录过 } return
-			 * ResponseDto.successResp(token); }
-			 */
 		}
 	}
 
@@ -392,7 +320,7 @@ public class UserLoginService implements IUserLoginService {
 				// 微店检测导购
 //				GuidMbrDto guidMbrDto = findGuidMbrByMoblie(mbr.getPhone());
 				// 正常通过则B登录
-				TokenDto token = login(LoginRoleConstant.IS_B, mbr, loginShop, null);
+				TokenDto token = login(LoginRoleConstant.IS_B, mbr, loginShop);
 				// 检测是否首次登录，首次登录则要提示其是否填写了收获地址，非首次则直接进B端主页
 				ShopDto shop = new ShopDto();// 店铺是否首次登录状态查出去，并把收获地址带过去，用于前端提示
 				shop.setCode(loginShop.getCode());
@@ -521,11 +449,9 @@ public class UserLoginService implements IUserLoginService {
 			throw new TsfaServiceException(ResponseCode.SHOP_UNNORMAL.getCode(), ResponseCode.SHOP_UNNORMAL.getMsg());
 		}
 		// 2.根据手机号查找会员体系导购信息
-		GuidMbrDto mbrDto = findGuidMbrAndCheck(loginDto.getMobilePhone(), loginDto.getPassword());
 		// 3.以上通过的时候设置token
-		TokenDto token = login(LoginRoleConstant.IS_B_APP, loginMbr, loginShop, mbrDto);
+		TokenDto token = login(LoginRoleConstant.IS_B_APP, loginMbr, loginShop);
 		token.setMerchantCode(loginMbr.getMerchantCode());
-		token.setGuidMbr(mbrDto);// APP需要使用会员体系的导购信息
 		String uploadUrl = localCacheSystemParams.getSystemParam(SystemAliasName.ms.toString(),
 				SystemParamConstant.UPLOAD_GROUP, SystemParamConstant.UPLOAD_URL);
 		String wxUpdateUrl = localCacheSystemParams.getSystemParam(Constans.CC_EIS_SYSTEMALIASNAME,
@@ -537,121 +463,6 @@ public class UserLoginService implements IUserLoginService {
 		return token;
 	}
 
-	/**
-	 * 方法说明：根据手机号查导购。
-	 *
-	 * @param moblie
-	 * @return
-	 *
-	 * @author lhy 2017年9月20日
-	 *
-	 */
-	/*
-	 * private GuidMbrDto findGuidMbrByMoblie(String moblie) { FindGuidMemberReturn
-	 * guidMember = guidMemberService.findGuidMemberByMoblie_ec(moblie); GuidMbrDto
-	 * mbrDto = toGuidMbrDto(guidMember); return mbrDto; }
-	 */
-
-	/**
-	 * 方法说明：根据导购编号找导购.暂时不使用,unchecked.
-	 *
-	 * @param memberNo
-	 * @param password 非空则校验 否则不校验。
-	 * @return
-	 * 
-	 * @author lhy 2017年10月10日
-	 *
-	 */
-	@Deprecated
-	private GuidMbrDto findGuidMbrByMemberNoAndCheck(String memberNo, String password) {
-		/*
-		 * // 1.根据电商会员找到导购进行修改 FindGuidMember findGuidMember = new FindGuidMember();
-		 * findGuidMember.setMemberNo(memberNo); FindGuidMemberReturn guidMbr = null;
-		 * guidMbr = guidMemberService.findGuidMember(findGuidMember); if (guidMbr ==
-		 * null) { throw new
-		 * TsfaServiceException(ResponseCode.GUID_MEMBER_NOT_EXIST.getCode(),
-		 * ResponseCode.GUID_MEMBER_NOT_EXIST.getMsg()); } if
-		 * (StringUtils.isNotEmpty(password) &&
-		 * !guidMbr.getPwd().equals(MD5.encryptByMD5(password))) { throw new
-		 * TsfaServiceException(ResponseCode.GUID_MEMBER_PWD_ERROR.getCode(),
-		 * ResponseCode.GUID_MEMBER_PWD_ERROR.getMsg()); } if
-		 * (MemberStatus.FREEZE.toString().equals(guidMbr.getStatus())) {
-		 * logger.error("个人会员登录错误：会员被冻结！"); throw new
-		 * TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
-		 * "个人会员登录错误：会员被冻结！"); } if
-		 * (MemberStatus.CANCEL.toString().equals(guidMbr.getStatus())) {
-		 * logger.error("个人会员登录错误：会员被注销！"); throw new
-		 * TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
-		 * "个人会员登录错误：会员被注销！"); } GuidMbrDto mbrDto = toGuidMbrDto(guidMbr); return
-		 * mbrDto;
-		 */
-		return null;
-	}
-
-	/**
-	 * 方法说明：根据手机号查找会员体系导购信息.
-	 *
-	 * @param moblie
-	 * @param password
-	 * @return
-	 *
-	 * @author lhy 2017年9月20日
-	 *
-	 */
-	@Deprecated
-	private GuidMbrDto findGuidMbrAndCheck(String moblie, String password) {
-		/*
-		 * FindGuidMemberReturn guidMember =
-		 * guidMemberService.findGuidMemberByMoblie_ec(moblie); if (guidMember == null)
-		 * { throw new
-		 * TsfaServiceException(ResponseCode.GUID_MEMBER_NOT_EXIST.getCode(),
-		 * ResponseCode.GUID_MEMBER_NOT_EXIST.getMsg()); } if
-		 * (!guidMember.getPwd().equals(MD5.encryptByMD5(password))) { throw new
-		 * TsfaServiceException(ResponseCode.GUID_MEMBER_PWD_ERROR.getCode(),
-		 * ResponseCode.GUID_MEMBER_PWD_ERROR.getMsg()); } if
-		 * (MemberStatus.FREEZE.toString().equals(guidMember.getStatus())) {
-		 * logger.error("个人会员登录错误：会员被冻结！"); throw new
-		 * TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
-		 * "个人会员登录错误：会员被冻结！"); } if
-		 * (MemberStatus.CANCEL.toString().equals(guidMember.getStatus())) {
-		 * logger.error("个人会员登录错误：会员被注销！"); throw new
-		 * TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
-		 * "个人会员登录错误：会员被注销！"); } GuidMbrDto mbrDto = toGuidMbrDto(guidMember); return
-		 * mbrDto;
-		 */
-		return null;
-	}
-
-	/**
-	 * 方法说明：对象转换。
-	 * 
-	 * @param mbrRt
-	 * @return
-	 *
-	 * @author lhy 2017年9月19日
-	 *
-	 */
-	/*
-	 * @Deprecated private GuidMbrDto toGuidMbrDto(FindGuidMemberReturn mbrRt) {
-	 * 
-	 * if (mbrRt == null) { return null; } GuidMbrDto mbrDto = new GuidMbrDto();
-	 * mbrDto.setCode(mbrRt.getCode()); mbrDto.setMemberName(mbrRt.getMemberName());
-	 * mbrDto.setMemberNo(mbrRt.getMemberNo());
-	 * mbrDto.setMerchantName(mbrRt.getMerchantName());
-	 * mbrDto.setMerchantNo(mbrRt.getMerchantNo());
-	 * mbrDto.setShopName(mbrRt.getShopName()); mbrDto.setShopNo(mbrRt.getShopNo());
-	 * mbrDto.setNoWx(mbrRt.getNoWx()); return mbrDto;
-	 * 
-	 * return null; }
-	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.lj.eshop.eis.service.IUserLoginService#checkShopAndUserStatus(com.lj.
-	 * eshop.eis.dto.LoginUserDto)
-	 */
 	@Override
 	public void checkShopAndUserStatus(LoginUserDto dto) {
 		if (dto == null) {
@@ -659,35 +470,6 @@ public class UserLoginService implements IUserLoginService {
 		}
 		logger.info("检测用户状态start。");
 		String tokenRedisKey = redisKeyPrefix + "_" + dto.getToken();
-		// 1.从redis拿最新的状态
-		// 2.若redis没有最新状态则从DB拿，并存贮其状态到redis有效期（5分钟）
-		/*
-		 * ShopDto shop = dto.getShop(); if (shop != null &&
-		 * (LoginRoleConstant.IS_B.equals(dto.getRole()) ||
-		 * LoginRoleConstant.IS_B_APP.equals(dto.getRole()))) {// B端才去检测其店铺状态 ShopDto
-		 * rtShop = null; // 从redis拿 String key = redisKeyPrefix + "_shop_" +
-		 * shop.getCode(); String objJson = redisCache.get(key); if
-		 * (StringUtils.isNotBlank(objJson)) { rtShop = JsonUtils.toObj(objJson,
-		 * ShopDto.class); } if (rtShop == null) { ShopDto shopParam = new ShopDto();
-		 * shopParam.setCode(shop.getCode()); rtShop = shopService.findShop(shopParam);
-		 * // 刷新到redis String jsonShop = JsonUtils.toJSON(rtShop); //
-		 * redisClient.setex(key, USER_VALID_SECOND, jsonShop); redisCache.set(key,
-		 * jsonShop, USER_VALID_SECOND); } if (rtShop == null) {
-		 * redisCache.del(tokenRedisKey);// 校验不通过把token和用户信息都从redis删除
-		 * redisCache.del(key); throw new
-		 * TsfaServiceException(ResponseCode.SHOP_NOT_FIND.getCode(),
-		 * ResponseCode.SHOP_NOT_FIND.getMsg()); } if
-		 * (ShopStatus.IN_APPLY.getValue().equals(rtShop.getStatus())) {
-		 * redisCache.del(tokenRedisKey);// 校验不通过把token和用户信息都从redis删除
-		 * redisCache.del(key); throw new
-		 * TsfaServiceException(ResponseCode.SHOP_IN_APPLY.getCode(),
-		 * ResponseCode.SHOP_IN_APPLY.getMsg()); } if
-		 * (!ShopStatus.NORMAL.getValue().equals(rtShop.getStatus())) {
-		 * redisCache.del(tokenRedisKey);// 校验不通过把token和用户信息都从redis删除
-		 * redisCache.del(key); throw new
-		 * TsfaServiceException(ResponseCode.SHOP_UNNORMAL.getCode(),
-		 * ResponseCode.SHOP_UNNORMAL.getMsg()); } }
-		 */
 		MemberDto user = dto.getMember();
 		if (user != null) {
 			MemberDto rtMbr = null;
@@ -718,8 +500,4 @@ public class UserLoginService implements IUserLoginService {
 		logger.info("检测用户状态end,is ok。");
 	}
 
-	public static void main(String[] args) {
-		String pwd = MD5.encryptByMD5("666666");
-		System.out.println(pwd);
-	}
 }

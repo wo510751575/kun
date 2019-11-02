@@ -26,7 +26,7 @@ public class NoUtil {
 	 * @param preStr
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月28日
+	 * @author  CreateDate: 2017年8月28日
 	 *
 	 */
 	public static String generateNo(String preStr){

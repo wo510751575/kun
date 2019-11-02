@@ -33,7 +33,7 @@ import java.util.Map;
  * 
  * 类说明：http请求封装。
  * <p>
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月8日

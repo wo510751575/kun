@@ -28,7 +28,7 @@ import com.lj.eshop.service.IMerchantService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 彭俊霖
  * 
  *         CreateDate: 2017年9月9日

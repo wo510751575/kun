@@ -107,7 +107,7 @@ public interface IMerchantSettingService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月21日
+	 * @author  CreateDate: 2017年9月21日
 	 *
 	 */
 	public MerchantSettingDto findSettingsByName(String name,String merchantCode)throws TsfaServiceException;

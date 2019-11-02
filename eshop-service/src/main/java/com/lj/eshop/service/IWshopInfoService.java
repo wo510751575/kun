@@ -23,8 +23,8 @@ import com.lj.eshop.dto.WshopInfoDto;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年8月22日
  */
@@ -39,7 +39,7 @@ public interface IWshopInfoService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月22日
+	 * @author  CreateDate: 2017年8月22日
 	 *
 	 */
 	public WshopInfoDto addWshopInfo(WshopInfoDto wshopInfoDto) throws TsfaServiceException;
@@ -53,7 +53,7 @@ public interface IWshopInfoService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月22日
+	 * @author  CreateDate: 2017年8月22日
 	 *
 	 */
 	public WshopInfoDto updateWshopInfo(WshopInfoDto wshopInfoDto)throws TsfaServiceException;
@@ -67,7 +67,7 @@ public interface IWshopInfoService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月22日
+	 * @author  CreateDate: 2017年8月22日
 	 *
 	 */
 	public WshopInfoDto findWshopInfo(FindWshopInfoPage findWshopInfoPage) throws TsfaServiceException;
@@ -81,7 +81,7 @@ public interface IWshopInfoService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月22日
+	 * @author  CreateDate: 2017年8月22日
 	 *
 	 */
 	public Page<FindWshopInfoPage> findWshopInfoPage(FindWshopInfoPage findWshopInfoPage) throws TsfaServiceException;
@@ -94,7 +94,7 @@ public interface IWshopInfoService {
 	 * @param findWshopInfoPage
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月22日
+	 * @author  CreateDate: 2017年8月22日
 	 *
 	 */
 	public List<FindWshopInfoPage> findWshopInfos(FindWshopInfoPage findWshopInfoPage);

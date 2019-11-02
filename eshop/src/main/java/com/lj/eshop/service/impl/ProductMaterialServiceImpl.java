@@ -30,7 +30,7 @@ import com.lj.eshop.service.IProductMaterialService;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  * CreateDate: 2017.12.14
@@ -84,7 +84,7 @@ public class ProductMaterialServiceImpl implements IProductMaterialService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年12月14日
+	 * @author  CreateDate: 2017年12月14日
 	 *
 	 */
 	public List<ProductMaterialDto>  findProductMaterials(FindProductMaterialPage findProductMaterialPage)throws TsfaServiceException{

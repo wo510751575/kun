@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 类说明：会员体系导购信息。
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月19日

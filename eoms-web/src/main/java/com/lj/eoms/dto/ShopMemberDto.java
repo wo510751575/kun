@@ -14,7 +14,7 @@ import com.lj.eoms.utils.excel.annotation.ExcelField;
  * <p>
  * 详细描述:
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 林进权
  *   
  * CreateDate: 2017年9月2日

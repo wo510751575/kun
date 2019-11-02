@@ -15,8 +15,8 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：业务类型 0:注册验证码 1:修改手机号验证 2:提现验证码 3:B端用户登录
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年9月4日
  */

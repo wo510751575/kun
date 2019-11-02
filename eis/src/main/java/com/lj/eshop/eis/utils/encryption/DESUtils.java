@@ -21,7 +21,7 @@ import org.apache.commons.codec.binary.Base64;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月4日

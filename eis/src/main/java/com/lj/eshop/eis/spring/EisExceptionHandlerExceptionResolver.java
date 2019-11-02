@@ -27,7 +27,7 @@ import com.lj.eshop.eis.dto.ResponseDto;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy  CreateDate: 2017年8月18日
  */
 public class EisExceptionHandlerExceptionResolver extends

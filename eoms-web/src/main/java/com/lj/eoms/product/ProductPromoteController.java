@@ -44,7 +44,7 @@ import com.lj.eshop.service.IProductSkuService;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年8月26日

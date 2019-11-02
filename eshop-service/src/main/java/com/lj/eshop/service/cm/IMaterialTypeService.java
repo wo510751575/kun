@@ -116,7 +116,7 @@ public interface IMaterialTypeService {
 	 * @param findMaterialType
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年6月23日
+	 * @author  CreateDate: 2017年6月23日
 	 *
 	 */
 	public List<FindMaterialTypePageReturn> findMaterialTypes(FindMaterialTypePage findMaterialTypePage);

@@ -16,10 +16,10 @@ package com.lj.eshop.constant;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company:
+ * @author
  * 
- *         CreateDate: 2017年8月22日
+ * 		CreateDate: 2017年8月22日
  */
 public class ErrorCode {
 	/** 新增商品每日一抢信息错误. */
@@ -745,4 +745,15 @@ public class ErrorCode {
 	public static final String PRODUCT_GIFT_FIND_PAGE_ERROR = "product_gift_find_page_error";
 	/** 赠品礼包信息不存在错误. */
 	public static final String PRODUCT_GIFT_NOT_EXIST_ERROR = "product_gift_not_exist_error";
+
+	/** 新增收款账户信息错误. */
+	public static final String ACCOUNT_INFO_ADD_ERROR = "account_info_add_error";
+	/** 收款账户信息更新错误. */
+	public static final String ACCOUNT_INFO_UPDATE_ERROR = "account_info_update_error";
+	/** 查找收款账户信息错误. */
+	public static final String ACCOUNT_INFO_FIND_ERROR = "account_info_find_error";
+	/** 收款账户信息分页查询错误. */
+	public static final String ACCOUNT_INFO_FIND_PAGE_ERROR = "account_info_find_page_error";
+	/** 收款账户信息不存在错误. */
+	public static final String ACCOUNT_INFO_NOT_EXIST_ERROR = "account_info_not_exist_error";
 }

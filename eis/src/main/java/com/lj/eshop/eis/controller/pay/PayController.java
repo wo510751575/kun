@@ -44,7 +44,7 @@ import com.lj.eshop.service.IPaymentService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy CreateDate: 2017年9月8日
  */
 @RestController

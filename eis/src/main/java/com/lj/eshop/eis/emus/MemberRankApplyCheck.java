@@ -14,7 +14,7 @@ package com.lj.eshop.eis.emus;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 林进权
  * 
  *         CreateDate: 2017年10月11日

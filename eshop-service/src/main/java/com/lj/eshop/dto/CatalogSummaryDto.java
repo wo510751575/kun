@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 类说明：
  * 	分类统计
  * <p>
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 林进权
  * 
  *         CreateDate: 2017年9月13日

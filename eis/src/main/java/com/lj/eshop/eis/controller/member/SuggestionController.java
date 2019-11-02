@@ -25,7 +25,7 @@ import com.lj.eshop.service.ISuggestionService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 彭俊霖
  * 
  *         CreateDate: 2017年9月5日

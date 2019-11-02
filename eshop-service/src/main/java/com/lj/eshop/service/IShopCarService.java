@@ -107,7 +107,7 @@ public interface IShopCarService {
 	 * @param code
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月28日
+	 * @author  CreateDate: 2017年8月28日
 	 *
 	 */
 	public void deleteShopCar(String code) throws TsfaServiceException;

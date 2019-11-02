@@ -16,7 +16,7 @@ import java.util.Map;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy CreateDate: 2017年8月24日
  */
 public enum ResponseCode {

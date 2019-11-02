@@ -76,8 +76,8 @@ import com.lj.eshop.service.IShopService;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  * 
  *         CreateDate: 2017年9月1日
  */
@@ -124,7 +124,7 @@ public class OrderController extends BaseController {
 	 * @param code
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月2日
+	 * @author  CreateDate: 2017年9月2日
 	 *
 	 */
 	@RequestMapping(value = "/detail")
@@ -197,7 +197,7 @@ public class OrderController extends BaseController {
 	 * @param invoiceInfo
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月1日
+	 * @author  CreateDate: 2017年9月1日
 	 *
 	 */
 	@RequestMapping(value = { "createByCar" })
@@ -267,7 +267,7 @@ public class OrderController extends BaseController {
 	 * @param invoiceInfo
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月1日
+	 * @author  CreateDate: 2017年9月1日
 	 *
 	 */
 	@RequestMapping(value = { "create" })
@@ -444,7 +444,7 @@ public class OrderController extends BaseController {
 	 * @param status
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月2日
+	 * @author  CreateDate: 2017年9月2日
 	 *
 	 */
 	@RequestMapping(value = { "list_b" })
@@ -492,7 +492,7 @@ public class OrderController extends BaseController {
 	 * @param pageSize
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月6日
+	 * @author  CreateDate: 2017年9月6日
 	 *
 	 */
 	@RequestMapping(value = { "list_c" })
@@ -541,7 +541,7 @@ public class OrderController extends BaseController {
 	 * @param code
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月2日
+	 * @author  CreateDate: 2017年9月2日
 	 *
 	 */
 	@RequestMapping(value = { "receipt" })
@@ -576,7 +576,7 @@ public class OrderController extends BaseController {
 	 * @param code
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月2日
+	 * @author  CreateDate: 2017年9月2日
 	 *
 	 */
 	@RequestMapping(value = { "cancel" })
@@ -629,7 +629,7 @@ public class OrderController extends BaseController {
 	 * @param jsonStr
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月2日
+	 * @author  CreateDate: 2017年9月2日
 	 *
 	 */
 	@RequestMapping(value = { "review" })

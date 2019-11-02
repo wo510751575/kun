@@ -108,7 +108,7 @@ public interface IMyAttentionService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月5日
+	 * @author  CreateDate: 2017年9月5日
 	 *
 	 */
 	int findMyAttentionPageCount(FindMyAttentionPage findMyAttentionPage)throws TsfaServiceException;

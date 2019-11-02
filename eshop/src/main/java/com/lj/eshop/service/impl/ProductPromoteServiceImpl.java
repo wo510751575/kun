@@ -28,7 +28,7 @@ import com.lj.eshop.service.IProductPromoteService;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  * CreateDate: 2017.12.14
@@ -84,7 +84,7 @@ public class ProductPromoteServiceImpl implements IProductPromoteService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年12月14日
+	 * @author  CreateDate: 2017年12月14日
 	 *
 	 */
 	@Override

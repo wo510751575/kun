@@ -31,7 +31,7 @@ import com.lj.eshop.service.IProductRankPriceService;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  *         CreateDate: 2017.12.14
@@ -77,7 +77,7 @@ public class ProductRankPriceServiceImpl implements IProductRankPriceService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年12月14日
+	 * @author  CreateDate: 2017年12月14日
 	 *
 	 */
 	public List<ProductRankPriceDto> findProductRankPrices(FindProductRankPricePage findProductRankPricePage)

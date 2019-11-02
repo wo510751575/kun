@@ -30,8 +30,8 @@ import com.lj.eshop.service.ICustOrderService;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年8月29日
  */

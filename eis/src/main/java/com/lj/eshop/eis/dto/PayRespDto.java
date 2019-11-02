@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 类说明：支付返回。
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月8日

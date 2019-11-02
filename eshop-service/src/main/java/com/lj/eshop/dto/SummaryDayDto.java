@@ -15,7 +15,7 @@ import java.util.Date;
  * 类说明：按日统计。
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月28日

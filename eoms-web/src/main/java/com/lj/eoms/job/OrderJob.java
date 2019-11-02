@@ -19,7 +19,7 @@ public class OrderJob {
 	 * 方法说明：7天自动好评
 	 *
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月15日
+	 * @author  CreateDate: 2017年9月15日
 	 *
 	 */
 	@Scheduled(cron = "${job.member_order_review.cron}")
@@ -33,7 +33,7 @@ public class OrderJob {
 	 * 方法说明：7天自动收确认收货
 	 *
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月15日
+	 * @author  CreateDate: 2017年9月15日
 	 *
 	 */
 	@Scheduled(cron = "${job.member_order_receipt.cron}")

@@ -400,5 +400,11 @@
 		<property name="serviceName" value="productTextureService" />
 		<property name="serviceInterface" value="com.lj.eshop.service.IProductTextureService" />
 	</bean>
+	<bean id="accountInfoService" parent="systemHessianFactoryBean">
+		<property name="systemAliasName" value="eshop" />
+		<property name="serviceName" value="accountInfoService" />
+		<property name="serviceInterface" value="com.lj.eshop.service.IAccountInfoService" />
+	</bean>
+	
 </beans> 
 

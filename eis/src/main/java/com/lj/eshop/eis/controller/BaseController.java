@@ -22,7 +22,7 @@ import com.lj.eshop.eis.dto.UserTokenThreadLocal;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年8月31日
@@ -181,7 +181,7 @@ public class BaseController {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月22日
+	 * @author  CreateDate: 2017年9月22日
 	 *
 	 */
 	/*

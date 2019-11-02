@@ -20,7 +20,7 @@ import com.lj.eshop.dto.ProductGiftDto;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  *         CreateDate: 2017.12.14
@@ -36,7 +36,7 @@ public interface IProductGiftService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public void addProductGift(ProductGiftDto productGiftDto) throws TsfaServiceException;
@@ -50,7 +50,7 @@ public interface IProductGiftService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public ProductGiftDto findProductGift(ProductGiftDto productGiftDto) throws TsfaServiceException;
@@ -64,7 +64,7 @@ public interface IProductGiftService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public List<ProductGiftDto> findProductGifts(FindProductGiftPage findProductGiftPage) throws TsfaServiceException;
@@ -78,7 +78,7 @@ public interface IProductGiftService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public void updateProductGift(ProductGiftDto productGiftDto) throws TsfaServiceException;
@@ -92,7 +92,7 @@ public interface IProductGiftService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public Page<ProductGiftDto> findProductGiftPage(FindProductGiftPage findProductGiftPage)

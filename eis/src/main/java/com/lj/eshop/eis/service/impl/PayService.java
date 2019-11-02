@@ -44,7 +44,7 @@ import com.lj.eshop.service.IShopService;
  * 类说明：支付业务处理。
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年9月8日

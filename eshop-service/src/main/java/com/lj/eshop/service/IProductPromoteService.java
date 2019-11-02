@@ -20,7 +20,7 @@ import java.util.List;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  * CreateDate: 2017.12.14
@@ -36,7 +36,7 @@ public interface IProductPromoteService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public void addProductPromote(ProductPromoteDto productPromoteDto) throws TsfaServiceException;
@@ -50,7 +50,7 @@ public interface IProductPromoteService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public ProductPromoteDto findProductPromote(ProductPromoteDto productPromoteDto) throws TsfaServiceException;
@@ -65,7 +65,7 @@ public interface IProductPromoteService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public List<ProductPromoteDto>  findProductPromotes(FindProductPromotePage findProductPromotePage)throws TsfaServiceException;
@@ -79,7 +79,7 @@ public interface IProductPromoteService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public void updateProductPromote(ProductPromoteDto productPromoteDto)throws TsfaServiceException;
@@ -93,7 +93,7 @@ public interface IProductPromoteService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public Page<ProductPromoteDto> findProductPromotePage(FindProductPromotePage findProductPromotePage) throws TsfaServiceException;

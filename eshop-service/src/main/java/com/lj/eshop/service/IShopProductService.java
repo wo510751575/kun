@@ -108,7 +108,7 @@ public interface IShopProductService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月31日
+	 * @author  CreateDate: 2017年8月31日
 	 *
 	 */
 	public Page<ShopProductDto> findIndexShopProductPage(FindShopProductPage findShopProductPage) throws TsfaServiceException;
@@ -123,7 +123,7 @@ public interface IShopProductService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月31日
+	 * @author  CreateDate: 2017年8月31日
 	 *
 	 */
 	public ShopProductDto findByShopCodeAndProCode(ShopProductDto param) throws TsfaServiceException;

@@ -25,7 +25,7 @@ import com.lj.eshop.eis.spring.SpringContextUtil;
  * 类说明：微信签名。
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年9月7日

@@ -26,7 +26,7 @@ import com.lj.eshop.eis.controller.weixin.util.WeixinSignUtil;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy  CreateDate: 2017年9月8日
  */
 @RestController

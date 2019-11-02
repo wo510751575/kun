@@ -31,8 +31,8 @@ import com.lj.eshop.service.ISmsSenderService;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  * 
  *         CreateDate: 2017年9月4日
  */
@@ -57,7 +57,7 @@ public class SmsCodeService {
 	 *
 	 * @param request
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月4日
+	 * @author  CreateDate: 2017年9月4日
 	 *
 	 */
 	public void send(SmsCodeSenderRequest request) {
@@ -103,7 +103,7 @@ public class SmsCodeService {
 	 * @param request
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月4日
+	 * @author  CreateDate: 2017年9月4日
 	 *
 	 */
 	public String verify(SmsCodeVerifyRequest request) {
@@ -139,7 +139,7 @@ public class SmsCodeService {
 	 * @param bizType
 	 * @param smsCode
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月4日
+	 * @author  CreateDate: 2017年9月4日
 	 *
 	 */
 	public void verify(String mobile, String bizType, String smsCode) {

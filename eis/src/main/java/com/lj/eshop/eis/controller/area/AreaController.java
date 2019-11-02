@@ -30,7 +30,7 @@ import com.lj.eshop.eis.dto.ResponseDto;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年9月1日
@@ -86,7 +86,7 @@ public class AreaController {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月4日
+	 * @author  CreateDate: 2017年8月4日
 	 *
 	 */
 	@RequestMapping(value = "findAllList", method = RequestMethod.POST)

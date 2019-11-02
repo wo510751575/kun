@@ -13,8 +13,8 @@ import java.util.List;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年8月23日
  */
@@ -148,7 +148,7 @@ public class CatalogDto implements Serializable {
      *
      * @return
      *
-     * @author 段志鹏 CreateDate: 2017年8月24日
+     * @author  CreateDate: 2017年8月24日
      *
      */
 	public static String getRootId() {
@@ -164,7 +164,7 @@ public class CatalogDto implements Serializable {
 	 * @param parentId
 	 * @param cascade
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月24日
+	 * @author  CreateDate: 2017年8月24日
 	 *
 	 */
 	public static void sortList(List<CatalogDto> list, List<CatalogDto> sourcelist, String parentId, boolean cascade){

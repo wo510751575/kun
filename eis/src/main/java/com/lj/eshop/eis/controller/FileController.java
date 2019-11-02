@@ -27,8 +27,8 @@ import com.lj.eshop.eis.utils.FileUtils;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年7月14日
  */
@@ -52,7 +52,7 @@ public class FileController{
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年7月14日
+	 * @author  CreateDate: 2017年7月14日
 	 *
 	 */
 	 @RequestMapping(value={"/upload"},method=RequestMethod.POST,produces="application/json;charset=UTF-8")

@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 类说明：系统对外的配置。
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年9月21日

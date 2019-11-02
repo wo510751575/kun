@@ -21,7 +21,7 @@ import com.lj.eshop.eis.constant.Constans;
  * 
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月14日

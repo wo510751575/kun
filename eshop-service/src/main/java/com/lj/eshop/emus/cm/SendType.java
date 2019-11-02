@@ -11,7 +11,7 @@ package com.lj.eshop.emus.cm;
  * <p>
  * 详细描述：发送类型
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 邹磊
  *   
  * CreateDate: 2017年6月22日

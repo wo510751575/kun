@@ -14,7 +14,7 @@ import com.lj.eshop.dto.cm.FindBomPageDto;
  * <p>
  * 详细描述：产品表接口类
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 邹磊
  *   
  * CreateDate: 2017年6月30日

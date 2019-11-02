@@ -297,7 +297,7 @@ public class UserUtils {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年7月12日
+	 * @author  CreateDate: 2017年7月12日
 	 *
 	 */
 	public static String getAreaName(String code) {
@@ -317,7 +317,7 @@ public class UserUtils {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月8日
+	 * @author  CreateDate: 2017年8月8日
 	 *
 	 */
 	public static String getUploadUrl() {

@@ -15,7 +15,7 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：0：充值 1：提现 2：订单 3：销售提成 4：押金
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年8月23日

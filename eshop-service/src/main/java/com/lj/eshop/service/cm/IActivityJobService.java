@@ -18,8 +18,8 @@ import com.lj.base.exception.TsfaServiceException;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年8月15日
  */
@@ -32,7 +32,7 @@ public interface IActivityJobService {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月15日
+	 * @author  CreateDate: 2017年8月15日
 	 *
 	 */
 	public void activityComTask() throws TsfaServiceException;

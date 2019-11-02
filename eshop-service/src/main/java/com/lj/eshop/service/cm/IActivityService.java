@@ -31,7 +31,7 @@ import com.lj.eshop.dto.cm.activity.UpdateActivityReturn;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 邹磊
  * 
  *         CreateDate: 2017年7月24日
@@ -144,7 +144,7 @@ public interface IActivityService {
 	 * @param updateActivity
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月15日
+	 * @author  CreateDate: 2017年8月15日
 	 *
 	 */
 	public void addActivityForShare(UpdateActivity updateActivity) throws TsfaServiceException;

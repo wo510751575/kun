@@ -28,7 +28,7 @@ import com.lj.eshop.service.IProductGiftService;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  *         CreateDate: 2017.12.11
@@ -45,7 +45,7 @@ public class ProductGiftServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	@Test
@@ -70,7 +70,7 @@ public class ProductGiftServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	@Test
@@ -94,7 +94,7 @@ public class ProductGiftServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	@Test
@@ -111,7 +111,7 @@ public class ProductGiftServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	@Test
@@ -129,7 +129,7 @@ public class ProductGiftServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	@Test

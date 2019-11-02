@@ -8,7 +8,7 @@ package com.lj.eshop.eis.controller.weixin.config;
  * 
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月6日

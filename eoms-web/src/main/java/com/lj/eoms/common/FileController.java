@@ -25,8 +25,8 @@ import com.lj.eoms.utils.FileUtils;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年7月14日
  */
@@ -51,7 +51,7 @@ public class FileController {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年7月14日
+	 * @author  CreateDate: 2017年7月14日
 	 *
 	 */
 	 @SuppressWarnings({ "rawtypes", "unchecked" })

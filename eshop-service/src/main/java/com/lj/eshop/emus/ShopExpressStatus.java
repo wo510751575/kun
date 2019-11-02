@@ -14,7 +14,7 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：0待收货 1已收货
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年8月24日

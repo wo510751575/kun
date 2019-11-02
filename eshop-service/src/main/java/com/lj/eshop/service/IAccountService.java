@@ -108,7 +108,7 @@ public interface IAccountService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月29日
+	 * @author  CreateDate: 2017年8月29日
 	 *
 	 */
 	public AccountDto findAccountByMbrCode(String mbrCode) throws TsfaServiceException;

@@ -13,7 +13,7 @@ import com.lj.base.mvc.base.json.JsonUtils;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 彭阳
  *   
  * CreateDate: 2017年7月1日

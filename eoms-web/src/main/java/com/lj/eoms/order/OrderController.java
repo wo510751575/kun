@@ -43,8 +43,8 @@ import com.lj.eshop.service.IPaymentService;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  * 
  *         CreateDate: 2017年7月22日
  */
@@ -165,7 +165,7 @@ public class OrderController extends BaseController {
 	 * @param orderDto
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月9日
+	 * @author  CreateDate: 2017年9月9日
 	 *
 	 */
 	private PaymentDto builPaymentDto(OrderDto orderDto) {

@@ -17,7 +17,7 @@ import com.lj.eshop.emus.cm.SendType;
  * <p>
  * 详细描述：
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 邹磊
  * 
  *         CreateDate: 2017年7月12日

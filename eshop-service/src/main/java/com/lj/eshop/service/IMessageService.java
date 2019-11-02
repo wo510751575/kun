@@ -119,7 +119,7 @@ public interface IMessageService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月22日
+	 * @author  CreateDate: 2017年9月22日
 	 *
 	 */
 	int findMessagePageCount(FindMessagePage findMessagePage) throws TsfaServiceException;
@@ -132,7 +132,7 @@ public interface IMessageService {
 	 * @param record
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月27日
+	 * @author  CreateDate: 2017年9月27日
 	 *
 	 */
 	void updateByRecevier(MessageDto messageDto) throws TsfaServiceException;

@@ -82,7 +82,7 @@ import com.lj.eshop.service.ISysSpeService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017.08.28

@@ -188,7 +188,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月5日
+	 * @author  CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test
@@ -213,7 +213,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月5日
+	 * @author  CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test
@@ -223,7 +223,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 //			productSkuDto.setCode("LJ_663f16e577de44a784055a5f9739066c");
 //			AddrsDto paramDto = new AddrsDto();
 //			paramDto.setCode("LJ_03a22325b5ca4ae9b2cbe1e8e3460e91");
-//			orderService.createOrder(productSkuService.findProductSku(productSkuDto), "LJ_0e0a461585fa493794cc1368b87ec324", 1, addrsService.findAddrs(paramDto), true, "深圳市小坤有限公司", "123546151222", "备注");
+//			orderService.createOrder(productSkuService.findProductSku(productSkuDto), "LJ_0e0a461585fa493794cc1368b87ec324", 1, addrsService.findAddrs(paramDto), true, "深圳市", "123546151222", "备注");
 //		}
 
 		ProductSkuDto productSkuDto = new ProductSkuDto();
@@ -232,7 +232,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 		paramDto.setCode("LJ_b6e033a1e275476f9bf2464eeb21cfd4");
 		String shopCode = "LJ_0e0a461585fa493794cc1368b87ec324";
 //		orderService.createOrder(productSkuService.findProductSku(productSkuDto), shopCode, 1,
-//				addrsService.findAddrs(paramDto), true, "深圳市小坤有限公司", "123546151222", "备注", "", "", "");
+//				addrsService.findAddrs(paramDto), true, "深圳市", "123546151222", "备注", "", "", "");
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月5日
+	 * @author  CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test
@@ -263,7 +263,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月5日
+	 * @author  CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test

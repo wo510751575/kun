@@ -14,8 +14,8 @@ import com.lj.eoms.entity.sys.Dict;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年7月11日
  */
@@ -53,7 +53,7 @@ public interface AreaHessianService {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年7月27日
+	 * @author  CreateDate: 2017年7月27日
 	 *
 	 */
 	public List<Dict> selectAreaCode();    
@@ -66,7 +66,7 @@ public interface AreaHessianService {
 	 * @param code
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月3日
+	 * @author  CreateDate: 2017年8月3日
 	 *
 	 */
 	public String getAreaNameByCode(String code);
@@ -78,7 +78,7 @@ public interface AreaHessianService {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月4日
+	 * @author  CreateDate: 2017年8月4日
 	 *
 	 */
 	public List<Area> findAllList();  
@@ -90,7 +90,7 @@ public interface AreaHessianService {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月4日
+	 * @author  CreateDate: 2017年8月4日
 	 *
 	 */
 	public int getAreaVersion();

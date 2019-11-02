@@ -381,4 +381,8 @@
 		<property name="serviceInterface" value="com.lj.eshop.service.IProductPromoteService" />
 	</bean>
 	
+	<bean name="/accountInfoService" class="com.lj.base.mvc.remote.hession.spring.HessianServiceExporter">
+		<property name="service" ref="accountInfoServiceImpl" />
+		<property name="serviceInterface" value="com.lj.eshop.service.IAccountInfoService" />
+	</bean>
 </beans> 

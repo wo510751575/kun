@@ -36,7 +36,7 @@ import com.lj.eshop.service.IMessageService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 林进权
  * 
  *         CreateDate: 2017年8月28日
@@ -123,7 +123,7 @@ public class MessageController extends BaseController {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月22日
+	 * @author  CreateDate: 2017年9月22日
 	 *
 	 */
 	@RequestMapping(value = "unRead")
@@ -148,7 +148,7 @@ public class MessageController extends BaseController {
 	 *
 	 * @return
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月22日
+	 * @author  CreateDate: 2017年9月22日
 	 *
 	 */
 	@RequestMapping(value = "newMsg")

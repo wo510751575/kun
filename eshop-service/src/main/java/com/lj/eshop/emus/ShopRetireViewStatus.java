@@ -15,7 +15,7 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：1成功 2失败
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 林进权
  *   
  * CreateDate: 2017年8月26日

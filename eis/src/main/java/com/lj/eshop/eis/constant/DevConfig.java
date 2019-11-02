@@ -17,7 +17,7 @@ import com.lj.eshop.eis.spring.SpringContextUtil;
  *  
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月9日

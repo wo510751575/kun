@@ -48,7 +48,7 @@ import com.lj.eshop.service.IMerchantSettingService;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月6日

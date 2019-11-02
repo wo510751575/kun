@@ -20,7 +20,7 @@ import com.lj.eshop.dto.ProductRankPriceDto;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  *         CreateDate: 2017.12.14
@@ -36,7 +36,7 @@ public interface IProductRankPriceService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public void addOrUpdateProductRankPrice(ProductRankPriceDto productRankPriceDto) throws TsfaServiceException;
@@ -50,7 +50,7 @@ public interface IProductRankPriceService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public ProductRankPriceDto findProductRankPrice(ProductRankPriceDto productRankPriceDto)
@@ -65,7 +65,7 @@ public interface IProductRankPriceService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public List<ProductRankPriceDto> findProductRankPrices(FindProductRankPricePage findProductRankPricePage)
@@ -80,7 +80,7 @@ public interface IProductRankPriceService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public Page<ProductRankPriceDto> findProductRankPricePage(FindProductRankPricePage findProductRankPricePage)

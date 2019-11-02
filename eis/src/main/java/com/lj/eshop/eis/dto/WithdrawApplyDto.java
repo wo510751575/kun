@@ -16,7 +16,7 @@ import java.math.BigDecimal;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月5日

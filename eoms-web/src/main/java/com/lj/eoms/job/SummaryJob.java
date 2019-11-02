@@ -26,7 +26,7 @@ public class SummaryJob {
 	 * 方法说明：统计
 	 *
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月18日
+	 * @author  CreateDate: 2017年9月18日
 	 *
 	 */
 	@Scheduled(cron = "${job.summary.cron}")

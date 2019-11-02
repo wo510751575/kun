@@ -47,7 +47,7 @@ import com.lj.eshop.service.IAccountService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 林进权
  * 
  *         CreateDate: 2017年8月28日

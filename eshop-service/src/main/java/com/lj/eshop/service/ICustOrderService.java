@@ -108,7 +108,7 @@ public interface ICustOrderService {
 	 * @param expressName	快递公司
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月30日
+	 * @author  CreateDate: 2017年8月30日
 	 *
 	 */
 	public void shipping(CustOrderDto custOrderDto,String expressNo,String expressName) throws TsfaServiceException;
@@ -124,7 +124,7 @@ public interface ICustOrderService {
 	 * @param supply		供应商		
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月30日
+	 * @author  CreateDate: 2017年8月30日
 	 *
 	 */
 	public void offer(CustOrderDto custOrderDto) throws TsfaServiceException;
@@ -135,7 +135,7 @@ public interface ICustOrderService {
 	 *
 	 * @param custOrderDto
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月30日
+	 * @author  CreateDate: 2017年8月30日
 	 *
 	 */
 	public void complete(CustOrderDto custOrderDto)throws TsfaServiceException;
@@ -148,7 +148,7 @@ public interface ICustOrderService {
 	 * @param custOrderDto
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月30日
+	 * @author  CreateDate: 2017年8月30日
 	 *
 	 */
 	public void offerShop(CustOrderDto custOrderDto) throws TsfaServiceException;
@@ -163,7 +163,7 @@ public interface ICustOrderService {
 	 * @param payType	付款类型
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月30日
+	 * @author  CreateDate: 2017年8月30日
 	 *
 	 */
 	public void payment(CustOrderDto custOrderDto,BigDecimal amt,String payType) throws TsfaServiceException;

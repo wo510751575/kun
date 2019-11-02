@@ -106,7 +106,7 @@ public interface ISummaryService {
 	 * 方法说明：客户量统计
 	 *
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月11日
+	 * @author  CreateDate: 2017年9月11日
 	 *
 	 */
 	public void memberSummary()throws TsfaServiceException;
@@ -117,7 +117,7 @@ public interface ISummaryService {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月11日
+	 * @author  CreateDate: 2017年9月11日
 	 *
 	 */
 	public void amtSummary()throws TsfaServiceException;
@@ -139,7 +139,7 @@ public interface ISummaryService {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月20日
+	 * @author  CreateDate: 2017年9月20日
 	 *
 	 */
 	public void orderSummary()throws TsfaServiceException;

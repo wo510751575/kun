@@ -18,7 +18,7 @@ import com.lj.eshop.dto.cm.GeneratorMaterialTotalReturn;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 罗书明
  *   
  * CreateDate: 2017年6月21日

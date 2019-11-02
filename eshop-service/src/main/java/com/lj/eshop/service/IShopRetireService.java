@@ -105,7 +105,7 @@ public interface IShopRetireService {
 	 *
 	 * @param shopRetireDto
 	 *
-	 * @author 段志鹏 CreateDate: 2017年8月26日
+	 * @author  CreateDate: 2017年8月26日
 	 *
 	 */
 	public void audit(ShopRetireDto shopRetireDto,BigDecimal amount);

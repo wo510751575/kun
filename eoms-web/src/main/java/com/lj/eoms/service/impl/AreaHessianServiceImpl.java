@@ -21,8 +21,8 @@ import com.lj.eoms.utils.DictUtils;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年7月11日
  */

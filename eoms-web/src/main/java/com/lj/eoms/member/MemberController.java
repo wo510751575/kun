@@ -79,7 +79,7 @@ import com.lj.eshop.service.IShopStyleService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy CreateDate: 2017-8-25
  */
 @Controller

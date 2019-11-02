@@ -21,7 +21,7 @@ import java.util.List;
  * <p>
  * 详细描述：.
  *
- * @author 段志鹏
+ * @author 
  * 
  * 
  * CreateDate: 2017.12.14
@@ -37,7 +37,7 @@ public interface IProductMaterialService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public void addProductMaterial(ProductMaterialDto productMaterialDto) throws TsfaServiceException;
@@ -51,7 +51,7 @@ public interface IProductMaterialService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public ProductMaterialDto findProductMaterial(ProductMaterialDto productMaterialDto) throws TsfaServiceException;
@@ -66,7 +66,7 @@ public interface IProductMaterialService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public List<ProductMaterialDto>  findProductMaterials(FindProductMaterialPage findProductMaterialPage)throws TsfaServiceException;
@@ -80,7 +80,7 @@ public interface IProductMaterialService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public void updateProductMaterial(ProductMaterialDto productMaterialDto)throws TsfaServiceException;
@@ -94,7 +94,7 @@ public interface IProductMaterialService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017-12-14
+	 * @author  CreateDate: 2017-12-14
 	 *
 	 */
 	public Page<ProductMaterialDto> findProductMaterialPage(FindProductMaterialPage findProductMaterialPage) throws TsfaServiceException;

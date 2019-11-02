@@ -25,8 +25,8 @@ package com.lj.eshop.emus;
 	8：完成 
 	9：已取消
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年8月30日
  */

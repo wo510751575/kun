@@ -6,20 +6,20 @@ import java.util.Date;
 /**
  * @ClassName: MemberRankApplyDto
  * @Description:TODO(这里用一句话描述这个类的作用)
- * @author: 段志鹏
+ * @author: 
  * @date: 2019-09-18 18:27
  * 
  * @Copyright: 2019 www.kehuzhitongche.com Inc. All rights reserved.
- *             注意：本内容仅限于小坤有限公司内部传阅，禁止外泄
+ *             注意：本内容仅限于内部传阅，禁止外泄
  */
 /**
  * @ClassName: MemberRankApplyDto
  * @Description:TODO(这里用一句话描述这个类的作用)
- * @author: 段志鹏
+ * @author: 
  * @date: 2019-09-23 09:43
  * 
  * @Copyright: 2019 www.kehuzhitongche.com Inc. All rights reserved.
- *             注意：本内容仅限于小坤有限公司内部传阅，禁止外泄
+ *             注意：本内容仅限于内部传阅，禁止外泄
  */
 public class MemberRankApplyDto implements Serializable {
 

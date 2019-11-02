@@ -37,7 +37,7 @@ import com.lj.eshop.service.IShopService;
  * <p>
  * （进入微店）
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  * 
  *         CreateDate: 2017年9月6日

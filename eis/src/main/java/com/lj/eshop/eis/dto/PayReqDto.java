@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 类说明：第三方支付请求入参。
  * <p>
  *   
- * @Company: 小坤有限公司
+ * @Company: 
  * @author lhy
  *   
  * CreateDate: 2017年9月8日

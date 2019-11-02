@@ -15,8 +15,8 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：店铺等级 1星 2星 3星 4星 5星
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年8月25日
  */

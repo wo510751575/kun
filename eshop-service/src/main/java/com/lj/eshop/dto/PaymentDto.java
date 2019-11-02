@@ -7,11 +7,11 @@ import java.util.Date;
 /**
  * @ClassName: PaymentDto
  * @Description:TODO(这里用一句话描述这个类的作用)
- * @author: 段志鹏
+ * @author: 
  * @date: 2019-09-26 16:43
  * 
  * @Copyright: 2019 www.kehuzhitongche.com Inc. All rights reserved.
- *             注意：本内容仅限于小坤有限公司内部传阅，禁止外泄
+ *             注意：本内容仅限于内部传阅，禁止外泄
  */
 public class PaymentDto implements Serializable {
 

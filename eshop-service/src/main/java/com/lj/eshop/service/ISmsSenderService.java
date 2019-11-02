@@ -13,8 +13,8 @@ import com.lj.base.exception.TsfaServiceException;
  * <p>
  * 详细描述：
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年9月4日
  */
@@ -31,7 +31,7 @@ public interface ISmsSenderService {
 	 * @param bizType		业务类型 0:注册验证码 1:密码修改验证 2:提现验证码 3:B端用户登录
 	 * @throws TsfaServiceException
 	 *
-	 * @author 段志鹏 CreateDate: 2017年9月4日
+	 * @author  CreateDate: 2017年9月4日
 	 *
 	 */
 	public void sendTemplateSms(String mobile,String content,Map<String, String> map,String bizType) throws TsfaServiceException;

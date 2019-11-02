@@ -15,8 +15,8 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：C：c端，B：b端
  *   
- * @Company: 小坤有限公司
- * @author 段志鹏
+ * @Company: 
+ * @author 
  *   
  * CreateDate: 2017年9月22日
  */

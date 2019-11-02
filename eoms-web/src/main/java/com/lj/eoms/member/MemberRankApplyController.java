@@ -32,7 +32,7 @@ import com.lj.eshop.service.IMemberRankApplyService;
  * 
  * <p>
  * 
- * @Company: 小坤有限公司
+ * @Company: 
  * @author 林进权
  * 
  *         CreateDate: 2017年8月28日
