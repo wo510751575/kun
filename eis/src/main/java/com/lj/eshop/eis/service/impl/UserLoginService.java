@@ -8,12 +8,12 @@ package com.lj.eshop.eis.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ape.common.utils.StringUtils;
 import com.lj.base.core.encryption.MD5;
 import com.lj.base.exception.TsfaServiceException;
 import com.lj.business.common.SystemParamConstant;
@@ -81,12 +81,17 @@ public class UserLoginService implements IUserLoginService {
 
 	@Override
 	public TokenDto mobilePhoneLogin(MobilePhoneLoginDto dto) {
-		if (dto == null || StringUtils.isEmpty(dto.getMobilePhone()) || StringUtils.isEmpty(dto.getAuthCode())) {
+		if (dto == null || StringUtils.isEmpty(dto.getMobilePhone())) {
 			throw new TsfaServiceException(ResponseCode.PARAM_ERROR.getCode(), ResponseCode.PARAM_ERROR.getMsg());
 		}
-		// 1.验证短信验证码
-		AuthCodeUtils.validAuthCode(dto.getMobilePhone(), CodeCheckBizType.LOGIN.getValue(), dto.getAuthCode(),
-				AuthCodeUtils.AUTH_CODE_VALID_TIME);
+
+		// 如果是验证码登录，则直接验证验证码
+		if (StringUtils.isNotEmpty(dto.getAuthCode())) {
+			// 1.验证短信验证码
+			AuthCodeUtils.validAuthCode(dto.getMobilePhone(), CodeCheckBizType.LOGIN.getValue(), dto.getAuthCode(),
+					AuthCodeUtils.AUTH_CODE_VALID_TIME);
+		}
+
 		// 2.获取店铺及店主信息校验
 		MemberDto findM = new MemberDto();
 		findM.setPhone(dto.getMobilePhone());
@@ -98,10 +103,20 @@ public class UserLoginService implements IUserLoginService {
 		} else {
 			// 校验存在否以及 状态。
 			MemberDto loginMbr = ms.get(0);
+
+			// 校验密码
+			if (StringUtils.isNotEmpty(dto.getPassword())) {
+				if (!loginMbr.getPassword().equals(MD5.encryptByMD5(dto.getPassword()))) {
+					throw new TsfaServiceException(ResponseCode.GUID_MEMBER_PWD_ERROR.getCode(),
+							ResponseCode.GUID_MEMBER_PWD_ERROR.getMsg());
+				}
+			}
+
 			if (!MemberStatus.NORMAL.getValue().equals(loginMbr.getStatus())) {
 				throw new TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
 						ResponseCode.USER_UNNORMAL.getMsg());
 			}
+
 			TokenDto token = login(LoginRoleConstant.IS_C, loginMbr, null);
 			token.setHasOpenid(StringUtils.isBlank(loginMbr.getOpenId()) ? false : true);// 返回是否已绑定微信
 			token.setMerchantCode(loginMbr.getMerchantCode());

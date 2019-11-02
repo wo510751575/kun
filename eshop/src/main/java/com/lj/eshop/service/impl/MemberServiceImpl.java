@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.lj.base.core.encryption.MD5;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.util.AssertUtils;
 import com.lj.base.core.util.GUID;
@@ -81,7 +82,7 @@ public class MemberServiceImpl implements IMemberService {
 			member.setSourceFrom(memberDto.getSourceFrom());
 			member.setMerchantCode(memberDto.getMerchantCode());
 			member.setMemberRankCode(memberDto.getMemberRankCode());
-			member.setPassword(memberDto.getPassword());
+			member.setPassword(MD5.encryptByMD5(memberDto.getPassword()));
 			memberDao.insertSelective(member);
 			memberDto.setCode(member.getCode());
 			memberDto.setCreateTime(member.getCreateTime());
