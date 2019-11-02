@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lj.eshop.dao.IProTextureDao">
+  <resultMap id="BaseResultMap" type="com.lj.eshop.domain.ProductTexture">
+    <id column="code" jdbcType="VARCHAR" property="code" />
+    <result column="texture_name" jdbcType="VARCHAR" property="textureName" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    code, texture_name, creater, status, create_time
+  </sql>
+  <resultMap id="FindResultMap" type="com.lj.eshop.dto.ProductTextureDto"
+	extends="BaseResultMap"></resultMap>
+	<sql id="findPage_condition">
+		<where>
+			<!-- 查询条件根据业务需求自由添加 -->
+			<if test="param">
+				<if test="param.code != null and param.code !='' ">
+					<![CDATA[and code =#{param.code}]]>
+				</if>
+				<if test="param.textureName != null and param.textureName !='' ">
+					<![CDATA[and texture_name like CONCAT('%',#{param.textureName},'%' )]]>
+				</if>
+				<if test="param.status != null and param.status !='' ">
+					<![CDATA[and status  =#{param.status} ]]>
+				</if>
+			</if>
+		</where>
+	</sql>
+	<!-- 不分页查询 -->
+	<select id="findProTextures" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProTexturePage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_product_texture
+		<include refid="findPage_condition" />
+		order by create_time desc
+	</select>
+	<!-- 分页查询 -->
+	<select id="findProTexturePage" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProTexturePage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_product_texture
+		<include refid="findPage_condition" />
+		order by create_time desc
+		limit ${start} , ${limit}
+	</select>
+	<!-- 查询总数 -->
+	<select id="findProTexturePageCount" resultType="int"
+		parameterType="com.lj.eshop.dto.FindSysSpePage">
+		select count(*)
+		FROM t_product_texture
+		<include refid="findPage_condition" />
+	</select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_product_texture
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+   
+  <insert id="insertSelective" parameterType="com.lj.eshop.domain.ProductTexture">
+    insert into t_product_texture
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        code,
+      </if>
+      <if test="textureName != null">
+        texture_name,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="textureName != null">
+        #{textureName,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lj.eshop.domain.ProductTexture">
+    update t_product_texture
+    <set>
+      <if test="textureName != null">
+        texture_name = #{textureName,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+</mapper>

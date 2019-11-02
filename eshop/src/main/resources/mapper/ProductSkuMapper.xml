@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lj.eshop.dao.IProductSkuDao">
+  <resultMap id="BaseResultMap" type="com.lj.eshop.domain.ProductSku">
+    <id column="code" jdbcType="VARCHAR" property="code" />
+    <result column="cnt" jdbcType="INTEGER" property="cnt" />
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <result column="product_spes" jdbcType="VARCHAR" property="productSpes" />
+    <result column="sku_no" jdbcType="VARCHAR" property="skuNo" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
+    <result column="org_price" jdbcType="DECIMAL" property="orgPrice" />
+    <result column="gap_price" jdbcType="DECIMAL" property="gapPrice" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="is_default" jdbcType="CHAR" property="isDefault" />
+    <result column="sku_desc" jdbcType="VARCHAR" property="skuDesc" />
+    <result column="order_no" jdbcType="INTEGER" property="orderNo" />
+    <result column="one_price" jdbcType="DECIMAL" property="onePrice" />
+    <result column="two_price" jdbcType="DECIMAL" property="twoPrice" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ps.code, ps.cnt, ps.product_code, ps.product_spes, ps.sku_no, ps.del_flag, ps.cost_price, ps.sale_price, 
+    ps.org_price, ps.gap_price, ps.price, ps.is_default, ps.sku_desc,ps.order_no,one_price,two_price
+  </sql>
+
+
+	<resultMap id="FindResultMap" type="com.lj.eshop.dto.ProductSkuDto" extends="BaseResultMap">
+	</resultMap>
+	
+	<resultMap id="JoinResultMap" type="com.lj.eshop.dto.ProductSkuDto"	extends="FindResultMap">
+	</resultMap>
+	
+	<sql id="findPage_condition">
+		<where>
+			<if test="param!=null">
+				<!-- 查询条件根据业务需求自由添加 -->
+				<if test="param.code != null and param.code !='' ">
+					<![CDATA[and ps.code =#{param.code}]]>
+				</if>
+				<if test="param.productCode != null and param.productCode !='' ">
+					<![CDATA[and ps.product_code =#{param.productCode}]]>
+				</if>
+				<if test="param.delFlag != null and param.delFlag !='' ">
+					<![CDATA[and ps.del_flag =#{param.delFlag}]]>
+				</if>
+			</if>
+			<if test="inCodes != null and inCodes.size > 0">
+				and ps.code IN 
+				<foreach item="item" index="index" collection="inCodes" open="(" separator="," close=")">  
+				  	#{item}  
+				 </foreach>  
+			</if>
+		</where>
+	</sql>
+	<!-- 不分页查询 -->
+	<select id="findProductSkus" resultMap="JoinResultMap"
+		parameterType="com.lj.eshop.dto.FindProductSkuPage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_product_sku ps
+		<include refid="findPage_condition" />
+		order by order_no
+	</select>
+	<!-- 分页查询 -->
+	<select id="findProductSkuPage" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProductSkuPage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_product_sku ps
+		<include refid="findPage_condition" />
+		order by order_no
+		limit ${start} , ${limit}
+	</select>
+	<!-- 查询总数 -->
+	<select id="findProductSkuPageCount" resultType="int"
+		parameterType="com.lj.eshop.dto.FindProductSkuPage">
+		select count(*)
+		FROM t_product_sku
+		<include refid="findPage_condition" />
+	</select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="JoinResultMap">
+    select 
+    <include refid="Base_Column_List" />
+	FROM t_product_sku ps
+    where ps.code = #{code,jdbcType=VARCHAR}
+  </select>
+  <insert id="insertSelective" parameterType="com.lj.eshop.domain.ProductSku">
+    insert into t_product_sku
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        code,
+      </if>
+      <if test="cnt != null">
+        cnt,
+      </if>
+      <if test="productCode != null">
+        product_code,
+      </if>
+      <if test="productSpes != null">
+        product_spes,
+      </if>
+      <if test="skuNo != null">
+        sku_no,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="costPrice != null">
+        cost_price,
+      </if>
+      <if test="salePrice != null">
+        sale_price,
+      </if>
+      <if test="orgPrice != null">
+        org_price,
+      </if>
+      <if test="gapPrice != null">
+        gap_price,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="isDefault != null">
+        is_default,
+      </if>
+      <if test="skuDesc != null">
+        sku_desc,
+      </if>
+       <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="onePrice != null">
+        one_price,
+      </if>
+      <if test="twoPrice != null">
+        two_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="cnt != null">
+        #{cnt,jdbcType=INTEGER},
+      </if>
+      <if test="productCode != null">
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productSpes != null">
+        #{productSpes,jdbcType=VARCHAR},
+      </if>
+      <if test="skuNo != null">
+        #{skuNo,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="costPrice != null">
+        #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null">
+        #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orgPrice != null">
+        #{orgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="gapPrice != null">
+        #{gapPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=CHAR},
+      </if>
+      <if test="skuDesc != null">
+        #{skuDesc,jdbcType=VARCHAR},
+      </if>
+        <if test="orderNo != null">
+        #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="onePrice != null">
+        #{onePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="twoPrice != null">
+        #{twoPrice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lj.eshop.domain.ProductSku">
+    update t_product_sku
+    <set>
+      <if test="cnt != null">
+        cnt = #{cnt,jdbcType=INTEGER},
+      </if>
+      <if test="productCode != null">
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productSpes != null">
+        product_spes = #{productSpes,jdbcType=VARCHAR},
+      </if>
+      <if test="skuNo != null">
+        sku_no = #{skuNo,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="costPrice != null">
+        cost_price = #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null">
+        sale_price = #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orgPrice != null">
+        org_price = #{orgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="gapPrice != null">
+        gap_price = #{gapPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=CHAR},
+      </if>
+      <if test="skuDesc != null">
+        sku_desc = #{skuDesc,jdbcType=VARCHAR},
+      </if>
+       <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="onePrice != null">
+        one_price = #{onePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="twoPrice != null">
+        two_price = #{twoPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+   <update id="updateProductSkuByProductCode" parameterType="com.lj.eshop.domain.ProductSku">
+    update t_product_sku
+    <set>
+      <if test="cnt != null">
+        cnt = #{cnt,jdbcType=INTEGER},
+      </if>
+      <if test="productSpes != null">
+        product_spes = #{productSpes,jdbcType=VARCHAR},
+      </if>
+      <if test="skuNo != null">
+        sku_no = #{skuNo,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="costPrice != null">
+        cost_price = #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null">
+        sale_price = #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orgPrice != null">
+        org_price = #{orgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="gapPrice != null">
+        gap_price = #{gapPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=CHAR},
+      </if>
+      <if test="skuDesc != null">
+        sku_desc = #{skuDesc,jdbcType=VARCHAR},
+      </if>
+       <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="onePrice != null">
+        one_price = #{onePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="twoPrice != null">
+        two_price = #{twoPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where product_code = #{productCode,jdbcType=VARCHAR}
+  </update>
+  
+  <sql id="findMinProductSkus_condition">
+		<where>
+			<if test="param!=null">
+				<!-- 查询条件根据业务需求自由添加 -->
+				<if test="param.code != null and param.code !='' ">
+					<![CDATA[and s.code =#{param.code}]]>
+				</if>
+				<if test="param.productCode != null and param.productCode !='' ">
+					<![CDATA[and s.product_code =#{param.productCode}]]>
+				</if>
+				<if test="param.delFlag != null and param.delFlag !='' ">
+					<![CDATA[and s.del_flag =#{param.delFlag}]]>
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+  <!-- 不分页查询  from=b 才计算提成-->
+	<select id="findMinProductSkus" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProductSkuPage">
+		SELECT s.code,s.cnt,s.product_spes,s.sku_no,s.sale_price,
+		<if test="from!=null and from =='b'.toString()">
+			<![CDATA[
+				IF(s.sale_price-s.one_price < 0,0,s.sale_price-s.one_price) gap_price,
+			]]>
+		</if>
+		s.price,s.is_default,s.sku_desc,s.order_no 
+		from t_product_sku s ,t_product p 
+		where s.product_code=p.code 
+			<if test="param!=null">
+				<!-- 查询条件根据业务需求自由添加 -->
+				<if test="param.code != null and param.code !='' ">
+					<![CDATA[and s.code =#{param.code}]]>
+				</if>
+				<if test="param.productCode != null and param.productCode !='' ">
+					<![CDATA[and s.product_code =#{param.productCode}]]>
+				</if>
+				<if test="param.delFlag != null and param.delFlag !='' ">
+					<![CDATA[and s.del_flag =#{param.delFlag}]]>
+				</if>
+			</if>
+		order by s.order_no
+	</select>
+  
+</mapper>

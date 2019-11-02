@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lj.eshop.dao.IProductGiftDao" >
+  <resultMap id="BaseResultMap" type="com.lj.eshop.domain.ProductGift" >
+    <id column="code" property="code" jdbcType="VARCHAR" />
+    <result column="gift_code" property="giftCode" jdbcType="VARCHAR" />
+    <result column="gift_name" property="giftName" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="creater" property="creater" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    code, gift_code, gift_name, name, status, creater, create_time
+  </sql>
+  <resultMap id="FindResultMap" type="com.lj.eshop.dto.ProductGiftDto"
+		extends="BaseResultMap"></resultMap>
+	<sql id="findPage_condition">
+		<where>
+			<if test="param!=null">
+				<!-- 查询条件根据业务需求自由添加 -->
+				<if test="param.code != null and param.code !='' ">
+					<![CDATA[and code =#{param.code}]]>
+				</if>
+				<if test="param.giftCode != null and param.giftCode !='' ">
+					<![CDATA[and gift_code =#{param.giftCode}]]>
+				</if>
+				<if test="param.name != null and param.name !='' ">
+					<![CDATA[and name like CONCAT('%',#{param.name},'%' )]]>
+				</if>
+				<if test="param.giftName != null and param.giftName !='' ">
+					<![CDATA[and gift_name like CONCAT('%',#{param.giftName},'%' )]]>
+				</if>
+				<if test="param.status != null and param.status !='' ">
+					<![CDATA[and status  =#{param.status} ]]>
+				</if>
+			</if>
+		</where>
+	</sql>
+	<!-- 不分页查询 -->
+	<select id="findProductGifts" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProductGiftPage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_product_gift
+		<include refid="findPage_condition" />
+
+	</select>
+	<!-- 分页查询 -->
+	<select id="findProductGiftPage" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProductGiftPage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_product_gift
+		<include refid="findPage_condition" />
+
+		limit ${start} , ${limit}
+	</select>
+	<!-- 查询总数 -->
+	<select id="findProductGiftPageCount" resultType="int"
+		parameterType="com.lj.eshop.dto.FindProductGiftPage">
+		select count(*)
+		FROM t_product_gift
+		<include refid="findPage_condition" />
+	</select>
+	
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_product_gift
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_product_gift
+    where code = #{code,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.lj.eshop.domain.ProductGift" >
+    insert into t_product_gift
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="giftCode != null" >
+        gift_code,
+      </if>
+      <if test="giftName != null" >
+        gift_name,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="creater != null" >
+        creater,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="giftCode != null" >
+        #{giftCode,jdbcType=VARCHAR},
+      </if>
+      <if test="giftName != null" >
+        #{giftName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="creater != null" >
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lj.eshop.domain.ProductGift" >
+    update t_product_gift
+    <set >
+      <if test="giftCode != null" >
+        gift_code = #{giftCode,jdbcType=VARCHAR},
+      </if>
+      <if test="giftName != null" >
+        gift_name = #{giftName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="creater != null" >
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+</mapper>

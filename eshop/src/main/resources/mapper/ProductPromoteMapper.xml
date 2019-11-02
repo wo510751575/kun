@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lj.eshop.dao.IProductPromoteDao">
+  <resultMap id="BaseResultMap" type="com.lj.eshop.domain.ProductPromote">
+    <id column="code" jdbcType="VARCHAR" property="code" />
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <result column="open_date" jdbcType="TIMESTAMP" property="openDate" />
+    <result column="close_date" jdbcType="TIMESTAMP" property="closeDate" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap id="FindResultMap" type="com.lj.eshop.dto.ProductPromoteDto" extends="BaseResultMap">
+  	<!-- 商品相关信息  款号:modelNum  商品名称:name icon:productIcon 商品类目： -->
+  		<association property="productDto" column="product_code" javaType="com.lj.eshop.dto.ProductDto" >
+  			<id column="code" jdbcType="VARCHAR" property="code" />
+            <result property="modelNum" column="model_num"/>
+       	 	<result property="name" column="name"/>
+        	<result property="productIcon" column="product_icon"/>
+        	<result property="cnt" column="cnt"/>
+        	<result property="saleCnt" column="sale_cnt"/>
+        	<result property="weight" column="weight"/>
+        	<collection property="catalog"  ofType="com.lj.eshop.dto.CatalogDto"   resultMap="CatalogBaseResultMap"/>
+        </association>
+	</resultMap>
+	<resultMap id="CatalogBaseResultMap" type="com.lj.eshop.dto.CatalogDto">
+   		 <id column="catalog_type_code" jdbcType="VARCHAR" property="code" />
+   		 <result column="catalog_name" jdbcType="CHAR" property="catalogName" />
+    	 <result column="parent_cataLog_name" jdbcType="CHAR" property="parentCatalogName" />
+    </resultMap>
+  <sql id="Base_Column_List">
+    o.code, o.product_code, o.open_date, o.close_date, o.status, o.creater, o.create_time, o.updater, 
+    o.update_time
+  </sql>
+   <sql id="product_Base_Column_List">
+  	  ,t.model_num,t.name,t.product_icon,t.cnt,t.sale_cnt,t.weight
+  </sql> 
+  <sql id="catalog_Base_Column_List">
+      ,c.catalog_name,c.parent_cataLog_name
+  </sql> 
+  <sql id="findPage_condition">
+		<where>
+			<if test="param!=null">
+				<!-- 查询条件根据业务需求自由添加 -->
+				<if test="param.code != null and param.code !='' ">
+					<![CDATA[and o.code =#{param.code}]]>
+				</if>
+				<if test="param.status != null and param.status !='' ">
+					<![CDATA[and o.status = #{param.status}]]>
+				</if>
+				<if test="param.productDto != null">
+					<if test="param.productDto.name != null and param.productDto.name !='' ">
+						<![CDATA[and t.name like CONCAT('%',#{param.productDto.name},'%' )]]>
+					</if>
+					<if test="param.productDto.modelNum != null and param.productDto.modelNum !='' ">
+						<![CDATA[and t.model_num like CONCAT('%',#{param.productDto.modelNum},'%' )]]>
+					</if>
+				</if>
+			</if>
+		</where>
+	</sql>
+  <!-- 不分页查询 -->
+	<select id="findProductPromotes" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProductPromotePage">
+		SELECT
+		<include refid="Base_Column_List" />
+		<include refid="product_Base_Column_List" />
+		<include refid="catalog_Base_Column_List" />
+		FROM t_product_promote o
+		LEFT JOIN t_product t ON o.product_code = t.code
+		LEFT JOIN t_catalog c on t.catalog_type_code = c.code
+		<include refid="findPage_condition" />
+		order by create_time desc
+	</select>
+	<!-- 分页查询 -->
+	<select id="findProductPromotePage" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindProductPromotePage">
+		SELECT
+		<include refid="Base_Column_List" />
+		<include refid="product_Base_Column_List" />
+		<include refid="catalog_Base_Column_List" />
+		FROM t_product_promote o
+		LEFT JOIN t_product t ON o.product_code = t.code
+		LEFT JOIN t_catalog c on t.catalog_type_code = c.code
+		<include refid="findPage_condition" />
+		order by create_time desc
+		limit ${start} , ${limit}
+	</select>
+	<!-- 查询总数 -->
+	<select id="findProductPromotePageCount" resultType="int"
+		parameterType="com.lj.eshop.dto.FindProductPromotePage">
+		select count(*) 
+		FROM t_product_promote o
+		LEFT JOIN t_product t ON o.product_code = t.code
+		LEFT JOIN t_catalog c on t.catalog_type_code = c.code
+		<include refid="findPage_condition" />
+	</select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    <include refid="product_Base_Column_List" />
+	<include refid="catalog_Base_Column_List" />
+    from t_product_promote o
+    LEFT JOIN t_product t ON o.product_code = t.code
+	LEFT JOIN t_catalog c on t.catalog_type_code = c.code
+    where o.code = #{code,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_product_promote
+    where code = #{code,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.lj.eshop.domain.ProductPromote">
+    insert into t_product_promote
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        code,
+      </if>
+      <if test="productCode != null">
+        product_code,
+      </if>
+      <if test="openDate != null">
+        open_date,
+      </if>
+      <if test="closeDate != null">
+        close_date,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null">
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="openDate != null">
+        #{openDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeDate != null">
+        #{closeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lj.eshop.domain.ProductPromote">
+    update t_product_promote
+    <set>
+      <if test="productCode != null">
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="openDate != null">
+        open_date = #{openDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeDate != null">
+        close_date = #{closeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+</mapper>

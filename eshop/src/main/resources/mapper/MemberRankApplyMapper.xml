@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lj.eshop.dao.IMemberRankApplyDao" >
+  <resultMap id="BaseResultMap" type="com.lj.eshop.domain.MemberRankApply" >
+    <id column="code" property="code" jdbcType="VARCHAR" />
+    <result column="member_code" property="memberCode" jdbcType="VARCHAR" />
+    <result column="member_rank_code" property="memberRankCode" jdbcType="VARCHAR" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="approve_time" property="approveTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="member_rank_name" property="memberRankName" jdbcType="VARCHAR" />
+    <result column="gift_code" property="giftCode" jdbcType="VARCHAR" />
+    <result column="my_invite" property="myInvite" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="FindResultMap" type="com.lj.eshop.dto.MemberRankApplyDto"
+		extends="BaseResultMap">
+		<result column="avotor" property="avotor" jdbcType="VARCHAR" />
+		</resultMap>
+		
+  <sql id="Base_Column_List" >
+    code, member_code, member_rank_code, apply_time, approve_time, status, 
+    del_flag, member_name, member_rank_name,gift_code,my_invite
+  </sql>
+  
+  <sql id="findPage_condition">
+		<where>
+			<if test="param!=null">
+				<!-- 查询条件根据业务需求自由添加 -->
+				<if test="param.code != null and param.code !='' ">
+					<![CDATA[and code =#{param.code}]]>
+				</if>
+				<if test="param.delFlag != null and param.delFlag !='' ">
+					<![CDATA[and del_flag=#{param.delFlag}]]>
+				</if>
+				<if test="param.memberCode != null and param.memberCode !='' ">
+					<![CDATA[and member_code=#{param.memberCode}]]>
+				</if>
+				<if test="param.memberRankCode != null and param.memberRankCode !='' ">
+					<![CDATA[and member_rank_code=#{param.memberRankCode}]]>
+				</if>
+				<if test="param.status != null and param.status !='' ">
+					<![CDATA[and status=#{param.status}]]>
+				</if>
+				<if test="param.memberName != null and param.memberName !='' ">
+					<![CDATA[and member_name like CONCAT('%',#{param.memberName},'%' )]]>
+				</if>
+				<if test="param.memberRankName != null and param.memberRankName !='' ">
+					<![CDATA[and member_rank_name=#{param.memberRankName}]]>
+				</if>
+				<if test="param.myInvite != null and param.myInvite !='' ">
+					<![CDATA[and my_invite=#{param.myInvite}]]>
+				</if>
+			</if>
+			
+			<if test="neStatus != null and neStatus !='' ">
+					<![CDATA[and status<>#{neStatus}]]>
+			</if>
+		</where>
+	</sql>
+	<!-- 不分页查询 -->
+	<select id="findMemberRankApplys" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindMemberRankApplyPage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_member_rank_apply
+		<include refid="findPage_condition" />
+		ORDER BY apply_time DESC
+		
+	</select>
+	<!-- 分页查询 -->
+	<select id="findMemberRankApplyPage" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindMemberRankApplyPage">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_member_rank_apply
+		<include refid="findPage_condition" />
+		ORDER BY apply_time DESC
+		limit ${start} , ${limit}
+	</select>
+	<!-- 查询总数 -->
+	<select id="findMemberRankApplyPageCount" resultType="int"
+		parameterType="com.lj.eshop.dto.FindMemberRankApplyPage">
+		select count(*)
+		FROM t_member_rank_apply
+		<include refid="findPage_condition" />
+	</select>
+	<!-- 分页查询 -->
+	<select id="findMemberByMyInvitePage" resultMap="FindResultMap"
+		parameterType="com.lj.eshop.dto.FindMemberRankApplyPage">
+		SELECT  mra.member_name, mra.approve_time,mra.gift_code
+		,(select m.avotor from t_member m where m.code =mra.member_code) avotor
+		FROM t_member_rank_apply mra
+		where mra.my_invite=#{param.myInvite}
+		and mra.del_flag =0
+		and mra.status =1
+		ORDER BY mra.apply_time DESC
+		limit ${start} , ${limit}
+	</select>
+	
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_member_rank_apply
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_member_rank_apply
+    where code = #{code,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.lj.eshop.domain.MemberRankApply" >
+    insert into t_member_rank_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="memberCode != null" >
+        member_code,
+      </if>
+      <if test="memberRankCode != null" >
+        member_rank_code,
+      </if>
+      <if test="applyTime != null" >
+        apply_time,
+      </if>
+      <if test="approveTime != null" >
+        approve_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="memberName != null" >
+        member_name,
+      </if>
+      <if test="memberRankName != null" >
+        member_rank_name,
+      </if>
+      <if test="giftCode != null" >
+        gift_code,
+      </if>
+      <if test="myInvite != null" >
+        my_invite,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="memberCode != null" >
+        #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRankCode != null" >
+        #{memberRankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveTime != null" >
+        #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="memberName != null" >
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRankName != null" >
+        #{memberRankName,jdbcType=VARCHAR},
+      </if>
+      <if test="giftCode != null" >
+        #{giftCode,jdbcType=VARCHAR},
+      </if>
+      <if test="myInvite != null" >
+        #{myInvite,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lj.eshop.domain.MemberRankApply" >
+    update t_member_rank_apply
+    <set >
+      <if test="memberCode != null" >
+        member_code = #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRankCode != null" >
+        member_rank_code = #{memberRankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveTime != null" >
+        approve_time = #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="memberName != null" >
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRankName != null" >
+        member_rank_name = #{memberRankName,jdbcType=VARCHAR},
+      </if>
+      <if test="giftCode != null" >
+        gift_code = #{giftCode,jdbcType=VARCHAR},
+      </if>
+      <if test="myInvite != null" >
+        my_invite = #{myInvite,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPkAndStatus" parameterType="com.lj.eshop.domain.MemberRankApply" >
+    update t_member_rank_apply
+    set 
+      approve_time = #{approveTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR}
+    where code = #{code,jdbcType=VARCHAR} AND (status=0 or status is null )
+  </update>
+  
+  <select id="findMemberCodesByInvite" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT member_code FROM t_member_rank_apply
+		where my_invite =#{myInvite,jdbcType=VARCHAR}
+		and del_flag =0
+		and status =1
+	</select>
+</mapper>
