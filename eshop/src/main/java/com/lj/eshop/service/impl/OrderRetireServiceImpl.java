@@ -40,6 +40,7 @@ import com.lj.eshop.service.IOrderRetireDetailService;
 import com.lj.eshop.service.IOrderRetireService;
 import com.lj.eshop.service.IOrderService;
 import com.lj.eshop.service.IShopService;
+
 /**
  * 类说明：实现类
  * 
@@ -50,43 +51,39 @@ import com.lj.eshop.service.IShopService;
  * @author lhy
  * 
  * 
- * CreateDate: 2017-08-22
+ *         CreateDate: 2017-08-22
  */
 @Service
-public class OrderRetireServiceImpl implements IOrderRetireService { 
+public class OrderRetireServiceImpl implements IOrderRetireService {
 
-	
 	/** Logger for this class. */
 	private static final Logger logger = LoggerFactory.getLogger(OrderRetireServiceImpl.class);
-	
 
 	@Resource
 	private IOrderRetireDao orderRetireDao;
 	@Resource
 	private IOrderRetireDetailService orderRetireDetailService;
-	
+
 	@Resource
 	private IOrderService orderService;
-	
+
 	@Resource
 	private IOrderDetailService orderDetailService;
-	
+
 	@Resource
 	private IMessageService messageService;
-	
+
 	@Resource
 	private IShopService shopService;
-	
-	
+
 	@Override
-	public void addOrderRetire(
-			OrderRetireDto orderRetireDto) throws TsfaServiceException {
-		logger.debug("addOrderRetire(AddOrderRetire addOrderRetire={}) - start", orderRetireDto); 
+	public void addOrderRetire(OrderRetireDto orderRetireDto) throws TsfaServiceException {
+		logger.debug("addOrderRetire(AddOrderRetire addOrderRetire={}) - start", orderRetireDto);
 
 		AssertUtils.notNull(orderRetireDto);
 		try {
 			OrderRetire orderRetire = new OrderRetire();
-			//add数据录入
+			// add数据录入
 			orderRetire.setCode(orderRetireDto.getCode());
 			orderRetire.setOrderNo(orderRetireDto.getOrderCode());
 			orderRetire.setExpressNo(orderRetireDto.getExpressNo());
@@ -105,18 +102,17 @@ public class OrderRetireServiceImpl implements IOrderRetireService {
 			orderRetire.setFailReason(orderRetireDto.getFailReason());
 			orderRetire.setAmt(orderRetireDto.getAmt());
 			orderRetireDao.insertSelective(orderRetire);
-			logger.debug("addOrderRetire(OrderRetireDto) - end - return"); 
-		}catch (TsfaServiceException e) {
-			logger.error(e.getMessage(),e);
+			logger.debug("addOrderRetire(OrderRetireDto) - end - return");
+		} catch (TsfaServiceException e) {
+			logger.error(e.getMessage(), e);
 			throw e;
-		}  catch (Exception e) {
-			logger.error("新增订单退换信息错误！",e);
-			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_ADD_ERROR,"新增订单退换信息错误！",e);
+		} catch (Exception e) {
+			logger.error("新增订单退换信息错误！", e);
+			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_ADD_ERROR, "新增订单退换信息错误！", e);
 		}
 	}
-	
-	
- 	/**
+
+	/**
 	 * 
 	 *
 	 * 方法说明：不分页查询订单退换信息
@@ -128,30 +124,27 @@ public class OrderRetireServiceImpl implements IOrderRetireService {
 	 * @author lhy CreateDate: 2017年07月10日
 	 *
 	 */
-	public List<OrderRetireDto>  findOrderRetires(FindOrderRetirePage findOrderRetirePage)throws TsfaServiceException{
+	public List<OrderRetireDto> findOrderRetires(FindOrderRetirePage findOrderRetirePage) throws TsfaServiceException {
 		AssertUtils.notNull(findOrderRetirePage);
-		List<OrderRetireDto> returnList=null;
+		List<OrderRetireDto> returnList = null;
 		try {
 			returnList = orderRetireDao.findOrderRetires(findOrderRetirePage);
 		} catch (Exception e) {
 			logger.error("查找订单退换信息信息错误！", e);
-			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_NOT_EXIST_ERROR,"订单退换信息不存在");
+			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_NOT_EXIST_ERROR, "订单退换信息不存在");
 		}
 		return returnList;
 	}
-	
 
 	@Override
-	public void updateOrderRetire(
-			OrderRetireDto orderRetireDto)
-			throws TsfaServiceException {
+	public void updateOrderRetire(OrderRetireDto orderRetireDto) throws TsfaServiceException {
 		logger.debug("updateOrderRetire(OrderRetireDto orderRetireDto={}) - start", orderRetireDto); //$NON-NLS-1$
 
 		AssertUtils.notNull(orderRetireDto);
-		AssertUtils.notNullAndEmpty(orderRetireDto.getCode(),"Code不能为空");
+		AssertUtils.notNullAndEmpty(orderRetireDto.getCode(), "Code不能为空");
 		try {
 			OrderRetire orderRetire = new OrderRetire();
-			//update数据录入
+			// update数据录入
 			orderRetire.setCode(orderRetireDto.getCode());
 			orderRetire.setOrderNo(orderRetireDto.getOrderNo());
 			orderRetire.setExpressNo(orderRetireDto.getExpressNo());
@@ -171,32 +164,30 @@ public class OrderRetireServiceImpl implements IOrderRetireService {
 			orderRetire.setAmt(orderRetireDto.getAmt());
 			AssertUtils.notUpdateMoreThanOne(orderRetireDao.updateByPrimaryKeySelective(orderRetire));
 			logger.debug("updateOrderRetire(OrderRetireDto) - end - return"); //$NON-NLS-1$
-		}catch (TsfaServiceException e) {
-			logger.error(e.getMessage(),e);
+		} catch (TsfaServiceException e) {
+			logger.error(e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("订单退换信息更新信息错误！",e);
-			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_UPDATE_ERROR,"订单退换信息更新信息错误！",e);
+			logger.error("订单退换信息更新信息错误！", e);
+			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_UPDATE_ERROR, "订单退换信息更新信息错误！", e);
 		}
 	}
 
-	
-
 	@Override
-	public OrderRetireDto findOrderRetire(
-			OrderRetireDto orderRetireDto) throws TsfaServiceException {
+	public OrderRetireDto findOrderRetire(OrderRetireDto orderRetireDto) throws TsfaServiceException {
 		logger.debug("findOrderRetire(FindOrderRetire findOrderRetire={}) - start", orderRetireDto); //$NON-NLS-1$
 
 		AssertUtils.notNull(orderRetireDto);
-		AssertUtils.notAllNull(orderRetireDto.getCode(),"Code不能为空");
+		AssertUtils.notAllNull(orderRetireDto.getCode(), "Code不能为空");
 		try {
 			OrderRetire orderRetire = orderRetireDao.selectByPrimaryKey(orderRetireDto.getCode());
-			if(orderRetire == null){
+			if (orderRetire == null) {
 				return null;
-				//throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_NOT_EXIST_ERROR,"订单退换信息不存在");
+				// throw new
+				// TsfaServiceException(ErrorCode.ORDER_RETIRE_NOT_EXIST_ERROR,"订单退换信息不存在");
 			}
 			OrderRetireDto findOrderRetireReturn = new OrderRetireDto();
-			//find数据录入
+			// find数据录入
 			findOrderRetireReturn.setCode(orderRetire.getCode());
 			findOrderRetireReturn.setOrderNo(orderRetire.getOrderNo());
 			findOrderRetireReturn.setExpressNo(orderRetire.getExpressNo());
@@ -214,58 +205,54 @@ public class OrderRetireServiceImpl implements IOrderRetireService {
 			findOrderRetireReturn.setAuditStatus(orderRetire.getAuditStatus());
 			findOrderRetireReturn.setFailReason(orderRetire.getFailReason());
 			findOrderRetireReturn.setAmt(orderRetire.getAmt());
-			
+
 			logger.debug("findOrderRetire(OrderRetireDto) - end - return value={}", findOrderRetireReturn); //$NON-NLS-1$
 			return findOrderRetireReturn;
-		}catch (TsfaServiceException e) {
-			logger.error(e.getMessage(),e);
+		} catch (TsfaServiceException e) {
+			logger.error(e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("查找订单退换信息信息错误！",e);
-			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_FIND_ERROR,"查找订单退换信息信息错误！",e);
+			logger.error("查找订单退换信息信息错误！", e);
+			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_FIND_ERROR, "查找订单退换信息信息错误！", e);
 		}
-
 
 	}
 
-	
 	@Override
-	public Page<OrderRetireDto> findOrderRetirePage(
-			FindOrderRetirePage findOrderRetirePage)
+	public Page<OrderRetireDto> findOrderRetirePage(FindOrderRetirePage findOrderRetirePage)
 			throws TsfaServiceException {
 		logger.debug("findOrderRetirePage(FindOrderRetirePage findOrderRetirePage={}) - start", findOrderRetirePage); //$NON-NLS-1$
 
 		AssertUtils.notNull(findOrderRetirePage);
-		List<OrderRetireDto> returnList=null;
+		List<OrderRetireDto> returnList = null;
 		int count = 0;
 		try {
 			returnList = orderRetireDao.findOrderRetirePage(findOrderRetirePage);
 			count = orderRetireDao.findOrderRetirePageCount(findOrderRetirePage);
-		}  catch (Exception e) {
-			logger.error("订单退换信息不存在错误",e);
-			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_FIND_PAGE_ERROR,"订单退换信息不存在错误.！",e);
+		} catch (Exception e) {
+			logger.error("订单退换信息不存在错误", e);
+			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_FIND_PAGE_ERROR, "订单退换信息不存在错误.！", e);
 		}
 		Page<OrderRetireDto> returnPage = new Page<OrderRetireDto>(returnList, count, findOrderRetirePage);
 
 		logger.debug("findOrderRetirePage(FindOrderRetirePage) - end - return value={}", returnPage); //$NON-NLS-1$
-		return  returnPage;
+		return returnPage;
 	}
-
 
 	@Override
 	@Transactional
-	public void applyBack(OrderRetireDto orderRetireDto) throws TsfaServiceException{
-		logger.debug("addOrderRetire(applyBack applyBack={}) - start", orderRetireDto); 
+	public void applyBack(OrderRetireDto orderRetireDto) throws TsfaServiceException {
+		logger.debug("addOrderRetire(applyBack applyBack={}) - start", orderRetireDto);
 
 		AssertUtils.notNull(orderRetireDto);
 
 		try {
-			//插入退货订单
+			// 插入退货订单
 			orderRetireDto.setRetireNo(NoUtil.generateNo(NoUtil.JY));
 			orderRetireDto.setCode(GUID.generateCode());
 			addOrderRetire(orderRetireDto);
-			
-			//插入退货明细
+
+			// 插入退货明细
 			String productName = null;
 			BigDecimal totalAmt = new BigDecimal(0);
 			List<OrderRetireDetailDto> retireDetails = orderRetireDto.getRetireDetailDtos();
@@ -277,74 +264,71 @@ public class OrderRetireServiceImpl implements IOrderRetireService {
 				retireDetailDto.setSkuNo(rltOrderDetailDto.getSkuCode());
 				retireDetailDto.setRetireNo(orderRetireDto.getRetireNo());
 				orderRetireDetailService.addOrderRetireDetail(retireDetailDto);
-				if(StringUtils.isEmpty(productName)) {
+				if (StringUtils.isEmpty(productName)) {
 					productName = rltOrderDetailDto.getProductName();
 				}
-				
-				if(retireDetailDto.getCnt().compareTo(rltOrderDetailDto.getCnt())>0) {
-					throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_ADD_ERROR,"订单有误，退货数量大于订单数量！");
+
+				if (retireDetailDto.getCnt().compareTo(rltOrderDetailDto.getCnt()) > 0) {
+					throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_ADD_ERROR, "订单有误，退货数量大于订单数量！");
 				}
-				
-				totalAmt = totalAmt.add(rltOrderDetailDto.getSalePrice().multiply(new BigDecimal(retireDetailDto.getCnt())));
+
+				totalAmt = totalAmt
+						.add(rltOrderDetailDto.getSalePrice().multiply(new BigDecimal(retireDetailDto.getCnt())));
 			}
 			orderRetireDto.setAmt(totalAmt);
 			updateOrderRetire(orderRetireDto);
-			
-			
-			//订单状态变更为申请退货
+
+			// 订单状态变更为申请退货
 			OrderDto orderDto = new OrderDto();
 			orderDto.setCode(orderRetireDto.getOrderCode());
-			orderDto.setStatus(OrderStatus.UNRETURNS.getValue());
+			orderDto.setStatus(OrderStatus.CANCEL.getValue());
 			orderService.updateOrder(orderDto);
 			OrderDto rOrderDto = new OrderDto();
 			rOrderDto.setCode(orderRetireDto.getOrderCode());
 			rOrderDto = orderService.findOrder(orderDto);
-			
+
 			ShopDto paramShopDto = new ShopDto();
 			paramShopDto.setCode(rOrderDto.getShopCode());
 			ShopDto rltShopDto = shopService.findShop(paramShopDto);
-			
-			//发送消息通知
+
+			// 发送消息通知
 			MessageDto messageDto = new MessageDto();
 			messageDto.setRecevier(rltShopDto.getMbrCode());
 			messageDto.setcClientName(rOrderDto.getMbrName());
 			messageDto.setcClientCommodity(productName);
 			messageDto.setcClientOrderNo(orderRetireDto.getRetireNo());
 			messageService.addMessageByTemplate(messageDto, MessageTemplate.B_SERVICE_ORDER_BILL_BACK);
-			
-			logger.debug("applyBack(OrderRetireDto) - end - return"); 
-		}catch (TsfaServiceException e) {
-			logger.error(e.getMessage(),e);
+
+			logger.debug("applyBack(OrderRetireDto) - end - return");
+		} catch (TsfaServiceException e) {
+			logger.error(e.getMessage(), e);
 			throw e;
-		}  catch (Exception e) {
-			logger.error("新增订单退换信息错误！",e);
-			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_ADD_ERROR,"新增订单退换信息错误！",e);
+		} catch (Exception e) {
+			logger.error("新增订单退换信息错误！", e);
+			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_ADD_ERROR, "新增订单退换信息错误！", e);
 		}
-		
+
 	}
-	
-	
+
 	@Override
-	public Page<OrderRetireDto> findOrderRetirePage4BC(
-			FindOrderRetirePage findOrderRetirePage)
+	public Page<OrderRetireDto> findOrderRetirePage4BC(FindOrderRetirePage findOrderRetirePage)
 			throws TsfaServiceException {
 		logger.debug("findOrderRetirePage(FindOrderRetirePage findOrderRetirePage={}) - start", findOrderRetirePage); //$NON-NLS-1$
 
 		AssertUtils.notNull(findOrderRetirePage);
-		List<OrderRetireDto> returnList=null;
+		List<OrderRetireDto> returnList = null;
 		int count = 0;
 		try {
 			returnList = orderRetireDao.findOrderRetirePage4BC(findOrderRetirePage);
 			count = orderRetireDao.findOrderRetirePageCount4BC(findOrderRetirePage);
-		}  catch (Exception e) {
-			logger.error("订单退换信息不存在错误",e);
-			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_FIND_PAGE_ERROR,"订单退换信息不存在错误.！",e);
+		} catch (Exception e) {
+			logger.error("订单退换信息不存在错误", e);
+			throw new TsfaServiceException(ErrorCode.ORDER_RETIRE_FIND_PAGE_ERROR, "订单退换信息不存在错误.！", e);
 		}
 		Page<OrderRetireDto> returnPage = new Page<OrderRetireDto>(returnList, count, findOrderRetirePage);
 
 		logger.debug("findOrderRetirePage(FindOrderRetirePage) - end - return value={}", returnPage); //$NON-NLS-1$
-		return  returnPage;
+		return returnPage;
 	}
-
 
 }

@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>会员特权管理</title>
+	<title>押金管理</title>
 	<meta name="decorator" content="default"/>
 	
 	<style>
@@ -60,21 +60,21 @@
 <body>
 <div class="container">
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/member/memberRank/">会员特权列表</a></li>
-		<li class="active"><a href="${ctx}/member/memberRank/form?code=${data.code}">会员特权<shiro:hasPermission name="content:wshopinfo:edit">${not empty data.code?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="content:wshopinfo:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/member/memberRank/">押金列表</a></li>
+		<li class="active"><a href="${ctx}/member/memberRank/form?code=${data.code}">押金<shiro:hasPermission name="member:memberRank:edit">${not empty data.code?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="content:wshopinfo:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form id="inputForm"  action="${ctx}/member/memberRank/${not empty data.code?'edit':'save'}" method="post" class="form-horizontal">
 		<input type="hidden" name="code" value="${data.code}">
 		<tags:message content="${message}"/>
 		<div class="control-group">
-			<label class="control-label">特权名称:</label>
+			<label class="control-label">押金名称:</label>
 			<div class="controls">
 				<input type="text" name="name" value="${data.name}" maxlength="50" class="required input-xlarge" />
 				<span class="help-inline"><font color="red">* 请谨慎修改</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">会员费用:</label>
+			<label class="control-label">会员押金:</label>
 			<div class="controls">
 				<input type="text" name="amount" value="${data.amount}" maxlength="50" class="required input-xlarge number" />
 				<span class="help-inline"><font color="red">* 请谨慎修改</font> </span>
@@ -131,7 +131,7 @@
 		</div>
 		 
 		<div class="form-actions">
-			<shiro:hasPermission name="content:wshopinfo:edit">
+			<shiro:hasPermission name="member:memberRank:edit">
 				<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
 			</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>

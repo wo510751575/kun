@@ -25,11 +25,13 @@
     <result column="member_rank_code" jdbcType="VARCHAR" property="memberRankCode" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="member_rank_name" jdbcType="VARCHAR" property="memberRankName" />
+    <result column="share_code" jdbcType="VARCHAR" property="shareCode" />
+    
   </resultMap>
   <sql id="Base_Column_List">
     m.code, m.name, m.phone, m.wx_no, m.status, m.type, m.avotor, m.province, m.city, m.area, m.my_invite, 
     m.grade, m.create_time, m.creater, m.open_id, m.sex, m.source_from, m.merchant_code,
-    m.open_member_date, m.close_member_date, m.member_rank_code, m.password
+    m.open_member_date, m.close_member_date, m.member_rank_code, m.password,m.share_code
   </sql>
   
   <sql id="apply_Column_List">
@@ -139,6 +141,13 @@
 		where my_invite =#{myInvite,jdbcType=VARCHAR}
 	</select>
 	
+	<select id="findMemberByShareCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select 
+	    <include refid="Base_Column_List" />
+	    from t_member m
+	    where m.share_code = #{shareCode,jdbcType=VARCHAR}
+	</select>
+	
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -216,6 +225,9 @@
       <if test="password != null">
         password,
       </if>
+      <if test="shareCode != null">
+        share_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="code != null">
@@ -284,6 +296,9 @@
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
+      <if test="shareCode != null">
+        #{shareCode,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lj.eshop.domain.Member">
@@ -351,6 +366,9 @@
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="shareCode != null">
+        share_code = #{shareCode,jdbcType=VARCHAR},
       </if>
     </set>
     where code = #{code,jdbcType=VARCHAR}

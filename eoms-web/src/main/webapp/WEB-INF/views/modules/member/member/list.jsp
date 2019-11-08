@@ -126,12 +126,6 @@
 		    <li><label>会员名称：</label>
 		    	<input type="text" name="param.name" value="${memberPage.param.name}" class="input-medium" maxlength="100" placeholder="会员名称">
 			</li>
-			<%-- <li><label>openId：</label>
-		    	<input type="text" name="param.openId" value="${memberPage.param.openId}" class="input-medium" maxlength="100" placeholder="openId">
-			</li> --%>
-			<li><label>微信号：</label>
-		    	<input type="text" name="param.wxNo" value="${memberPage.param.wxNo}" class="input-medium" maxlength="100" placeholder="微信号">
-			</li>
 			<li><label>会员状态：</label>
 				<select style="width: 177px;" name="param.status">
                     <option value="">全部</option>
@@ -141,7 +135,7 @@
 					</c:forEach>
                 </select>
 			</li>
-			<li><label>会员类型：</label>
+			<%-- <li><label>会员类型：</label>
 				<select style="width: 177px;" name="param.type">
                     <option value="">全部</option>
                     <c:forEach items="${types}" var="item">
@@ -149,11 +143,11 @@
 							<c:if test="${item.value eq memberPage.param.type}">selected="selected"</c:if>>${item.chName}</option>
 					</c:forEach>
                 </select>
-			</li>
+			</li> --%>
 			<li><label>邀请人：</label>
 		    	<input type="text" name="param.myInviteName" value="${memberPage.param.myInviteName}" class="input-medium" maxlength="100" placeholder="邀请人">
 			</li>
-			<li><label>邀请人电话：</label>
+			<li><label>邀请人手机号：</label>
 		    	<input type="text" name="param.myInvitePhone" value="${memberPage.param.myInvitePhone}" class="input-medium" maxlength="100" placeholder="邀请人电话">
 			</li>
  			<li> 
@@ -178,15 +172,15 @@
 			<th>性别</th>
 			<th>状态</th>
 			<th>手机号码</th>
-			<th>微信号</th>
-			<th>类型</th>
+<!-- 			<th>微信号</th> -->
+<!-- 			<th>类型</th> -->
 			<th>会员等级</th>
 			<th>头像</th>
 			<th>省</th>
 			<th>市</th>
 			<th>区</th>
 			<th>邀请人</th>
-			<th>邀请电话</th>
+			<th>邀请人手机号</th>
 			<th>评分等级</th>
 			<th>来源</th>
 			<th>录入时间</th>
@@ -217,7 +211,7 @@
 						</c:forEach>
 					</td>
 					<td> ${item.phone } </td>
-					<td> ${item.wxNo } </td>
+					<%-- <td> ${item.wxNo } </td>
 					<td>  
 						<c:forEach items="${types}" var="p">
 							<c:choose> 
@@ -226,7 +220,7 @@
 							</c:choose>
 						</c:forEach>
 					
-					 </td>
+					 </td> --%>
 					 <td>
 					 <c:choose>
 					 	<c:when test="${item.memberRankCode eq '1' }">微商会员</c:when>

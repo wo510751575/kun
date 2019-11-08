@@ -7,9 +7,6 @@
         <dependent-module archiveName="eshop-service.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/eshop-service/eshop-service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="eshop-service.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/eshop-service/eshop-service">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="context-root" value="eshop"/>
         <property name="java-output-path" value="/eshop/target/classes"/>
     </wb-module>

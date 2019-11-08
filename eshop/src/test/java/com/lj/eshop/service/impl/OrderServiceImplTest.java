@@ -81,7 +81,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 		orderDto.setMbrPhone("MbrPhone");
 		orderDto.setRevicerName("RevicerName");
 		orderDto.setRevicePhone("RevicePhone");
-		orderDto.setStatus(OrderStatus.UNSHIPPED.getValue());
+		orderDto.setStatus(OrderStatus.CANCEL.getValue());
 		orderDto.setRemarks("Remarks");
 		orderDto.setIsInvoice(OrderInvoice.Y.getValue());
 		orderDto.setInvoiceTitle("InvoiceTitle");
@@ -146,7 +146,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	@Test
 	public void findOrderPage() throws TsfaServiceException {
 		OrderDto param = new OrderDto();
-		param.setStatus(OrderStatus.UNPAID.getValue());
+		param.setStatus(OrderStatus.CANCEL.getValue());
 		param.setMbrType(MemberType.CLIENT.getValue());
 //		param.setMerchantCode("LJ_d0e8edca19bc445bbca254ddca6703d9");
 		FindOrderPage findOrderPage = new FindOrderPage();
@@ -188,7 +188,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月5日
+	 * @author CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test
@@ -213,7 +213,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月5日
+	 * @author CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test
@@ -242,7 +242,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月5日
+	 * @author CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test
@@ -263,7 +263,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月5日
+	 * @author CreateDate: 2017年9月5日
 	 *
 	 */
 	@Test
@@ -316,7 +316,7 @@ public class OrderServiceImplTest extends SpringTestCase {
 		FindOrderPage findOrderPage = new FindOrderPage();
 		OrderDto param = new OrderDto();
 		param.setShopCode("LJ_0e0a461585fa493794cc1368b87ec324");
-		param.setStatus(OrderStatus.UNPAID.getValue());
+		param.setStatus(OrderStatus.CANCEL.getValue());
 //		param.setStartTime(DateUtils.formatDate(startTime, DateUtils.PATTERN_yyyy_MM_dd_HH_mm_ss));
 //		param.setEndTime(DateUtils.formatDate(endTime, DateUtils.PATTERN_yyyy_MM_dd_HH_mm_ss));
 		findOrderPage.setParam(param);

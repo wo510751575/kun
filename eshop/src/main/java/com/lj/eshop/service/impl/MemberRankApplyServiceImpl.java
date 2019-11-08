@@ -460,7 +460,7 @@ public class MemberRankApplyServiceImpl implements IMemberRankApplyService {
 		orderDto.setMbrCode(member.getCode());
 		orderDto.setMbrName(member.getName());
 		orderDto.setMbrPhone(member.getPhone());
-		orderDto.setStatus(OrderStatus.UNSHIPPED.getValue());
+		orderDto.setStatus(OrderStatus.DQR.getValue());
 		orderDto.setMerchantCode(member.getMerchantCode());
 		orderDto.setIsInvoice(OrderInvoice.N.getValue());
 		orderDto.setOrderNo(NoUtil.generateNo(NoUtil.JY));

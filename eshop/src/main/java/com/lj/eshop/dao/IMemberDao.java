@@ -20,4 +20,7 @@ public interface IMemberDao {
 	List<MemberDto> findMembers(FindMemberPage findMemberPage);
 
 	List<String> findMemberCodesByInvite(String myInvite);
+
+	MemberDto findMemberByShareCode(String shareCode);
+
 }

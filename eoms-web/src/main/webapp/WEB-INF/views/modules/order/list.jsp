@@ -135,11 +135,8 @@
 				<th>订单号</th>
 				<th>下单人姓名</th>
 				<th>订单金额</th>
-				<th>快递公司</th>
 				<th>订单状态</th>
-				<th>支付方式</th>
-				<th>邀请人</th>
-				<th>邀请人电话</th>
+				<th>收款帐号</th>
 				<th>下单时间</th>
 				<th>备注</th>
 				<shiro:hasPermission name="order:order:edit"><th>操作</th></shiro:hasPermission>
@@ -158,9 +155,6 @@
 					${item.amt}
 				</td>
 				<td>
-					${item.expressName}
-				</td>
-				<td>
 					<c:forEach items="${orderStatus}" var="status">
 						<c:if test="${status.value eq item.status}">${status.chName}</c:if>
 					</c:forEach>
@@ -169,12 +163,6 @@
 					<c:forEach items="${payTypes}" var="pay">
 						<c:if test="${pay.value eq item.payType}">${pay.chName}</c:if>
 					</c:forEach>
-				</td>
-				<td>
-					${item.myInviteDto.name}
-				</td>
-				<td>
-					${item.myInviteDto.phone}
 				</td>
 				<td>
 					<fmt:formatDate value="${item.createTime }" pattern="yyyy-MM-dd HH:mm:ss"/>

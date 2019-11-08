@@ -44,7 +44,7 @@ import com.lj.eshop.service.IPaymentService;
  * 
  * <p>
  * 
- * @Company: 
+ * @Company:
  * @author lhy CreateDate: 2017年9月8日
  */
 @RestController
@@ -99,7 +99,7 @@ public class PayController extends BaseController {
 			return ResponseDto.getErrorResponse(ErrorCode.ORDER_PAYMENT_ERROR, "订单不存在");
 		}
 
-		if (!orderDto.getStatus().equals(OrderStatus.UNPAID.getValue())) {
+		if (!orderDto.getStatus().equals(OrderStatus.YQR.getValue())) {
 			return ResponseDto.getErrorResponse(ErrorCode.ORDER_PAYMENT_ERROR, "订单已支付");
 		}
 		// 校验订单价格

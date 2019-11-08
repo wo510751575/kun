@@ -6,12 +6,10 @@
  */
 package com.lj.eshop.eis.controller.member;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,9 +36,7 @@ import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
 import com.lj.eshop.emus.DelFlag;
-import com.lj.eshop.emus.MemberRankAmt;
 import com.lj.eshop.emus.MemberRankApplyStatus;
-import com.lj.eshop.emus.MemberRankGift;
 import com.lj.eshop.emus.MemberRankMaxRank;
 import com.lj.eshop.emus.MemberRankValid;
 import com.lj.eshop.service.IAccWaterService;
@@ -55,7 +51,7 @@ import com.lj.eshop.service.IMemberService;
  * 
  * <p>
  * 
- * @Company: 
+ * @Company:
  * @author 林进权
  * 
  *         CreateDate: 2017年9月1日
@@ -92,29 +88,8 @@ public class MemberRankApplyController extends BaseController {
 		dto.setDelFlag("0");
 		findMemberRankPage.setParam(dto);
 		List<MemberRankDto> list = memberRankService.findMemberRanks(findMemberRankPage);
-
-		List<Map<String, Object>> giftList = new ArrayList<Map<String, Object>>();
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("code", MemberRankGift.MEMBER_RANK_GIVE_1.getValue());
-		map.put("name", MemberRankGift.MEMBER_RANK_GIVE_1.getName());
-		map.put("amt", MemberRankAmt.MEMBER_RANK_GIVE_1.getAmount());
-		giftList.add(map);
-		map = new HashMap<String, Object>();
-		map.put("code", MemberRankGift.MEMBER_RANK_GIVE_2.getValue());
-		map.put("name", MemberRankGift.MEMBER_RANK_GIVE_2.getName());
-		map.put("amt", MemberRankAmt.MEMBER_RANK_GIVE_2.getAmount());
-		giftList.add(map);
-		map = new HashMap<String, Object>();
-		map.put("code", MemberRankGift.MEMBER_RANK_GIVE_3.getValue());
-		map.put("name", MemberRankGift.MEMBER_RANK_GIVE_3.getName());
-		map.put("amt", MemberRankAmt.MEMBER_RANK_GIVE_3.getAmount());
-		giftList.add(map);
-
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("memberRanks", list);
-		returnMap.put("gifts", giftList);
 		logger.debug("MemberRankController --> returnMap(={}) - returnMap");
-		return ResponseDto.successResp(returnMap);
+		return ResponseDto.successResp(list);
 	}
 
 	/**
@@ -150,71 +125,6 @@ public class MemberRankApplyController extends BaseController {
 	}
 
 	/**
-	 * 方法说明： 我的特权-查询现有特权信息
-	 * 
-	 * @author 林进权
-	 * 
-	 *         CreateDate: 2017年9月1日
-	 */
-	@RequestMapping(value = { "view" })
-	@ResponseBody
-	public ResponseDto view() {
-		logger.debug("MemberRankController --> view() - start");
-
-		MemberDto memberDto = new MemberDto();
-		memberDto.setCode(getLoginMemberCode());
-		MemberDto member = memberService.findMember(memberDto);
-
-		Map<String, Object> map = new TreeMap<String, Object>();
-
-		// 查询特权
-		MemberRankDto param = new MemberRankDto();
-
-		if (StringUtils.isEmpty(member.getMemberRankCode())) {
-			map.put("validRank", MemberRankValid.INVALID.getValue());
-			return ResponseDto.successResp(map);
-		}
-		param.setCode(member.getMemberRankCode());
-		MemberRankDto memberRankDto = memberRankService.findMemberRank(param);
-
-		map.put("amount", memberRankDto.getAmount());
-		map.put("rankCode", memberRankDto.getCode());
-		map.put("rankName", memberRankDto.getName());
-		// map.put("scale", memberRankDto.getScale());
-		map.put("rankExpireTime", member.getCloseMemberDate());
-		// map.put("bgUrl", shopDto.getBgUrl());
-		map.put("img", member.getAvotor());
-		map.put("memberName", member.getName());
-		map.put("remark", memberRankDto.getRemark());
-		FindMemberRankApplyPage findMemberRankApplyPage = new FindMemberRankApplyPage();
-		MemberRankApplyDto paramApply = new MemberRankApplyDto();
-		paramApply.setMemberCode(getLoginMemberCode());
-		paramApply.setDelFlag(DelFlag.N.getValue());
-		paramApply.setStatus(MemberRankApplyStatus.SUCCESS.getValue());
-		findMemberRankApplyPage.setParam(paramApply);
-		List<MemberRankApplyDto> list = memberRankApplyService.findMemberRankApplys(findMemberRankApplyPage);
-		if (list != null && list.size() > 0) {
-			map.put("giftCode", list.get(0).getGiftCode());
-		}
-
-		// 可用余额
-		AccountDto accountDto = accountService.findAccountByMbrCode(getLoginMemberCode());
-		if (null != accountDto) {
-			map.put("rankCashAmt", accountDto.getRankCashAmt());
-
-		}
-
-		// 校验特权是否有效
-		checkValidRank(member, map);
-
-		// 校验最大特权
-		// checkMaxRank(memberRankDto, map);
-
-		logger.debug("MemberRankController --> view(={}) - end");
-		return ResponseDto.successResp(map);
-	}
-
-	/**
 	 * 方法说明： 我的特权-申请-付款
 	 * 
 	 * @param 会员特权编码 memberRankCode 必填
@@ -227,8 +137,7 @@ public class MemberRankApplyController extends BaseController {
 		logger.debug("MemberRankControl --> apply() - start={}", memberRankApplyDto);
 
 		// 基础校验
-		if (memberRankApplyDto == null || StringUtils.isEmpty(memberRankApplyDto.getMemberRankCode())
-				|| StringUtils.isEmpty(memberRankApplyDto.getGiftCode())) {
+		if (memberRankApplyDto == null || StringUtils.isEmpty(memberRankApplyDto.getMemberRankCode())) {
 			return ResponseDto.createResp(false, ResponseCode.PARAM_ERROR.getCode(), ResponseCode.PARAM_ERROR.getMsg(),
 					null);
 		}
@@ -242,57 +151,22 @@ public class MemberRankApplyController extends BaseController {
 					ResponseCode.MEMBER_RANK_APPLY_NOT_FOUND.getMsg(), null);
 		}
 
-		// 如果有邀请人，校验邀请人是否存在
-		if (StringUtils.isNotEmpty(memberRankApplyDto.getMyInvite())) {
-
-			// 不能邀请自己
-			if (memberRankApplyDto.getMyInvite().equals(getLoginMemberCode())) {
-				return ResponseDto.getErrorResponse(ResponseCode.USER_NOT_FIND.getCode(), "不能邀请自己");
-			}
-
-			MemberDto dto = new MemberDto();
-			dto.setCode(memberRankApplyDto.getMyInvite());
-			MemberDto memberDto = memberService.findMember(dto);
-			if (null == memberDto) {
-				return ResponseDto.getErrorResponse(ResponseCode.USER_NOT_FIND.getCode(), "邀请人编号不正确！");
-			}
-		}
-
-		// 如果有特权尚未处理，禁止再次申请
-		// 需求变更-2019-09-20 让用户重新走流程，此处删除上一个未通过的申请
+		// 如果已经申请过同级特权
 		FindMemberRankApplyPage findMemberRankApplyPage = new FindMemberRankApplyPage();
 		MemberRankApplyDto param = new MemberRankApplyDto();
 		param.setMemberCode(getLoginMemberCode());
 		param.setDelFlag(DelFlag.N.getValue());
-		param.setStatus(MemberRankApplyStatus.WAIT.getValue());
+		param.setMemberRankCode(memberRankDto.getCode());
 		findMemberRankApplyPage.setParam(param);
 		List<MemberRankApplyDto> list = memberRankApplyService.findMemberRankApplys(findMemberRankApplyPage);
 		if (null != list && list.size() > 0) {
-//			return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_FAIL.getCode(),
-//					ResponseCode.MEMBER_RANK_APPLY_FAIL.getMsg(), null);
-			MemberRankApplyDto delDto = new MemberRankApplyDto();
-			delDto.setCode(list.get(0).getCode());
-			delDto.setDelFlag(DelFlag.Y.getValue());
-			memberRankApplyService.updateMemberRankApply(delDto);
+			MemberRankApplyDto delDto = list.get(0);
+			if (MemberRankApplyStatus.WAIT.getValue().equals(delDto.getStatus())) {
+				return ResponseDto.getErrorResponse("0", "已申请，请等待审核！");
+			} else {
+				return ResponseDto.getErrorResponse("0", "已缴纳该级别押金！");
+			}
 		}
-
-		/*
-		 * ShopDto paramShopDto = new ShopDto(); param.setCode(getLoginShopCode());
-		 * ShopDto rltShop = this.shopService.findShop(paramShopDto); if(null!=rltShop
-		 * && StringUtils.isNotEmpty(rltShop.getRankCode())) { //如果已经过期，清除特权信息
-		 * if(null!=rltShop.getRankExpireTime() &&
-		 * (rltShop.getRankExpireTime().getTime()<new Date().getTime())) { ShopDto
-		 * updShopDto = new ShopDto(); updShopDto.setCode(rltShop.getCode());
-		 * updShopDto.setRankCode(null); updShopDto.setRankExpireTime(null);
-		 * this.shopService.updateShop(updShopDto); } else {
-		 * //没过期，如果购买特权小于或等于现特权金额，不允许购买 MemberRankDto shopRankDto = new MemberRankDto();
-		 * shopRankDto.setCode(rltShop.getRankCode()); MemberRankDto rltShopRankDto =
-		 * memberRankService.findMemberRank(memberRankDto);
-		 * if(memberRankDto.getAmount().compareTo(rltShopRankDto.getAmount())<=0) {
-		 * return ResponseDto.createResp(false,
-		 * ResponseCode.MEMBER_RANK_APPLY_FAIL_DISABLED_BUY_DOWN.getCode(),
-		 * ResponseCode.MEMBER_RANK_APPLY_FAIL_DISABLED_BUY_DOWN.getMsg(), null); } } }
-		 */
 
 		// 添加申请纪录
 		MemberDto memberDto = new MemberDto();

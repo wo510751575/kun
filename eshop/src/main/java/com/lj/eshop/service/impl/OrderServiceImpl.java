@@ -383,7 +383,7 @@ public class OrderServiceImpl implements IOrderService {
 				orderDto.setMbrPhone(member.getPhone());
 				orderDto.setRevicerName(addrsDto.getReciverName());
 				orderDto.setRevicePhone(addrsDto.getReciverPhone());
-				orderDto.setStatus(OrderStatus.UNPAID.getValue());
+				orderDto.setStatus(OrderStatus.DQR.getValue());
 				orderDto.setMerchantCode(member.getMerchantCode());
 				if (isInvoice) {
 					orderDto.setIsInvoice(OrderInvoice.Y.getValue());
@@ -564,7 +564,7 @@ public class OrderServiceImpl implements IOrderService {
 		AssertUtils.notNullAndEmpty(orderDto.getOrderNo(), "订单编号不能为空");
 //		AssertUtils.notNullAndEmpty(orderDto.getShopCode(), "店铺编号不能为空");
 		try {
-			if (!orderDto.getStatus().equals(OrderStatus.SHIPPED.getValue())) {
+			if (!orderDto.getStatus().equals(OrderStatus.YQR.getValue())) {
 				return;
 			}
 
@@ -650,7 +650,7 @@ public class OrderServiceImpl implements IOrderService {
 			accountService.updateAccount(accountDto);
 
 			/* 状态流转至待评价 */
-			orderDto.setStatus(OrderStatus.UNEVL.getValue());
+			orderDto.setStatus(OrderStatus.COMPLETED.getValue());
 			this.updateOrder(orderDto);
 		} catch (TsfaServiceException e) {
 			logger.error(e.getMessage(), e);
@@ -730,7 +730,7 @@ public class OrderServiceImpl implements IOrderService {
 			if (orderDto.getAmt().compareTo(paymentDto.getAmount()) <= 0) {
 
 				/* 状态流转至待发货 */
-				orderDto.setStatus(OrderStatus.UNSHIPPED.getValue());
+				orderDto.setStatus(OrderStatus.DQR.getValue());
 				orderDto.setPayType(paymentDto.getPaymentMethod());
 				orderDto.setPayTime(new Date());
 				this.updateOrder(orderDto);
@@ -813,11 +813,11 @@ public class OrderServiceImpl implements IOrderService {
 		AssertUtils.notNullAndEmpty(orderDto.getCode(), "订单编号不能为空");
 		try {
 
-			if (orderDto != null && orderDto.getStatus().equals(OrderStatus.UNSHIPPED.getValue())) {
+			if (orderDto != null && orderDto.getStatus().equals(OrderStatus.CANCEL.getValue())) {
 				/* 状态流转至待收货 */
 				OrderDto upDto = new OrderDto();
 				upDto.setCode(orderDto.getCode());
-				upDto.setStatus(OrderStatus.SHIPPED.getValue());
+				upDto.setStatus(OrderStatus.CANCEL.getValue());
 				upDto.setExpressNo(expressNo);
 				upDto.setExpressName(expressName);
 				upDto.setShippingTime(new Date());
@@ -1119,7 +1119,7 @@ public class OrderServiceImpl implements IOrderService {
 			String areaName = province + city + area;
 			orderDto.setAreaName(areaName);
 			orderDto.setReciverZip(addrsDto.getReciverZip() == null ? "" : addrsDto.getReciverZip());
-			orderDto.setStatus(OrderStatus.UNPAID.getValue());
+			orderDto.setStatus(OrderStatus.CANCEL.getValue());
 			orderDto.setMerchantCode(member.getMerchantCode());
 			orderDto.setRemarks(remarks);
 			if (isInvoice) {
@@ -1408,7 +1408,7 @@ public class OrderServiceImpl implements IOrderService {
 		logger.info("autoReceipt----------------start");
 		/* 获取所有待收货订单 */
 		OrderDto paramOrderDto = new OrderDto();
-		paramOrderDto.setStatus(OrderStatus.SHIPPED.getValue());
+		paramOrderDto.setStatus(OrderStatus.CANCEL.getValue());
 		FindOrderPage findOrderPage = new FindOrderPage();
 		findOrderPage.setParam(paramOrderDto);
 		List<OrderDto> orderDtos = this.findOrders(findOrderPage);
@@ -1435,7 +1435,7 @@ public class OrderServiceImpl implements IOrderService {
 		logger.info("autoReview----------------start");
 		/* 获取所有待评价订单 */
 		OrderDto paramOrderDto = new OrderDto();
-		paramOrderDto.setStatus(OrderStatus.UNEVL.getValue());
+		paramOrderDto.setStatus(OrderStatus.CANCEL.getValue());
 		FindOrderPage findOrderPage = new FindOrderPage();
 		findOrderPage.setParam(paramOrderDto);
 		List<OrderDto> orderDtos = this.findOrders(findOrderPage);

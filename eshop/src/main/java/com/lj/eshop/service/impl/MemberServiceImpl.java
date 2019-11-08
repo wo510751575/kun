@@ -83,6 +83,7 @@ public class MemberServiceImpl implements IMemberService {
 			member.setMerchantCode(memberDto.getMerchantCode());
 			member.setMemberRankCode(memberDto.getMemberRankCode());
 			member.setPassword(MD5.encryptByMD5(memberDto.getPassword()));
+			member.setShareCode(memberDto.getShareCode());
 			memberDao.insertSelective(member);
 			memberDto.setCode(member.getCode());
 			memberDto.setCreateTime(member.getCreateTime());
@@ -167,6 +168,7 @@ public class MemberServiceImpl implements IMemberService {
 			member.setCloseMemberDate(memberDto.getCloseMemberDate());
 			member.setMemberRankCode(memberDto.getMemberRankCode());
 			member.setPassword(memberDto.getPassword());
+			member.setShareCode(memberDto.getShareCode());
 			AssertUtils.notUpdateMoreThanOne(memberDao.updateByPrimaryKeySelective(member));
 			logger.debug("updateMember(MemberDto) - end - return");
 		} catch (TsfaServiceException e) {
@@ -215,6 +217,7 @@ public class MemberServiceImpl implements IMemberService {
 			findMemberReturn.setMemberRankCode(member.getMemberRankCode());
 			findMemberReturn.setMemberRankName(member.getMemberRankName());
 			findMemberReturn.setPassword(member.getPassword());
+			findMemberReturn.setShareCode(member.getShareCode());
 			logger.debug("findMember(MemberDto) - end - return value={}", findMemberReturn);
 			return findMemberReturn;
 		} catch (TsfaServiceException e) {
@@ -262,6 +265,27 @@ public class MemberServiceImpl implements IMemberService {
 		}
 		logger.debug("findMembers(MemberDto memberDto={}) - end");
 		return returnList;
+	}
+
+	@Override
+	public MemberDto findMemberByShareCode(String shareCode) throws TsfaServiceException {
+		logger.debug("findMemberByShareCode(String shareCode={}) - start", shareCode);
+
+		AssertUtils.notNullAndEmpty(shareCode, "邀请码不能为空");
+		try {
+			MemberDto member = memberDao.findMemberByShareCode(shareCode);
+			if (member == null) {
+				return null;
+			}
+			logger.debug("findMemberByShareCode(MemberDto) - end - return value={}", member);
+			return member;
+		} catch (TsfaServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("查找会员信息信息错误！", e);
+			throw new TsfaServiceException(ErrorCode.MEMBER_FIND_ERROR, "查找会员信息信息错误！", e);
+		}
 	}
 
 }

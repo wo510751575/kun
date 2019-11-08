@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>会员特权管理</title>
+	<title>押金管理</title>
 	<meta name="decorator" content="default"/>
 	<%@include file="/WEB-INF/views/include/treetable.jsp" %>
 	<script type="text/javascript">
@@ -15,7 +15,7 @@
 				var code = $(this).attr("data-code");
 				
 				// 正常打开	
-				top.$.jBox.open("iframe:${ctx}/member/memberRank/form?code="+code+"&isView="+true,"会员特权详情", 680, 360,{//宽高
+				top.$.jBox.open("iframe:${ctx}/member/memberRank/form?code="+code+"&isView="+true,"押金详情", 680, 360,{//宽高
 					id:9527,
 					draggable: true,
 					showClose: true,
@@ -63,8 +63,8 @@
 <body>
 <div class="container">
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberRank/">会员特权列表</a></li>
-		<shiro:hasPermission name="member:memberRank:edit"><li><a href="${ctx}/member/memberRank/form">会员特权添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/member/memberRank/">押金列表</a></li>
+		<shiro:hasPermission name="member:memberRank:edit"><li><a href="${ctx}/member/memberRank/form">押金添加</a></li></shiro:hasPermission>
 	</ul>
 		<form id="searchForm" action="${ctx}/member/memberRank/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -82,9 +82,8 @@
 	<tags:message content="${message}"/>
 		<table id="treeTable" class="table table-striped table-bordered table-condensed hide">
 			<thead><tr>
-			<th>特权名称</th>
+			<th>押金名称</th>
 			<th>会员费用</th>
-<!-- 			<th>穿戴次数</th> -->
 			<th>顺序</th>
 			<th>录入时间</th>
 			<th>操作</th>

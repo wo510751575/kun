@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>会员特权申请管理</title>
+	<title>会员押金申请管理</title>
 	<meta name="decorator" content="default"/>
 	<%@include file="/WEB-INF/views/include/treetable.jsp" %>
 	<script type="text/javascript">
@@ -15,7 +15,7 @@
 				var code = $(this).attr("data-code");
 				
 				// 正常打开	
-				top.$.jBox.open("iframe:${ctx}/member/memberRankApply/form?code="+code+"&isView="+true,"会员特权申请详情", 680, 360,{//宽高
+				top.$.jBox.open("iframe:${ctx}/member/memberRankApply/form?code="+code+"&isView="+true,"会员押金申请详情", 680, 360,{//宽高
 					id:9527,
 					draggable: true,
 					showClose: true,
@@ -63,8 +63,8 @@
 <body>
 <div class="container">
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/memberRankApply/">会员特权申请列表</a></li>
-		<%-- <shiro:hasPermission name="member:memberRankApply:edit"><li><a href="${ctx}/member/memberRankApply/form">会员特权申请添加</a></li></shiro:hasPermission> --%>
+		<li class="active"><a href="${ctx}/member/memberRankApply/">会员押金申请列表</a></li>
+		<%-- <shiro:hasPermission name="member:memberRankApply:edit"><li><a href="${ctx}/member/memberRankApply/form">会员押金申请添加</a></li></shiro:hasPermission> --%>
 	</ul>
 		<form id="searchForm" action="${ctx}/member/memberRankApply/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -95,7 +95,7 @@
 			<tr>
 			<th>会员code</th>
 			<th>会员名称</th>
-			<th>申请特权</th>
+			<th>申请押金</th>
 			<th>申请时间</th>
 			<th>审核时间</th>
 			<th>审核状态</th>

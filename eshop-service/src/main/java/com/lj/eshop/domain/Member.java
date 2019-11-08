@@ -71,6 +71,18 @@ public class Member {
 
 	/** 会员类型名称 */
 	private String memberRankName;
+	/**
+	 * 邀请码
+	 */
+	private String shareCode;
+
+	public String getShareCode() {
+		return shareCode;
+	}
+
+	public void setShareCode(String shareCode) {
+		this.shareCode = shareCode;
+	}
 
 	public String getMemberRankName() {
 		return memberRankName;
@@ -302,18 +314,15 @@ public class Member {
 		this.merchantCode = merchantCode;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Member [code=" + code + ", name=" + name + ", phone=" + phone + ", wxNo=" + wxNo + ", status=" + status
 				+ ", type=" + type + ", avotor=" + avotor + ", province=" + province + ", city=" + city + ", area="
 				+ area + ", myInvite=" + myInvite + ", grade=" + grade + ", createTime=" + createTime + ", creater="
 				+ creater + ", openId=" + openId + ", sex=" + sex + ", sourceFrom=" + sourceFrom + ", merchantCode="
-				+ merchantCode + "]";
+				+ merchantCode + ", openMemberDate=" + openMemberDate + ", closeMemberDate=" + closeMemberDate
+				+ ", memberRankCode=" + memberRankCode + ", password=" + password + ", memberRankName=" + memberRankName
+				+ ", shareCode=" + shareCode + "]";
 	}
 
 }

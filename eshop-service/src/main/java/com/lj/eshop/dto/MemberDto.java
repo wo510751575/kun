@@ -88,6 +88,18 @@ public class MemberDto implements Serializable {
 	 * 邀请人电话
 	 */
 	private String myInvitePhone;
+	/**
+	 * 邀请码
+	 */
+	private String shareCode;
+
+	public String getShareCode() {
+		return shareCode;
+	}
+
+	public void setShareCode(String shareCode) {
+		this.shareCode = shareCode;
+	}
 
 	public String getMyInviteName() {
 		return myInviteName;
@@ -357,7 +369,8 @@ public class MemberDto implements Serializable {
 				+ ", creater=" + creater + ", openId=" + openId + ", sex=" + sex + ", sourceFrom=" + sourceFrom
 				+ ", merchantCode=" + merchantCode + ", wxNoAll=" + wxNoAll + ", openMemberDate=" + openMemberDate
 				+ ", closeMemberDate=" + closeMemberDate + ", memberRankCode=" + memberRankCode + ", memberRankName="
-				+ memberRankName + ", password=" + password + "]";
+				+ memberRankName + ", password=" + password + ", myInviteName=" + myInviteName + ", myInvitePhone="
+				+ myInvitePhone + ", shareCode=" + shareCode + "]";
 	}
 
 }

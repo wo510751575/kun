@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-<title>会员特权</title>
+<title>会员押金</title>
 <meta name="decorator" content="default" />
 <style>
 .img-div>div {

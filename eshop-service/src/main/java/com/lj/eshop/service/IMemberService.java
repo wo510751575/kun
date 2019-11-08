@@ -104,4 +104,6 @@ public interface IMemberService {
 	 *         TsfaServiceException @return: MemberDto @throws
 	 */
 	public List<String> findMemberCodesByInvite(String myInvite) throws TsfaServiceException;
+
+	public MemberDto findMemberByShareCode(String shareCode) throws TsfaServiceException;
 }
