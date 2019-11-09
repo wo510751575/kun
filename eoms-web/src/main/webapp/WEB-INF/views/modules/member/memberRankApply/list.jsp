@@ -93,7 +93,7 @@
 		<table id="treeTable" class="table table-striped table-bordered table-condensed hide">
 			<thead>
 			<tr>
-			<th>会员code</th>
+			<th>会员手机号</th>
 			<th>会员名称</th>
 			<th>申请押金</th>
 			<th>申请时间</th>
@@ -105,7 +105,7 @@
 			<tbody>
 			<c:forEach items="${page.list}" var="item">
 				<tr id="${item.code}">
-					<td title="${item.memberCode}">${item.memberCode}</td>
+					<td title="${item.myInvite}">${item.myInvite}</td>
 					<td >${item.memberName}</td>
 					<td >${item.memberRankName}</td>
 					<td> <fmt:formatDate value="${item.applyTime}" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
@@ -121,7 +121,7 @@
 						</c:forEach>
 					</td>
 					<!--为空或者空才允许审核-->
-						<%-- <shiro:hasPermission name="member:memberRankApply:edit">
+						<shiro:hasPermission name="member:memberRankApply:edit">
 							<c:choose> 
 									<c:when test="${(empty item.status) or (item.status eq 0)}">
 										<td nowrap>
@@ -134,7 +134,7 @@
 										</td>
 									</c:otherwise>
 							</c:choose>
-						</shiro:hasPermission> --%>
+						</shiro:hasPermission>
 				</tr>
 			</c:forEach>
 			</tbody>

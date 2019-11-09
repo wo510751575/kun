@@ -100,12 +100,9 @@
 			<li><label>订单号：</label>
 		    	<input type="text" name="likeOrderNo" value="${param.likeOrderNo}" class="input-medium" maxlength="100" placeholder="订单号">
 			</li>
-		    <li><label>会员姓名：</label>
-		    	<input type="text" name="mbrName"  value="${param.mbrName}" class="input-medium" maxlength="100" placeholder="会员姓名">
+		    <li><label>接单人姓名：</label>
+		    	<input type="text" name="mbrName"  value="${param.mbrName}" class="input-medium" maxlength="100" placeholder="接单人姓名">
 			</li>
-			<%-- <li><label>店铺名称：</label>
-				<input type="text" name="shopName" value="${param.shopName}" class="input-medium" maxlength="100" placeholder="店铺名称">
-			</li> --%>
 			<li><label>订单状态：</label>
 				<select style="width: 177px;" name="status">
                     <option value="">全部</option>
@@ -133,7 +130,7 @@
 		<thead>
 			<tr>
 				<th>订单号</th>
-				<th>下单人姓名</th>
+				<th>接单人姓名</th>
 				<th>订单金额</th>
 				<th>订单状态</th>
 				<th>收款帐号</th>
@@ -171,20 +168,12 @@
 					${item.remarks}
 				</td>
 				<shiro:hasPermission name="order:order:edit"><td nowrap>
-						<!--待发货状态 -->
-						<c:if test="${item.status=='1'}">
-								<a href="javascript:;" class="shippingBtn" data-code="${item.code}" data-orderNo="${item.orderNo}">发货</a>
-						</c:if>
 						<!--待支付状态 -->
 						<c:if test="${item.status=='0'}">
-<%-- 								<a href="javascript:;" class="payBtn" data-code="${item.code}" data-orderNo="${item.orderNo}">线下支付</a> --%>
-							<a href="${ctx}/order/order/payment?code=${item.code}&orderNo=${item.orderNo}" onclick="return confirmx('是否确认已线下支付？', this.href)">线下支付</a>
-						</c:if>
-						
-						<c:if test="${item.status!='9' && item.status!='6'}">
+							<a href="${ctx}/order/order/payment?code=${item.code}&orderNo=${item.orderNo}" onclick="return confirmx('是否确认已收款？', this.href)">已收款</a>
 							<a href="${ctx}/order/order/cancel?code=${item.code}" onclick="return confirmx('是否确认取消订单？', this.href)">取消</a>
 						</c:if>
-						<a  href="${ctx}/order/order/view?code=${item.code}" >详情</a>
+<%-- 						<a  href="${ctx}/order/order/view?code=${item.code}" >详情</a> --%>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

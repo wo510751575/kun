@@ -1,5 +1,10 @@
 package com.lj.eshop.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Copyright &copy; 2017-2020  All rights reserved.
  *
@@ -14,17 +19,10 @@ import org.junit.Test;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.exception.TsfaServiceException;
 import com.lj.base.mvc.web.test.SpringTestCase;
-
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import com.lj.eshop.dto.AccWaterDto;
 import com.lj.eshop.dto.FindAccWaterPage;
 import com.lj.eshop.emus.AccWaterAccType;
 import com.lj.eshop.emus.AccWaterBizType;
-import com.lj.eshop.emus.AccWaterPayType;
 import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
@@ -40,14 +38,12 @@ import com.lj.eshop.service.IAccWaterService;
  * @author lhy
  * 
  * 
- * CreateDate: 2017-08-22
+ *         CreateDate: 2017-08-22
  */
-public class AccWaterServiceImplTest extends SpringTestCase{
+public class AccWaterServiceImplTest extends SpringTestCase {
 
 	@Resource
 	IAccWaterService accWaterService;
-
-
 
 	/**
 	 * 
@@ -60,30 +56,30 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 	 *
 	 */
 	@Test
-	public void addAccWater() throws TsfaServiceException{
+	public void addAccWater() throws TsfaServiceException {
 		AccWaterDto accWaterDto = new AccWaterDto();
-		//add数据录入
+		// add数据录入
 		accWaterDto.setCode("Code");
-		accWaterDto.setAccWaterNo("AccWaterNo"+System.currentTimeMillis());
+		accWaterDto.setAccWaterNo("AccWaterNo" + System.currentTimeMillis());
 		accWaterDto.setAccDate(new Date());
 		accWaterDto.setAccSource(AccWaterSource.DEPOSIT.getValue());
 		accWaterDto.setAccType(AccWaterAccType.MANUAL.getValue());
-		accWaterDto.setTranOrderNo("orderNo"+System.currentTimeMillis());
+		accWaterDto.setTranOrderNo("orderNo" + System.currentTimeMillis());
 		accWaterDto.setAmt(new BigDecimal(1));
-		accWaterDto.setAccNo("AccNo"+((System.currentTimeMillis()+"").substring(0, 10)));
+		accWaterDto.setAccNo("AccNo" + ((System.currentTimeMillis() + "").substring(0, 10)));
 		accWaterDto.setStatus("1");
-		accWaterDto.setPayType(AccWaterPayType.ALI.getValue());
+//		accWaterDto.setPayType(AccWaterPayType.ALI.getValue());
 		accWaterDto.setBeforeAmt(new BigDecimal(1));
 		accWaterDto.setAfterAmt(new BigDecimal(2));
 		accWaterDto.setBizType(AccWaterBizType.REFUND.getValue());
 		accWaterDto.setUpdateTime(new Date());
 		accWaterDto.setOpCode("OpCode");
 		accWaterDto.setWaterType(AccWaterType.ADD.getValue());
-		
+
 		accWaterService.addAccWater(accWaterDto);
-		
+
 	}
-	
+
 	/**
 	 * 
 	 *
@@ -95,9 +91,9 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 	 *
 	 */
 	@Test
-	public void updateAccWater() throws TsfaServiceException{
+	public void updateAccWater() throws TsfaServiceException {
 		AccWaterDto accWaterDto = new AccWaterDto();
-		//update数据录入
+		// update数据录入
 		accWaterDto.setCode("Code");
 		accWaterDto.setAccWaterNo("AccWaterNo");
 		accWaterDto.setAccDate(new Date());
@@ -115,9 +111,9 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 		accWaterDto.setOpCode("OpCode");
 
 		accWaterService.updateAccWater(accWaterDto);
-		
+
 	}
-	
+
 	/**
 	 * 
 	 *
@@ -129,12 +125,12 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 	 *
 	 */
 	@Test
-	public void findAccWater() throws TsfaServiceException{
+	public void findAccWater() throws TsfaServiceException {
 		AccWaterDto findAccWater = new AccWaterDto();
 		findAccWater.setCode("111");
 		accWaterService.findAccWater(findAccWater);
 	}
-	
+
 	/**
 	 * 
 	 *
@@ -146,13 +142,13 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 	 *
 	 */
 	@Test
-	public void findAccWaterPage() throws TsfaServiceException{
+	public void findAccWaterPage() throws TsfaServiceException {
 		FindAccWaterPage findAccWaterPage = new FindAccWaterPage();
 		findAccWaterPage.setEndTime(new Date());
 		Page<AccWaterDto> page = accWaterService.findAccWaterPage(findAccWaterPage);
 		Assert.assertNotNull(page);
 	}
-	
+
 	/**
 	 * 
 	 *
@@ -164,7 +160,7 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 	 *
 	 */
 	@Test
-	public void findAccWaters() throws TsfaServiceException{
+	public void findAccWaters() throws TsfaServiceException {
 		FindAccWaterPage findAccWaterPage = new FindAccWaterPage();
 //		AccWaterDto accWaterDto = new AccWaterDto();
 //		accWaterDto.setAccSource(AccWaterSource.DEPOSIT.getValue());
@@ -177,31 +173,31 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 		List<AccWaterDto> page = accWaterService.findAccWaters(findAccWaterPage);
 		Assert.assertNotNull(page);
 		System.out.println(page.size());
-		
+
 	}
-	
+
 	@Test
-	public void findIncomeAmt() throws TsfaServiceException{
-		/*当天收益*/
-		Date now =new Date();
-		Calendar calendar =  org.apache.commons.lang.time.DateUtils.toCalendar(now);
-		//将小时至0  
-		calendar.set(Calendar.HOUR_OF_DAY, 0);  
-		//将分钟至0  
-		calendar.set(Calendar.MINUTE, 0);  
-		//将秒至0  
-		calendar.set(Calendar.SECOND,0);  
-		Date startTime= calendar.getTime();
-		
-		//将小时至23  
-		calendar.set(Calendar.HOUR_OF_DAY, 23);  
-		//将分钟至59  
-		calendar.set(Calendar.MINUTE, 59);  
-		//将秒至59  
-		calendar.set(Calendar.SECOND,59);  
-		Date endTime= calendar.getTime();
-		
-		/*统计流水收益*/
+	public void findIncomeAmt() throws TsfaServiceException {
+		/* 当天收益 */
+		Date now = new Date();
+		Calendar calendar = org.apache.commons.lang.time.DateUtils.toCalendar(now);
+		// 将小时至0
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		// 将分钟至0
+		calendar.set(Calendar.MINUTE, 0);
+		// 将秒至0
+		calendar.set(Calendar.SECOND, 0);
+		Date startTime = calendar.getTime();
+
+		// 将小时至23
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		// 将分钟至59
+		calendar.set(Calendar.MINUTE, 59);
+		// 将秒至59
+		calendar.set(Calendar.SECOND, 59);
+		Date endTime = calendar.getTime();
+
+		/* 统计流水收益 */
 		AccWaterDto paramWaterDto = new AccWaterDto();
 		paramWaterDto.setAccCode("LJ_1eb863856573406c956c0478abf47111");
 		paramWaterDto.setWaterType(AccWaterType.ADD.getValue());
@@ -211,7 +207,7 @@ public class AccWaterServiceImplTest extends SpringTestCase{
 		findAccWaterPage.setParam(paramWaterDto);
 		findAccWaterPage.setStartTime(startTime);
 		findAccWaterPage.setEndTime(endTime);
-		BigDecimal decimal= accWaterService.findIncomeAmt(findAccWaterPage);
+		BigDecimal decimal = accWaterService.findIncomeAmt(findAccWaterPage);
 		System.out.println(decimal);
 	}
 }

@@ -44,8 +44,6 @@ public class TokenHandlerInterceptor implements HandlerInterceptor {
 	private static final String B_LOGIN = "1";
 	/** 2:仅C端登录访问 */
 	private static final String C_LOGIN = "2";
-	/** 3:仅APP登录 */
-	private static final String B_APP_LOGIN = "3";
 
 	/**
 	 * 前置拦截处理逻辑，验证用户是否登录

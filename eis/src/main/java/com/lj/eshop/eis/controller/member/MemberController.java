@@ -17,6 +17,7 @@ import com.lj.eshop.eis.dto.TokenDto;
 import com.lj.eshop.eis.service.IUserLoginService;
 import com.lj.eshop.eis.utils.AuthCodeUtils;
 import com.lj.eshop.emus.CodeCheckBizType;
+import com.lj.eshop.emus.MemberStatus;
 import com.lj.eshop.service.IMemberService;
 import com.lj.eshop.service.IOrderService;
 
@@ -48,7 +49,7 @@ public class MemberController extends BaseController {
 			return ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR);
 		}
 		// 校验验证码
-		AuthCodeUtils.validAuthCode(param.getPhone(), CodeCheckBizType.LOGIN.getValue(), authCode,
+		AuthCodeUtils.validAuthCode(param.getPhone(), CodeCheckBizType.REG.getValue(), authCode,
 				AuthCodeUtils.AUTH_CODE_VALID_TIME);
 
 		MemberDto shareDto = memberService.findMemberByShareCode(param.getShareCode());
@@ -60,7 +61,10 @@ public class MemberController extends BaseController {
 		if (memberDto != null) {
 			return ResponseDto.getErrorResponse(ResponseCode.PHONE_EXIST);
 		}
-		memberService.addMember(memberDto);
+
+		param.setStatus(MemberStatus.NORMAL.getValue());
+		param.setMerchantCode(shareDto.getMerchantCode());
+		memberService.addMember(param);
 		return ResponseDto.successResp();
 	}
 

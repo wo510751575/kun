@@ -18,7 +18,6 @@ import com.lj.eshop.dto.FindOrderPage;
 import com.lj.eshop.dto.OrderDto;
 import com.lj.eshop.dto.OrderRetireDto;
 import com.lj.eshop.dto.PaymentDto;
-import com.lj.eshop.dto.ProductSkuDto;
 import com.lj.eshop.dto.ShopCarDto;
 
 /**
@@ -117,7 +116,7 @@ public interface IOrderService {
 	 * @param invoiceInfo  发票明细
 	 * @return
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public List<OrderDto> createByCar(List<ShopCarDto> shopCarDtos, AddrsDto addrsDto, boolean isInvoice,
@@ -131,7 +130,7 @@ public interface IOrderService {
 	 *
 	 * @param orderDto
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public void confirm(OrderDto orderDto);
@@ -143,7 +142,7 @@ public interface IOrderService {
 	 *
 	 * @param order
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public void complete(OrderDto orderDto);
@@ -155,7 +154,7 @@ public interface IOrderService {
 	 *
 	 * @param orderDto
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public void cancel(OrderDto orderDto);
@@ -169,7 +168,7 @@ public interface IOrderService {
 	 * @param amt      支付金额
 	 * @param payType  支付方式
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public void payment(PaymentDto paymentDto);
@@ -181,7 +180,7 @@ public interface IOrderService {
 	 *
 	 * @param orderDto
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public void refunds(OrderDto orderDto);
@@ -193,7 +192,7 @@ public interface IOrderService {
 	 *
 	 * @param orderDto
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public void shipping(OrderDto orderDto, String expressNo, String expressName);
@@ -206,7 +205,7 @@ public interface IOrderService {
 	 * @param orderDto
 	 * @param orderRetireDto
 	 *
-	 * @author  CreateDate: 2017年8月28日
+	 * @author CreateDate: 2017年8月28日
 	 *
 	 */
 	public void returns(OrderRetireDto orderRetireDto, String failReason);
@@ -225,12 +224,10 @@ public interface IOrderService {
 	 * @param invoiceInfo  发票明细
 	 * @return
 	 *
-	 * @author  CreateDate: 2017年8月30日
+	 * @author CreateDate: 2017年8月30日
 	 *
 	 */
-	public OrderDto createOrder(ProductSkuDto productSkuDto, String myInvite, Integer cnt, AddrsDto addrsDto,
-			boolean isInvoice, String invoiceTitle, String invoiceInfo, String remarks, String mbrType, String province,
-			String city, String area);
+	public OrderDto createOrder(String mbrCode, BigDecimal amt, String payType);
 
 	/**
 	 * 
@@ -241,7 +238,7 @@ public interface IOrderService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月1日
+	 * @author CreateDate: 2017年9月1日
 	 *
 	 */
 	public Page<OrderDto> findOrderEisPage(FindOrderPage findOrderPage) throws TsfaServiceException;
@@ -254,7 +251,7 @@ public interface IOrderService {
 	 * @param findOrderPage
 	 * @return
 	 *
-	 * @author  CreateDate: 2017年9月5日
+	 * @author CreateDate: 2017年9月5日
 	 *
 	 */
 	public BigDecimal findAmtSum(FindOrderPage findOrderPage) throws TsfaServiceException;
@@ -268,7 +265,7 @@ public interface IOrderService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月5日
+	 * @author CreateDate: 2017年9月5日
 	 *
 	 */
 	public int findOrderPageCount(FindOrderPage findOrderPage) throws TsfaServiceException;
@@ -282,7 +279,7 @@ public interface IOrderService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月8日
+	 * @author CreateDate: 2017年9月8日
 	 *
 	 */
 	public OrderDto findOrderByOrderNo(String orderNo) throws TsfaServiceException;
@@ -295,7 +292,7 @@ public interface IOrderService {
 	 * @param order
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月11日
+	 * @author CreateDate: 2017年9月11日
 	 *
 	 */
 	public void review(OrderDto orderDto) throws TsfaServiceException;
@@ -329,7 +326,7 @@ public interface IOrderService {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月15日
+	 * @author CreateDate: 2017年9月15日
 	 *
 	 */
 	public void autoReceipt() throws TsfaServiceException;
@@ -341,7 +338,7 @@ public interface IOrderService {
 	 *
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月15日
+	 * @author CreateDate: 2017年9月15日
 	 *
 	 */
 	public void autoReview() throws TsfaServiceException;
@@ -355,7 +352,7 @@ public interface IOrderService {
 	 * @return
 	 * @throws TsfaServiceException
 	 *
-	 * @author  CreateDate: 2017年9月20日
+	 * @author CreateDate: 2017年9月20日
 	 *
 	 */
 	public List<Map<String, Object>> findOrderGroupStatus(FindOrderPage findOrderPage) throws TsfaServiceException;

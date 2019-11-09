@@ -21,8 +21,7 @@ package com.lj.eshop.emus;
  * 		CreateDate: 2017年8月28日
  */
 public enum OrderStatus {
-	DQR("0", "待确认"), YQR("1", "已确认"), COMPLETED("2", "已完成"), RETURNS("3", "申诉中"), CHANGE("4", "被申诉"),
-	CANCEL("5", "已取消"),;
+	DQR("0", "待确认"), COMPLETED("2", "已完成"), RETURNS("3", "申诉中"), CHANGE("4", "被申诉"), CANCEL("5", "已取消"),;
 
 	OrderStatus(String value, String chName) {
 		this.value = value;

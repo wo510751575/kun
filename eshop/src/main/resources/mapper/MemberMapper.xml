@@ -141,7 +141,7 @@
 		where my_invite =#{myInvite,jdbcType=VARCHAR}
 	</select>
 	
-	<select id="findMemberByShareCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="findMemberByShareCode" resultMap="FindResultMap" parameterType="java.lang.String">
 		select 
 	    <include refid="Base_Column_List" />
 	    from t_member m

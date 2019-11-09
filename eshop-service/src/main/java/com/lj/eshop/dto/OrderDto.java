@@ -114,6 +114,15 @@ public class OrderDto implements Serializable {
 	private ProductGiftDto productGiftDto;
 	/** 邀请人信息 */
 	private MemberDto myInviteDto;
+	private List<String> statuss;
+
+	public List<String> getStatuss() {
+		return statuss;
+	}
+
+	public void setStatuss(List<String> statuss) {
+		this.statuss = statuss;
+	}
 
 	public MemberDto getMyInviteDto() {
 		return myInviteDto;
@@ -516,7 +525,7 @@ public class OrderDto implements Serializable {
 	 * 方法说明：计算总提成价格（前端需要）
 	 *
 	 *
-	 * @author  CreateDate: 2017年9月19日
+	 * @author CreateDate: 2017年9月19日
 	 *
 	 */
 	public BigDecimal getGapPrice() {

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.util.AssertUtils;
+import com.lj.base.core.util.GUID;
 import com.lj.base.exception.TsfaServiceException;
 import com.lj.eshop.constant.ErrorCode;
 import com.lj.eshop.dao.IAccountInfoDao;
@@ -53,11 +54,12 @@ public class AccountInfoServiceImpl implements IAccountInfoService {
 		try {
 			AccountInfo accountInfo = new AccountInfo();
 			// add数据录入
-			accountInfo.setCode(accountInfoDto.getCode());
+			accountInfo.setCode(GUID.generateCode());
 			accountInfo.setName(accountInfoDto.getName());
 			accountInfo.setAccount(accountInfoDto.getAccount());
 			accountInfo.setPid(accountInfoDto.getPid());
 			accountInfo.setMbrCode(accountInfoDto.getMbrCode());
+			accountInfo.setType(accountInfoDto.getType());
 			accountInfoDao.insertSelective(accountInfo);
 			logger.debug("addAccountInfo(AccountInfoDto) - end - return");
 		} catch (TsfaServiceException e) {
@@ -107,6 +109,7 @@ public class AccountInfoServiceImpl implements IAccountInfoService {
 			accountInfo.setAccount(accountInfoDto.getAccount());
 			accountInfo.setPid(accountInfoDto.getPid());
 			accountInfo.setMbrCode(accountInfoDto.getMbrCode());
+			accountInfo.setType(accountInfoDto.getType());
 			AssertUtils.notUpdateMoreThanOne(accountInfoDao.updateByPrimaryKeySelective(accountInfo));
 			logger.debug("updateAccountInfo(AccountInfoDto) - end - return");
 		} catch (TsfaServiceException e) {
@@ -138,7 +141,7 @@ public class AccountInfoServiceImpl implements IAccountInfoService {
 			findAccountInfoReturn.setAccount(accountInfo.getAccount());
 			findAccountInfoReturn.setPid(accountInfo.getPid());
 			findAccountInfoReturn.setMbrCode(accountInfo.getMbrCode());
-
+			findAccountInfoReturn.setType(accountInfo.getType());
 			logger.debug("findAccountInfo(AccountInfoDto) - end - return value={}", findAccountInfoReturn);
 			return findAccountInfoReturn;
 		} catch (TsfaServiceException e) {

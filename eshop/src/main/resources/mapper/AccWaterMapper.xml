@@ -365,8 +365,11 @@
  	<!-- 查资金流水 ，金额 如果是商品提成则查详细里的提成金额， 如果非商品则查 流水中的金额 -->
  	<select id="findAcctWaterDetailPage" resultMap="FindResultMap"
 		parameterType="com.lj.eshop.dto.FindAccWaterPage">
- 		SELECT t.code,t.tran_order_no,t.biz_type,t.acc_source,t.water_type,t.acc_date,o.product_name,CASE WHEN o.`code`is not null THEN ((o.cnt-o.return_cnt)*o.gap_price) ELSE t.amt END amt  from t_acc_water t
-		left JOIN t_order_detail o on t.tran_order_no=o.order_no and t.water_type=2 and t.biz_type=3 and ((o.cnt-o.return_cnt)*o.gap_price) >0
+ 		SELECT t.code,t.tran_order_no,t.amt,t.biz_type,t.acc_source,t.water_type,t.acc_date,t.pay_type,
+		o.amt gapPrice  
+		from t_acc_water t
+		left JOIN t_order o on t.tran_order_no=o.order_no  
+		and t.water_type=2 and t.biz_type=3 
 		<include refid="findAcctWaterDetailPage_condition" />
 		<if test="sortBy!=null and sortBy=='create_time'.toString() ">
 			 ORDER BY t.acc_date ${sortDir}

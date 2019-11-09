@@ -90,118 +90,17 @@
 			 	   	-->
 			 	   	<property name="permissions">
 		             	 <map>
-		             		<!--<entry key="/wx/login/again" value="1,2" />
-		             		<entry key="/wx//openid/bind" value="1,2" />
-		             		BC可访问的
-		                 	<entry key="/product/evl/like" value="1,2" />
-		                 	
-		                 	订单相关
-		                 	<entry key="/order/createByCar" value="1,2" />
-		                 	<entry key="/order/create" value="1,2" />
-		                 	<entry key="/order/complete" value="1,2" />
-		                 	<entry key="/order/cancel" value="1,2" />
-		                 	<entry key="/product/evl" value="1,2" />
-		                 	<entry key="/shopCar/myShopCar" value="1,2" />
-		                 	<entry key="/shopCar/add" value="1,2" />
-		                 	<entry key="/shopCar/editCnt" value="1,2" />
-		                 	<entry key="/shopCar/del" value="1,2" />
-		                 	<entry key="/shopCar/getByIds" value="1,2" />
-		                 	<entry key="/myAttention/attention" value="1,2" />
-		                 	<entry key="/shop/myAttentionList" value="1,2" />
-		                 	<entry key="/member/my_c" value="1,2" />
-		                 	<entry key="/shop/status" value="1,2" />
-		                 	<entry key="/shop/openShopOne" value="1,2" />
-		                 	<entry key="/shop/openShopTwo" value="1,2" />
-		                 	
-		                 	退货相关
-		                 	<entry key="/order/retire/list" value="1,2" />
-		                 	<entry key="/order/retire/view" value="1,2" />
-		                 	<entry key="/order/retire/add" value="1,2" />
-		                 	
-		                 	地址相关
-		                 	<entry key="/addrs/list" value="1,2" />
-		                 	<entry key="/addrs/view" value="1,2" />
-		                 	<entry key="/addrs/add" value="1,2" />
-		                 	<entry key="/addrs/upd" value="1,2" />
-		                 	<entry key="/addrs/del" value="1,2" />
-		                 	<entry key="/addrs/setDefault" value="1,2" />
-		                 	<entry key="/mbr/img/upd" value="1,2" />
-		                 	
-		                 	我的消息
-		                 	<entry key="/message/list" value="1,2,3" />
-		                 	<entry key="/message/unRead" value="1,2" />
-		                 	支付相关
-		                 	<entry key="/pay/unifiedorder" value="1,2" />
-		                 	提现相关
-		                 	<entry key="/acct/index" value="1,2" />
-		                 	<entry key="/bankcard/list" value="1,2" />
-		                 	<entry key="/bankcard/save" value="1,2" />
-		                 	<entry key="/acct/withdraw/apply" value="1,2" />
-		                 	<entry key="/acct/withdraw/list" value="1,2" />
-		                 	<entry key="/acct/withdraw/detail" value="1,2" />
-		                 	<entry key="/acct/water/income/list" value="1,2" />
-		                 	<entry key="/acct/water/all/list" value="1,2" />
-		                 	需要登录的，不限制BC端谁登录 END
-		                 	
-		                 	需要B登录的
-		                 	<entry key="/product/index" value="1,2,3" />
-		                 	<entry key="/product/list" value="1,2,3" />
-		                 	<entry key="/shop/myShop" value="1,2" />
-		                 	<entry key="/shop/editShop" value="1,2" />
-		                 	<entry key="/shop/productStatus" value="1,2" />
-		                 	<entry key="/shop/product/status/find" value="1,2" />
-		                 	<entry key="/mbr/sec/cnt/index" value="1,2" />
-		                 	<entry key="/mbr/sec/cnt/auth/code" value="1,2" />
-		                 	<entry key="/mbr/sec/cnt/auth/verify" value="1,2" />
-		                 	<entry key="/mbr/sec/cnt/phone/update" value="1,2" />
-		                 	<entry key="/mbr/sec/cnt/paypwd/update" value="1,2" />
-		                 	<entry key="/member/my_b" value="1,2" />
-		                 	<entry key="/order/list_b" value="1,2" />
-		                 	<entry key="/myColl/list" value="1,2" />
-		                 	<entry key="/myColl/del" value="1,2" />
-		                 	<entry key="/member/memberRankApply/list" value="1,2" />
-		                 	<entry key="/member/memberRankApply/view" value="1,2" />
-		                 	<entry key="/member/memberRankApply/apply" value="1,2" />
-		                 	<entry key="/shop/retire/view" value="1,2" />
-		                 	<entry key="/shop/retire/add" value="1,2" />
-		                 	<entry key="/custOrder/history" value="1,2" />
-		                 	<entry key="/custOrder/add" value="1,2" />
-		                 	<entry key="/custOrder/update" value="1,2" />
-		                 	<entry key="/summary/index" value="1,2" />
-		                 	<entry key="/summary/list" value="1,2" />
-		             		需要B登录的END
-		             		
-		             		需要C登录的 value=2
-		             		<entry key="请求地址" value="2" /> 
-		                 	
-		             		需要C登录的END
-		             		
-		             		需要APP登录的 value=3
-		             		<entry key="/mbr/seccnt/updpass" value="2" />
-		             		<entry key="/mbr/updpass/authcode" value="2" />
-		             		<entry key="/mbr/updpass" value="2" />
-		             		<entry key="/mbr/myinfo" value="2" />
-		             		<entry key="/mbr/myinfo/upd" value="2" />
-		             		<entry key="/message/unRead" value="2" />
-		             		<entry key="/message/newMsg" value="2" />
-		             		
-		             		<entry key="/appmaterial/findMaterialTypesApp" value="2" />
-		             		<entry key="/appmaterial/findMaterialTypePage" value="2" />
-		             		<entry key="/appmaterial/addMaterialType" value="2" />
-		             		<entry key="/appmaterial/addMaterial" value="2" />
-		             		<entry key="/appmaterial/materialList" value="2" />
-		             		<entry key="/appmaterial/search" value="2" />
-		             		<entry key="/appwork/findGreetClientForDay" value="2" />
-		             		<entry key="/appwork/addGreetClient" value="2" /> 
-		             		
-		             		<entry key="/member/findPmSeachPage" value="2" />
-		             		<entry key="/member/findPmTypeIndex" value="2" />
-		             		<entry key="/member/findStIndexPage" value="2" />
-		             		<entry key="/member/findPmTypeIndexAll" value="2" /> 
-		             		<entry key="/member/changePmType" value="2" />
-		             		<entry key="/member/modifyMemberInfo" value="2" />
-		             		<entry key="/member/findPmInfo" value="2" /> 
-		             		需要APP登录的END -->
+		             		<entry key="/acct/water/income/list" value="1,2" />
+		             		<entry key="/acct/withdraw/list" value="1,2" />
+		             		<entry key="/acct/withdraw/apply" value="1,2" />
+		             		<entry key="/member/memberRankApply/list" value="1,2" />
+		             		<entry key="/member/memberRankApply/apply" value="1,2" />
+		             		<entry key="/file/upload" value="1,2" />
+		             		<entry key="/acctInfo/list" value="1,2" />
+		             		<entry key="/acctInfo/get" value="1,2" />
+		             		<entry key="/acctInfo/add" value="1,2" />
+		             		<entry key="/acctInfo/edit" value="1,2" />
+		             		<entry key="/order/grab" value="1" /><!-- 只有交过押金的代理可以抢单 -->
 		             	</map> 
 	        		</property>
 			 </bean>

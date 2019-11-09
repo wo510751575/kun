@@ -122,6 +122,12 @@
 					  	#{item}  
 					 </foreach>  
 			  	</if>
+				<if test="param.statuss != null and param.statuss.size > 0">
+					and o.status IN 
+					<foreach item="item" index="index" collection="param.statuss" open="(" separator="," close=")">  
+					  	#{item}  
+					 </foreach>  
+			  	</if>
 			  	<if test="param.mbrType != null and param.mbrType !='' ">
 					<![CDATA[and o.mbr_type =#{param.mbrType}]]>
 				</if>
@@ -219,10 +225,8 @@
 	<select id="findOrderPage" resultMap="FindResultMap" parameterType="com.lj.eshop.dto.FindOrderPage">
 		SELECT
 		<include refid="Base_Column_List" />
-		<include refid="gift_Column_List" />
 		<include refid="myInvite_Column_List" />
 		FROM t_order o
-		LEFT JOIN t_product_gift pg ON pg.`code` = o.gift_code
 		LEFT JOIN t_member my ON my.`code` = o.my_invite
 		<include refid="findPage_condition" />
 		<if test="sortBy==null or sortBy=='' ">

@@ -18,7 +18,7 @@ import com.lj.eshop.dto.ShopDto;
  * <p>
  * 详细描述：
  * 
- * @Company: 
+ * @Company:
  * @author lhy
  * 
  *         CreateDate: 2017年9月2日
@@ -26,21 +26,19 @@ import com.lj.eshop.dto.ShopDto;
 public class TokenDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String token;
 	/** 角色 */
 	private String role;
 	/** 用户已开店，但其店铺状态不正常，则以角色C的身份登录系统，但返回其店铺状态给 前端显示 */
 	private ShopDto shop;
-	/** 是否已绑定openId  true则代表已绑定，否则未绑定 */
-	private Boolean hasOpenid;
-	/**商户号*/
+	/** 商户号 */
 	private String merchantCode;
-	/** 会员体系导购信息 （APP登录后要使用 ）0*/
+	/** 会员体系导购信息 （APP登录后要使用 ）0 */
 	private GuidMbrDto guidMbr;
-    /** 系统配置常量 */
-    private ConfigDto config;
-    
+	/** 系统配置常量 */
+	private ConfigDto config;
+
 	/**
 	 * @param token
 	 * @param role
@@ -59,8 +57,7 @@ public class TokenDto implements Serializable {
 	}
 
 	/**
-	 * @param token
-	 *            the token to set
+	 * @param token the token to set
 	 */
 	public void setToken(String token) {
 		this.token = token;
@@ -92,20 +89,6 @@ public class TokenDto implements Serializable {
 	 */
 	public void setShop(ShopDto shop) {
 		this.shop = shop;
-	}
-
-	/**
-	 * @return the hasOpenid
-	 */
-	public Boolean getHasOpenid() {
-		return hasOpenid;
-	}
-
-	/**
-	 * @param hasOpenid the hasOpenid to set
-	 */
-	public void setHasOpenid(Boolean hasOpenid) {
-		this.hasOpenid = hasOpenid;
 	}
 
 	/**

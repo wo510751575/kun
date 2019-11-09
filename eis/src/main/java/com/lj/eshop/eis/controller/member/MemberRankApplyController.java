@@ -31,7 +31,6 @@ import com.lj.eshop.eis.dto.ResponseCode;
 import com.lj.eshop.eis.dto.ResponseDto;
 import com.lj.eshop.emus.AccWaterAccType;
 import com.lj.eshop.emus.AccWaterBizType;
-import com.lj.eshop.emus.AccWaterPayType;
 import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
@@ -88,6 +87,19 @@ public class MemberRankApplyController extends BaseController {
 		dto.setDelFlag("0");
 		findMemberRankPage.setParam(dto);
 		List<MemberRankDto> list = memberRankService.findMemberRanks(findMemberRankPage);
+		for (MemberRankDto memberRankDto : list) {
+			FindMemberRankApplyPage findMemberRankApplyPage = new FindMemberRankApplyPage();
+			MemberRankApplyDto param = new MemberRankApplyDto();
+			param.setMemberCode(getLoginMemberCode());
+			param.setMemberRankCode(memberRankDto.getCode());
+			param.setStatus(MemberRankApplyStatus.SUCCESS.getValue());
+			param.setDelFlag(DelFlag.N.getValue());
+			findMemberRankApplyPage.setParam(param);
+			int i = memberRankApplyService.findMemberRankApplyPageCount(findMemberRankApplyPage);
+			if (i > 0) {
+				memberRankDto.setIsPay(true);
+			}
+		}
 		logger.debug("MemberRankController --> returnMap(={}) - returnMap");
 		return ResponseDto.successResp(list);
 	}
@@ -111,7 +123,7 @@ public class MemberRankApplyController extends BaseController {
 		accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
 		accWaterDto.setBizType(AccWaterBizType.PAYMENT.getValue());
 		accWaterDto.setWaterType(AccWaterType.SUBTRACT.getValue());
-		accWaterDto.setPayType(AccWaterPayType.RANK.getValue());
+//		accWaterDto.setPayType(AccWaterPayType.RANK.getValue());
 		accWaterDto.setAccCode(accountDto.getCode());
 
 		// 一年内的购买记录
@@ -174,6 +186,7 @@ public class MemberRankApplyController extends BaseController {
 		MemberDto member = memberService.findMember(memberDto);
 		memberRankApplyDto.setMemberRankName(memberRankDto.getName());
 		memberRankApplyDto.setMemberName(member.getName());
+		memberRankApplyDto.setMyInvite(member.getPhone()); // 把邀请人字段作为会员手机号用
 		memberRankApplyDto.setMemberCode(member.getCode());
 		memberRankApplyDto.setStatus(MemberRankApplyStatus.WAIT.getValue());
 		MemberRankApplyDto rDto = memberRankApplyService.addMemberRankApply(memberRankApplyDto);

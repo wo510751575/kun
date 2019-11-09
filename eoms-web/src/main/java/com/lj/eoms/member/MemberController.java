@@ -6,9 +6,7 @@
  */
 package com.lj.eoms.member;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,16 +26,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ape.common.config.Global;
 import com.ape.common.web.BaseController;
 import com.google.common.collect.Lists;
+import com.lj.base.core.encryption.MD5;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.pagination.PageSortType;
-import com.lj.base.core.util.DateUtils;
-import com.lj.base.core.util.GUID;
 import com.lj.base.mvc.web.httpclient.HttpClientUtils;
 import com.lj.cc.clientintf.LocalCacheSystemParamsFromCC;
 import com.lj.eoms.dto.ShopMemberDto;
@@ -47,26 +43,14 @@ import com.lj.eoms.utils.UserUtils;
 import com.lj.eoms.utils.Validator;
 import com.lj.eoms.utils.excel.ExportExcel;
 import com.lj.eoms.utils.excel.ImportExcel;
-import com.lj.eshop.constant.NoUtil;
 import com.lj.eshop.dto.FindMemberPage;
-import com.lj.eshop.dto.FindShopBgImgPage;
-import com.lj.eshop.dto.FindShopStylePage;
 import com.lj.eshop.dto.MemberDto;
-import com.lj.eshop.dto.PaymentDto;
-import com.lj.eshop.dto.ShopBgImgDto;
-import com.lj.eshop.dto.ShopDto;
-import com.lj.eshop.dto.ShopStyleDto;
-import com.lj.eshop.emus.DelFlag;
 import com.lj.eshop.emus.Gender;
 import com.lj.eshop.emus.MemberGrade;
 import com.lj.eshop.emus.MemberSex;
 import com.lj.eshop.emus.MemberSourceFrom;
 import com.lj.eshop.emus.MemberStatus;
 import com.lj.eshop.emus.MemberType;
-import com.lj.eshop.emus.PaymentStatus;
-import com.lj.eshop.emus.PaymentType;
-import com.lj.eshop.emus.ShopGrade;
-import com.lj.eshop.emus.ShopStatus;
 import com.lj.eshop.service.IMemberService;
 import com.lj.eshop.service.IPaymentService;
 import com.lj.eshop.service.IShopBgImgService;
@@ -79,7 +63,7 @@ import com.lj.eshop.service.IShopStyleService;
  * 
  * <p>
  * 
- * @Company: 
+ * @Company:
  * @author lhy CreateDate: 2017-8-25
  */
 @Controller
@@ -262,8 +246,6 @@ public class MemberController extends BaseController {
 			logger.info("importExcel>>", list);
 			List<Area> provinceAreas = areaService.selectProvince();
 
-			MemberDto memberDto = new MemberDto();
-			memberDto.setCode(GUID.generateByUUID());
 			for (ShopMemberDto dto : list) {
 				try {
 					logger.info("excel dto >>" + dto.toString());
@@ -282,46 +264,10 @@ public class MemberController extends BaseController {
 					for (Gender gender : Gender.values()) {
 						items.add(gender.getName());
 					}
-					if (!items.contains(dto.getSex().trim())) {
-						failureMsg.append("<br/>客户手机号： " + dto.getMobile() + "性别填写错误 ：" + dto.getSex());
-						failureNum++;
-						continue;
-					}
 
 					if (checkMobile(dto.getMobile())) {
-						if (checkWxNo(dto.getWxNo())) {
-							ShopDto rtShop = createMemberOrderInfo(memberDto, dto, provinceAreas);
-
-							try {
-								// 把会员信息同步更新到热文会员
-								String url = localCacheSystemParams.getSystemParam("cc", "rw", "rwRegistUrl");
-								Map map = new HashMap<>();
-								map.put("code", memberDto.getCode());
-								map.put("name", memberDto.getName());
-								map.put("phone",
-										memberDto.getPhone() == null ? memberDto.getCode() : memberDto.getPhone());
-								String result = HttpClientUtils.postToWeb(url, map);
-								if (com.lj.base.core.util.StringUtils.isNotEmpty(result)) {
-									JSONObject obj = (JSONObject) JSON.parse(result);
-									String rs = (String) obj.get("returnObject");
-									if (!"OK".equalsIgnoreCase(rs)) {
-										addMessage(redirectAttributes, "同步客户'" + memberDto.getName() + "'到热文失败");
-										return "redirect:" + Global.getAdminPath() + "/member/member/?repage";
-									}
-								} else {
-									addMessage(redirectAttributes, "同步客户'" + memberDto.getName() + "'到热文失败");
-									return "redirect:" + Global.getAdminPath() + "/member/member/?repage";
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-								log.error("同步热文客户错误e={}", e);
-							}
-
-							successNum++;
-						} else {
-							failureMsg.append("<br/>微信号 " + dto.getWxNo() + " 已存在; ");
-							failureNum++;
-						}
+						createMemberOrderInfo(dto);
+						successNum++;
 					} else {
 						failureMsg.append("<br/>手机号 " + dto.getMobile() + " 已存在; ");
 						failureNum++;
@@ -342,106 +288,15 @@ public class MemberController extends BaseController {
 		return "redirect:" + Global.getAdminPath() + "/member/member/?repage";
 	}
 
-	private ShopDto createMemberOrderInfo(MemberDto memberDto, ShopMemberDto shopMemberDto, List<Area> areas) {
-		ShopDto rt = null;
-		// memberDto = new MemberDto();
+	private void createMemberOrderInfo(ShopMemberDto shopMemberDto) {
+		MemberDto memberDto = new MemberDto();
 		memberDto.setPhone(shopMemberDto.getMobile());
 		memberDto.setName(shopMemberDto.getMemberName());
 		memberDto.setStatus(MemberStatus.NORMAL.getValue());
-		if ("男".equals(shopMemberDto.getSex())) {
-			memberDto.setSex(MemberSex.MALE.getValue());
-		} else if ("女".equals(shopMemberDto.getSex())) {
-			memberDto.setSex(MemberSex.FEMALE.getValue());
-		}
-		memberDto.setWxNo(shopMemberDto.getWxNo());
 		memberDto.setType(MemberType.SHOP.getValue());
-		memberDto.setProvince(shopMemberDto.getProvince());
-		memberDto.setCity(shopMemberDto.getCity());
-		memberDto.setArea(shopMemberDto.getArea());
-		memberDto.setCreateTime(new Date());
 		memberDto.setMerchantCode(UserUtils.getUser().getMerchant().getCode());// 这里设置用户所属商户
-		memberDto.setMemberRankCode(shopMemberDto.getMemberRankCode());
-		memberDto = memberService.addMember(memberDto);
-
-		// 创建店铺
-		ShopDto shopDto = new ShopDto();
-		shopDto.setStatus(ShopStatus.NORMAL.getValue());
-		shopDto.setShopGarde(ShopGrade.FIVE.getValue());
-		shopDto.setReadNum(0);
-		shopDto.setCreateTime(new Date());
-		shopDto.setShopName(memberDto.getName());
-		try {
-			shopDto.setOpenTime(DateUtils.parseDate(shopMemberDto.getShopOpenTime(), "yyyy-MM-dd"));
-		} catch (Exception e) {
-			shopDto.setOpenTime(new Date());
-			e.printStackTrace();
-		}
-		shopDto.setShopAddinfo(shopMemberDto.getShopAddres());
-		shopDto.setMbrCode(memberDto.getCode());
-		shopDto.setMerchantCode(UserUtils.getUser().getMerchant().getCode());// 这里设置用户所属商户
-		shopDto.setShopNo(GUID.generateCode());
-
-		FindShopBgImgPage findShopBgImgPage = new FindShopBgImgPage();
-		List<ShopBgImgDto> bgimgs = shopBgImgService.findShopBgImgs(findShopBgImgPage);
-		if (bgimgs.size() > 0) {
-			shopDto.setBgUrl(bgimgs.get(0).getSpe());
-			shopDto.setShopBgImgCode(bgimgs.get(0).getCode());
-		}
-
-		FindShopStylePage findShopStylePage = new FindShopStylePage();
-		List<ShopStyleDto> shopStyleDtos = shopStyleService.findShopStyles(findShopStylePage);
-		if (shopStyleDtos.size() > 0) {
-			shopDto.setStyleColor(shopStyleDtos.get(0).getSpe());
-			shopDto.setStyleName(shopStyleDtos.get(0).getName());
-			shopDto.setShopStyleCode(shopStyleDtos.get(0).getCode());
-		}
-
-		Area area = getArea(areas, shopMemberDto.getProvince());
-
-		if (null != area) {
-			// 省
-			shopDto.setShopProvide(area.getCode());
-
-			// 市
-			areas = areaService.selectAreaByParentId(area.getId());
-			area = getArea(areas, shopMemberDto.getCity());
-			if (null != area) {
-				shopDto.setShopCity(area.getCode());
-			}
-
-			// 区
-			areas = areaService.selectAreaByParentId(area.getId());
-			area = getArea(areas, shopMemberDto.getArea());
-			if (null != area) {
-				shopDto.setShopArea(area.getCode());
-			}
-
-		}
-
-		rt = shopService.addShop(shopDto);
-
-		// 预支付流水
-		PaymentDto paymentDto = new PaymentDto();
-		paymentDto.setBizNo(shopDto.getShopNo());
-		paymentDto.setStatus(PaymentStatus.SUCCESS.getValue());
-		paymentDto.setFee(new BigDecimal(0));
-		paymentDto.setAmount(NoUtil.DEFAULT_CASH_PLEDGE);
-		paymentDto.setSn(shopDto.getShopNo());
-		paymentDto.setType(PaymentType.OFFLINE.getValue());
-		paymentDto.setDelFlag(DelFlag.N.getValue());
-		paymentDto.setMemo("导入用户，默认为支付成功");
-		paymentService.addPayment(paymentDto);
-		return rt;
-	}
-
-	private Area getArea(List<Area> provinceAreas, String name) {
-		Area rt = null;
-		for (Area area : provinceAreas) {
-			if (StringUtils.equals(area.getName(), name) || area.getName().indexOf(name) != -1) {
-				rt = area;
-			}
-		}
-		return rt;
+		memberDto.setPassword(MD5.encryptByMD5("123456"));
+		memberService.addMember(memberDto);
 	}
 
 	/**
@@ -462,35 +317,19 @@ public class MemberController extends BaseController {
 	public String importFileTemplate(HttpServletResponse response, HttpServletRequest request,
 			RedirectAttributes redirectAttributes) {
 		try {
-			String fileName = "店主会员导入模版.xlsx";
+			String fileName = "导入模版.xlsx";
 			List<ShopMemberDto> list = Lists.newArrayList();
 			ShopMemberDto dto = new ShopMemberDto();
 			dto.setMemberName("小龙");
-			dto.setSex(Gender.MALE.getName());
 			dto.setMobile("13888888888");
-			dto.setProvince("广东");
-			dto.setCity("深圳市");
-			dto.setArea("福田区");
-			dto.setWxNo("wx123");
-			dto.setShopOpenTime(DateUtils.formatDate(new Date(), "yyyy-MM-dd"));
-			dto.setShopCountry("中国");
-			dto.setShopAddres("商店地址");
 			list.add(dto);
 
 			dto = new ShopMemberDto();
 			dto.setMemberName("小强");
-			dto.setSex(Gender.FEMALE.getName());
 			dto.setMobile("13888888887");
-			dto.setProvince("广东");
-			dto.setCity("深圳市");
-			dto.setArea("福田区");
-			dto.setWxNo("wx124");
-			dto.setShopOpenTime(DateUtils.formatDate(new Date(), "yyyy-MM-dd"));
-			dto.setShopCountry("中国");
-			dto.setShopAddres("商店地址222");
 			list.add(dto);
 
-			new ExportExcel("店主会员导入模版", ShopMemberDto.class, 2).setDataList(list).write(response, fileName).dispose();
+			new ExportExcel("导入模版", ShopMemberDto.class, 2).setDataList(list).write(response, fileName).dispose();
 			return null;
 		} catch (Exception e) {
 			addMessage(redirectAttributes, "店主会员导入模板下载失败！失败信息：" + e.getMessage());

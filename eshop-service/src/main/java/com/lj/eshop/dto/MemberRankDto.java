@@ -9,120 +9,129 @@ import java.util.Date;
  * 
  * <p>
  * 
- * @Company: 
+ * @Company:
  * @author 林进权
  * 
- *         CreateDate: 2017年8月30日 
+ *         CreateDate: 2017年8月30日
  */
-public class MemberRankDto implements Serializable { 
+public class MemberRankDto implements Serializable {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-     *  .
-     */
-    private String code;
+	 * .
+	 */
+	private String code;
 
-    /**
-     *  .
-     */
-    private Date createDate;
+	/**
+	 * .
+	 */
+	private Date createDate;
 
-    /**
-     *  .
-     */
-    private Date modifyDate;
+	/**
+	 * .
+	 */
+	private Date modifyDate;
 
-    /**
-     * 租凭权限（如：5000以下，存储5000） .
-     */
-    private BigDecimal amount;
+	/**
+	 * 租凭权限（如：5000以下，存储5000） .
+	 */
+	private BigDecimal amount;
 
-    /**
-     *  .
-     */
-    private String remark;
+	/**
+	 * .
+	 */
+	private String remark;
 
-    /**
-     * 特权名称 .
-     */
-    private String name;
+	/**
+	 * 特权名称 .
+	 */
+	private String name;
 
-    /**
-     * 穿戴次数 .
-     */
-    private Double scale;
+	/**
+	 * 穿戴次数 .
+	 */
+	private Double scale;
 
-    /**
-     * 删除标记 .
-     */
-    private String delFlag;
-    /**
-     * 顺序号
-     */
-    private int seq;
-    
-    /**
-     * 特权图片地址 .
-     */
-    private String imgSrc;
+	/**
+	 * 删除标记 .
+	 */
+	private String delFlag;
+	/**
+	 * 顺序号
+	 */
+	private int seq;
 
-    
-    /**
-     *  补齐的余额
-     */
-    private BigDecimal residueAmount;
-    /**
-     * 剩余穿戴次数 .
-     */
-    private Double residueScale;
-    
-    /**
-     * 会员折扣 .
-     */
-    private String discount;
-    
-    /**
-     * 预付金额 .
-     */
-    private BigDecimal advancePayment;
-    
-    
-   
-	/**  
-	 * @Title:  getDiscount <BR>  
-	 * @Description: please write your description <BR>  
-	 * @return: String <BR>  
+	/**
+	 * 特权图片地址 .
+	 */
+	private String imgSrc;
+
+	/**
+	 * 补齐的余额
+	 */
+	private BigDecimal residueAmount;
+	/**
+	 * 剩余穿戴次数 .
+	 */
+	private Double residueScale;
+
+	/**
+	 * 会员折扣 .
+	 */
+	private String discount;
+
+	/**
+	 * 预付金额 .
+	 */
+	private BigDecimal advancePayment;
+	/**
+	 * 是否已购买
+	 */
+	private Boolean isPay = Boolean.FALSE;
+
+	public Boolean getIsPay() {
+		return isPay;
+	}
+
+	public void setIsPay(Boolean isPay) {
+		this.isPay = isPay;
+	}
+
+	/**
+	 * @Title: getDiscount <BR>
+	 * @Description: please write your description <BR>
+	 * @return: String <BR>
 	 */
 	public String getDiscount() {
 		return discount;
 	}
 
-	/**  
-	 * @Title:  setDiscount <BR>  
-	 * @Description: please write your description <BR>  
-	 * @return: String <BR>  
+	/**
+	 * @Title: setDiscount <BR>
+	 * @Description: please write your description <BR>
+	 * @return: String <BR>
 	 */
 	public void setDiscount(String discount) {
 		this.discount = discount;
 	}
 
-	/**  
-	 * @Title:  getAdvancePayment <BR>  
-	 * @Description: please write your description <BR>  
-	 * @return: BigDecimal <BR>  
+	/**
+	 * @Title: getAdvancePayment <BR>
+	 * @Description: please write your description <BR>
+	 * @return: BigDecimal <BR>
 	 */
 	public BigDecimal getAdvancePayment() {
 		return advancePayment;
 	}
 
-	/**  
-	 * @Title:  setAdvancePayment <BR>  
-	 * @Description: please write your description <BR>  
-	 * @return: BigDecimal <BR>  
+	/**
+	 * @Title: setAdvancePayment <BR>
+	 * @Description: please write your description <BR>
+	 * @return: BigDecimal <BR>
 	 */
 	public void setAdvancePayment(BigDecimal advancePayment) {
 		this.advancePayment = advancePayment;
@@ -137,137 +146,135 @@ public class MemberRankDto implements Serializable {
 	}
 
 	/**
-     *  .
-     *
-     */
-    public String getCode() {
-        return code;
-    }
+	 * .
+	 *
+	 */
+	public String getCode() {
+		return code;
+	}
 
-    /**
-     *  .
-     *
-     */
-    public void setCode(String code) {
-        this.code = code == null ? null : code.trim();
-    }
+	/**
+	 * .
+	 *
+	 */
+	public void setCode(String code) {
+		this.code = code == null ? null : code.trim();
+	}
 
-    /**
-     *  .
-     *
-     */
-    public Date getCreateDate() {
-        return createDate;
-    }
+	/**
+	 * .
+	 *
+	 */
+	public Date getCreateDate() {
+		return createDate;
+	}
 
-    /**
-     *  .
-     *
-     */
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+	/**
+	 * .
+	 *
+	 */
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
-    /**
-     *  .
-     *
-     */
-    public Date getModifyDate() {
-        return modifyDate;
-    }
+	/**
+	 * .
+	 *
+	 */
+	public Date getModifyDate() {
+		return modifyDate;
+	}
 
-    /**
-     *  .
-     *
-     */
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = modifyDate;
-    }
+	/**
+	 * .
+	 *
+	 */
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
 
-    /**
-     * 租凭权限（如：5000以下，存储5000） .
-     *
-     */
-    public BigDecimal getAmount() {
-    	if (amount != null) {
-    		amount= amount.setScale(2, BigDecimal.ROUND_HALF_UP);
-		} 
+	/**
+	 * 租凭权限（如：5000以下，存储5000） .
+	 *
+	 */
+	public BigDecimal getAmount() {
+		if (amount != null) {
+			amount = amount.setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 		return amount;
-    }
+	}
 
-    /**
-     * 租凭权限（如：5000以下，存储5000） .
-     *
-     */
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
+	/**
+	 * 租凭权限（如：5000以下，存储5000） .
+	 *
+	 */
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
 
-    /**
-     *  .
-     *
-     */
-    public String getRemark() {
-        return remark;
-    }
+	/**
+	 * .
+	 *
+	 */
+	public String getRemark() {
+		return remark;
+	}
 
-    /**
-     *  .
-     *
-     */
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
+	/**
+	 * .
+	 *
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark == null ? null : remark.trim();
+	}
 
-    /**
-     * 特权名称 .
-     *
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * 特权名称 .
+	 *
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * 特权名称 .
-     *
-     */
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	/**
+	 * 特权名称 .
+	 *
+	 */
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
 
-    /**
-     * 穿戴次数 .
-     *
-     */
-    public Double getScale() {
-        return scale;
-    }
+	/**
+	 * 穿戴次数 .
+	 *
+	 */
+	public Double getScale() {
+		return scale;
+	}
 
-    /**
-     * 穿戴次数 .
-     *
-     */
-    public void setScale(Double scale) {
-        this.scale = scale;
-    }
+	/**
+	 * 穿戴次数 .
+	 *
+	 */
+	public void setScale(Double scale) {
+		this.scale = scale;
+	}
 
-    /**
-     * 删除标记 .
-     *
-     */
-    public String getDelFlag() {
-        return delFlag;
-    }
+	/**
+	 * 删除标记 .
+	 *
+	 */
+	public String getDelFlag() {
+		return delFlag;
+	}
 
-    /**
-     * 删除标记 .
-     *
-     */
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag == null ? null : delFlag.trim();
-    }
-    
-    
+	/**
+	 * 删除标记 .
+	 *
+	 */
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag == null ? null : delFlag.trim();
+	}
 
 	public String getImgSrc() {
 		return imgSrc;
@@ -277,8 +284,6 @@ public class MemberRankDto implements Serializable {
 		this.imgSrc = imgSrc;
 	}
 
-	
-	
 	public BigDecimal getResidueAmount() {
 		return residueAmount;
 	}
@@ -302,9 +307,4 @@ public class MemberRankDto implements Serializable {
 				+ ", seq=" + seq + ", imgSrc=" + imgSrc + "]";
 	}
 
-	
-	
-	
-
 }
-

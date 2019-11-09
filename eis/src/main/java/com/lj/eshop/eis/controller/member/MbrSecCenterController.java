@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lj.base.core.encryption.MD5;
 import com.lj.base.core.util.StringUtils;
 import com.lj.base.exception.TsfaServiceException;
 import com.lj.eshop.dto.AccountDto;
@@ -26,7 +27,6 @@ import com.lj.eshop.eis.dto.ResponseDto;
 import com.lj.eshop.eis.service.IUserLoginService;
 import com.lj.eshop.eis.service.impl.MbrGuidMemberService;
 import com.lj.eshop.eis.utils.AuthCodeUtils;
-import com.lj.eshop.eis.utils.encryption.EncryptionUtils;
 import com.lj.eshop.emus.CodeCheckBizType;
 import com.lj.eshop.emus.MessageTemplate;
 import com.lj.eshop.service.IAccountService;
@@ -40,7 +40,7 @@ import com.lj.eshop.service.IMessageService;
  * <p>
  * 详细描述：
  * 
- * @Company: 
+ * @Company:
  * @author lhy
  * 
  *         CreateDate: 2017年9月4日
@@ -208,7 +208,7 @@ public class MbrSecCenterController extends BaseController {
 		AccountDto findAcct = accountService.findAccountByMbrCode(mbrCode);
 		AccountDto updateAcct = new AccountDto();
 		updateAcct.setMbrCode(mbrCode);
-		updateAcct.setPayPwd(EncryptionUtils.md5SavePwd(accountDto.getPayPwd()));
+		updateAcct.setPayPwd(MD5.encryptByMD5BySalt(accountDto.getPayPwd()));
 		updateAcct.setCode(findAcct.getCode());
 		accountService.updateAccount(updateAcct);
 

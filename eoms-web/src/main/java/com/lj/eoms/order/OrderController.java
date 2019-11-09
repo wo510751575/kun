@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,9 +19,15 @@ import com.ape.common.web.BaseController;
 import com.google.common.collect.Lists;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.pagination.PageSortType;
+import com.lj.base.core.util.StringUtils;
+import com.lj.distributecache.IQueue;
+import com.lj.distributecache.RedisCache;
 import com.lj.eoms.utils.UserUtils;
 import com.lj.eshop.constant.NoUtil;
+import com.lj.eshop.constant.PublicConstants;
 import com.lj.eshop.dto.AccountDto;
+import com.lj.eshop.dto.AccountInfoDto;
+import com.lj.eshop.dto.FindAccountInfoPage;
 import com.lj.eshop.dto.FindOrderPage;
 import com.lj.eshop.dto.OrderDto;
 import com.lj.eshop.dto.PaymentDto;
@@ -30,6 +38,7 @@ import com.lj.eshop.emus.OrderInvoice;
 import com.lj.eshop.emus.OrderStatus;
 import com.lj.eshop.emus.PaymentStatus;
 import com.lj.eshop.emus.PaymentType;
+import com.lj.eshop.service.IAccountInfoService;
 import com.lj.eshop.service.IAccountService;
 import com.lj.eshop.service.IOrderService;
 import com.lj.eshop.service.IPaymentService;
@@ -43,10 +52,10 @@ import com.lj.eshop.service.IPaymentService;
  * <p>
  * 详细描述：
  * 
- * @Company: 
- * @author 
+ * @Company:
+ * @author
  * 
- *         CreateDate: 2017年7月22日
+ * 		CreateDate: 2017年7月22日
  */
 @Controller
 @RequestMapping("${adminPath}/order/order")
@@ -63,6 +72,12 @@ public class OrderController extends BaseController {
 	private IPaymentService paymentService;
 	@Autowired
 	private IAccountService accountService;
+	@Resource
+	private IQueue queue;
+	@Autowired
+	private IAccountInfoService accountInfoService;
+	@Autowired
+	private RedisCache redisCache;
 
 	/** 列表 */
 	@RequiresPermissions("order:order:view")
@@ -143,7 +158,7 @@ public class OrderController extends BaseController {
 //		return "redirect:" + adminPath + "/order/order/";
 	}
 
-	/** 支付 */
+	/** 收款 */
 	@RequiresPermissions("order:order:edit")
 	@RequestMapping(value = "payment")
 	public String payment(String code, String orderNo, BigDecimal amt, RedirectAttributes redirectAttributes) {
@@ -153,7 +168,7 @@ public class OrderController extends BaseController {
 		OrderDto orderDto = orderService.findOrder(parmOrderDto);
 
 		orderService.payment(builPaymentDto(orderDto));
-		addMessage(redirectAttributes, "订单：" + orderNo + "付款成功");
+		addMessage(redirectAttributes, "订单：" + orderNo + "收款成功");
 		return "redirect:" + adminPath + "/order/order/";
 	}
 
@@ -165,7 +180,7 @@ public class OrderController extends BaseController {
 	 * @param orderDto
 	 * @return
 	 *
-	 * @author  CreateDate: 2017年9月9日
+	 * @author CreateDate: 2017年9月9日
 	 *
 	 */
 	private PaymentDto builPaymentDto(OrderDto orderDto) {
@@ -177,7 +192,7 @@ public class OrderController extends BaseController {
 		paymentDto.setOperator(UserUtils.getUser().getName());
 		paymentDto.setPayer(orderDto.getMbrCode());
 		paymentDto.setPaymentDate(new Date());
-		paymentDto.setPaymentMethod(AccWaterPayType.CASH.getValue());
+		paymentDto.setPaymentMethod(orderDto.getPayType());
 		paymentDto.setSn(NoUtil.generateNo(NoUtil.JY));
 		paymentDto.setStatus(PaymentStatus.SUCCESS.getValue());
 		paymentDto.setType(PaymentType.OFFLINE.getValue());
@@ -198,5 +213,43 @@ public class OrderController extends BaseController {
 		orderService.cancel(orderDto);
 		addMessage(redirectAttributes, "订单：" + orderDto.getOrderNo() + "取消成功");
 		return "redirect:" + adminPath + "/order/order/";
+	}
+
+	@RequestMapping(value = "viewH5")
+	public String viewH5(Model model) {
+		try {
+			// 从队列中取出第一个
+			String mbrCode = queue.lpop(PublicConstants.ORDER_GRAB_LIST);
+			if (StringUtils.isNotEmpty(mbrCode)) {
+				redisCache.set("grab:" + mbrCode, "N");
+				// 等待用户操作过后再移除 TODO
+//				queue.lpush(PublicConstants.ORDER_GRAB_LIST, mbrCode);
+				FindAccountInfoPage findAccountInfoPage = new FindAccountInfoPage();
+				AccountInfoDto param = new AccountInfoDto();
+				param.setMbrCode(mbrCode);
+				findAccountInfoPage.setParam(param);
+				List<AccountInfoDto> list = accountInfoService.findAccountInfos(findAccountInfoPage);
+				model.addAttribute("list", list);
+				model.addAttribute("types", AccWaterPayType.values());
+				model.addAttribute("mbrCode", mbrCode);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "modules/order/viewH5";
+	}
+
+	@RequestMapping(value = "create")
+	@ResponseBody
+	public boolean create(String mbrCode) {
+		try {
+			orderService.createOrder(mbrCode, new BigDecimal(5000), AccWaterPayType.ALIQRCODE.getValue());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("发货错误e={}", e);
+			return false;
+		}
+		return true;
 	}
 }

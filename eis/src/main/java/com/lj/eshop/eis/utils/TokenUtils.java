@@ -6,7 +6,7 @@
  */
 package com.lj.eshop.eis.utils;
 
-import com.lj.eshop.eis.utils.encryption.MD5Utils;
+import com.lj.base.core.encryption.MD5;
 
 /**
  * 
@@ -16,22 +16,23 @@ import com.lj.eshop.eis.utils.encryption.MD5Utils;
  * <p>
  * 详细描述：
  * 
- * @Company: 
+ * @Company:
  * @author lhy
  * 
  *         CreateDate: 2017年9月2日
  */
 public class TokenUtils {
 	/** token 有效期 2周 （单位 秒） */
-	public final static int VALID_TIME=1209600;
+	public final static int VALID_TIME = 1209600;
 
 	/**
 	 * 方法说明：创建TOKEN。
-	 * @param mbrCode 会员CODE 
+	 * 
+	 * @param mbrCode  会员CODE
 	 * @param shopCode 店铺CODE 无店可传null
 	 * @return
 	 *
-	 * @author lhy  2017年9月2日
+	 * @author lhy 2017年9月2日
 	 *
 	 */
 	public static String createToken(String mbrCode, String shopCode) {
@@ -40,9 +41,8 @@ public class TokenUtils {
 			shopCode = "";
 		}
 
-		String source =  mbrCode + ":" + shopCode + ":" + now;
-		String token = MD5Utils.getMD5Code(source);
-				//EncryptionUtils.aesEncode(source);
+		String source = mbrCode + ":" + shopCode + ":" + now;
+		String token = MD5.encryptByMD5BySalt(source);
 		return token;
 	}
 }

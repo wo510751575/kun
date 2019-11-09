@@ -116,9 +116,7 @@ public class UserLoginService implements IUserLoginService {
 				throw new TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
 						ResponseCode.USER_UNNORMAL.getMsg());
 			}
-
-			TokenDto token = login(LoginRoleConstant.IS_C, loginMbr, null);
-			token.setHasOpenid(StringUtils.isBlank(loginMbr.getOpenId()) ? false : true);// 返回是否已绑定微信
+			TokenDto token = login(loginMbr.getType(), loginMbr, null);
 			token.setMerchantCode(loginMbr.getMerchantCode());
 			return token;
 		}

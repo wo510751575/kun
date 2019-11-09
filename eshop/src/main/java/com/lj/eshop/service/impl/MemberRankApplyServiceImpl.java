@@ -41,7 +41,6 @@ import com.lj.eshop.dto.OrderDto;
 import com.lj.eshop.dto.PaymentDto;
 import com.lj.eshop.emus.AccWaterAccType;
 import com.lj.eshop.emus.AccWaterBizType;
-import com.lj.eshop.emus.AccWaterPayType;
 import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
@@ -262,11 +261,6 @@ public class MemberRankApplyServiceImpl implements IMemberRankApplyService {
 		paramRankDto.setCode(memberRankApplyDto.getCode());
 		MemberRankApplyDto rltRankApplyDto = findMemberRankApply(memberRankApplyDto);
 
-		// 新购买特权
-		MemberRankDto memberRankDto = new MemberRankDto();
-		memberRankDto.setCode(rltRankApplyDto.getMemberRankCode());
-		MemberRankDto rltNewMemberRank = memberRankService.findMemberRank(memberRankDto);
-
 		try {
 			MemberRankApply memberRankApply = new MemberRankApply();
 			// update数据录入
@@ -280,31 +274,11 @@ public class MemberRankApplyServiceImpl implements IMemberRankApplyService {
 
 			// 审批通过更新会员的特权过期时间和会员等级
 			if (successCnt > 0 && memberRankApplyDto.getStatus().equals(MemberRankApplyStatus.SUCCESS.getValue())) {
-
-				/*
-				 * if(StringUtils.isNotEmpty(rltShopDto.getRankCode())) {
-				 * 
-				 * //如果已经过期，清除特权信息 if(null!=rltShopDto.getRankExpireTime() &&
-				 * (rltShopDto.getRankExpireTime().getTime()<new Date().getTime())) { ShopDto
-				 * updShopDto = new ShopDto(); updShopDto.setCode(rltShopDto.getCode());
-				 * updShopDto.setRankCode(null); updShopDto.setRankExpireTime(null);
-				 * this.shopService.updateShop(updShopDto); } else {
-				 * //没过期，如果购买特权小于或等于现特权金额，不允许购买 MemberRankDto shopRankDto = new MemberRankDto();
-				 * shopRankDto.setCode(rltShopDto.getRankCode()); MemberRankDto rltShopRankDto =
-				 * memberRankService.findMemberRank(shopRankDto);
-				 * if(rltNewMemberRank.getAmount().compareTo(rltShopRankDto.getAmount())<=0) {
-				 * throw new
-				 * TsfaServiceException(ErrorCode.MEMBER_RANK_APPLY_UPDATE_ERROR,"不允许购买低级特权！");
-				 * } } }
-				 */
-
-				// 支付
-				PaymentDto paymentDto = new PaymentDto();
-				paymentDto.setBizNo(rltRankApplyDto.getCode());
-				paymentDto.setMbrCode(memberRankApplyDto.getMemberCode());
-				paymentDto.setAmount(rltNewMemberRank.getAmount());
-				payment(paymentDto);
-
+				// 修改申请人为B端
+				MemberDto memberDto = new MemberDto();
+				memberDto.setCode(rltRankApplyDto.getMemberCode());
+				memberDto.setType(MemberType.SHOP.getValue());
+				memberService.updateMember(memberDto);
 			}
 
 			logger.debug("updateMemberRankApplyByApprove(MemberRankApplyDto) - end - return");
@@ -500,7 +474,7 @@ public class MemberRankApplyServiceImpl implements IMemberRankApplyService {
 				accWaterDto.setAccNo(myInviteAcct.getAccNo());
 				accWaterDto.setAccCode(myInviteAcct.getCode());
 				accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-				accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
+//				accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
 				accWaterDto.setBizType(AccWaterBizType.COMMISSION.getValue());
 				accWaterDto.setWaterType(AccWaterType.ADD.getValue());
 				accWaterDto.setTranOrderNo(rApplyDto.getGiftCode());// 标识这笔返利用户开通了几年

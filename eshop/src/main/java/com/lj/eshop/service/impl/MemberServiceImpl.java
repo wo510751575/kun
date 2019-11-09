@@ -19,6 +19,7 @@ import com.lj.base.core.encryption.MD5;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.util.AssertUtils;
 import com.lj.base.core.util.GUID;
+import com.lj.base.core.util.ShareCodeUtil;
 import com.lj.base.exception.TsfaServiceException;
 import com.lj.eshop.constant.ErrorCode;
 import com.lj.eshop.constant.NoUtil;
@@ -83,7 +84,7 @@ public class MemberServiceImpl implements IMemberService {
 			member.setMerchantCode(memberDto.getMerchantCode());
 			member.setMemberRankCode(memberDto.getMemberRankCode());
 			member.setPassword(MD5.encryptByMD5(memberDto.getPassword()));
-			member.setShareCode(memberDto.getShareCode());
+			member.setShareCode(ShareCodeUtil.toSerialCode(new Date().getTime()).substring(0, 6));
 			memberDao.insertSelective(member);
 			memberDto.setCode(member.getCode());
 			memberDto.setCreateTime(member.getCreateTime());
@@ -287,5 +288,4 @@ public class MemberServiceImpl implements IMemberService {
 			throw new TsfaServiceException(ErrorCode.MEMBER_FIND_ERROR, "查找会员信息信息错误！", e);
 		}
 	}
-
 }

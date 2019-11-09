@@ -1,11 +1,11 @@
 package com.lj.eshop.eis.controller.order;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,37 +17,32 @@ import com.alibaba.fastjson.JSONObject;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.util.DateUtils;
 import com.lj.base.core.util.StringUtils;
-import com.lj.eoms.entity.sys.Area;
+import com.lj.business.common.CommonConstant;
+import com.lj.distributecache.IQueue;
+import com.lj.distributecache.RedisCache;
 import com.lj.eoms.service.AreaHessianService;
 import com.lj.eshop.constant.NoUtil;
+import com.lj.eshop.constant.PublicConstants;
 import com.lj.eshop.dto.AccWaterDto;
 import com.lj.eshop.dto.AccountDto;
-import com.lj.eshop.dto.AddrsDto;
 import com.lj.eshop.dto.EvlProductDto;
 import com.lj.eshop.dto.FindAccWaterPage;
 import com.lj.eshop.dto.FindOrderDetailPage;
 import com.lj.eshop.dto.FindOrderPage;
 import com.lj.eshop.dto.MemberDto;
-import com.lj.eshop.dto.MemberRankDto;
 import com.lj.eshop.dto.OrderDetailDto;
 import com.lj.eshop.dto.OrderDto;
 import com.lj.eshop.dto.PaymentDto;
 import com.lj.eshop.dto.ProductDto;
-import com.lj.eshop.dto.ProductGiftDto;
 import com.lj.eshop.dto.ProductSkuDto;
-import com.lj.eshop.dto.ShopCarDto;
-import com.lj.eshop.dto.ShopDto;
 import com.lj.eshop.eis.controller.BaseController;
-import com.lj.eshop.eis.dto.EvlDto;
 import com.lj.eshop.eis.dto.ResponseCode;
 import com.lj.eshop.eis.dto.ResponseDto;
 import com.lj.eshop.emus.AccWaterAccType;
 import com.lj.eshop.emus.AccWaterBizType;
-import com.lj.eshop.emus.AccWaterPayType;
 import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
-import com.lj.eshop.emus.AddrsIsDefault;
 import com.lj.eshop.emus.DelFlag;
 import com.lj.eshop.emus.OrderStatus;
 import com.lj.eshop.emus.PaymentStatus;
@@ -115,6 +110,46 @@ public class OrderController extends BaseController {
 	private IMemberService memberService;
 	@Autowired
 	private IProductGiftService productGiftService;
+	@Resource
+	private IQueue queue;
+	@Autowired
+	private RedisCache redisCache;
+
+	/**
+	 * 抢单
+	 */
+	@RequestMapping(value = "/grab")
+	public ResponseDto grab() {
+		try {
+
+			String flag = redisCache.get("grab:" + getLoginMemberCode());
+			if (CommonConstant.Y.equals(flag)) {
+				// 已在队列中直接返回
+				return ResponseDto.successResp();
+			}
+			queue.rpush(PublicConstants.ORDER_GRAB_LIST, getLoginMemberCode());
+			redisCache.set("grab:" + getLoginMemberCode(), CommonConstant.Y);
+		} catch (Exception e) {
+			logger.error("抢单错误！e={}", e);
+		}
+
+		return ResponseDto.successResp();
+	}
+
+	/**
+	 * 取消抢单
+	 */
+	@RequestMapping(value = "/unGrab")
+	public ResponseDto unGrab() {
+		String flag = redisCache.get("grab:" + getLoginMemberCode());
+		if (CommonConstant.N.equals(flag)) {
+			// 已取消直接返回
+			return ResponseDto.successResp();
+		}
+		queue.lrem(PublicConstants.ORDER_GRAB_LIST, 1, getLoginMemberCode());
+		redisCache.set("grab:" + getLoginMemberCode(), CommonConstant.N);
+		return ResponseDto.successResp();
+	}
 
 	/**
 	 * 
@@ -188,256 +223,6 @@ public class OrderController extends BaseController {
 	/**
 	 * 
 	 *
-	 * 方法说明：从购物车创建订单
-	 *
-	 * @param cars
-	 * @param addrCode
-	 * @param isInvoice
-	 * @param invoiceTitle
-	 * @param invoiceInfo
-	 * @return
-	 *
-	 * @author CreateDate: 2017年9月1日
-	 *
-	 */
-	@RequestMapping(value = { "createByCar" })
-	@ResponseBody
-	public ResponseDto createByCar(String cars, String addrCode, Boolean isInvoice, String invoiceTitle,
-			String invoiceInfo, String remarks, String myInvite) {
-		logger.info("createByCar --> - start");
-		if (cars == null || StringUtils.isEmpty(cars) || StringUtils.isEmpty(addrCode) || isInvoice == null) {
-			return ResponseDto.createResp(false, ResponseCode.PARAM_ERROR.getCode(), ResponseCode.PARAM_ERROR.getMsg(),
-					null);
-		}
-		// 不能邀请自己下单
-		if (getLoginMemberCode().equals(myInvite)) {
-			return ResponseDto.createResp(false, ResponseCode.ACCESS_VALID.getCode(), "不能邀请自己下单", null);
-		}
-		List<ShopCarDto> shopCarDtos = new ArrayList<ShopCarDto>();
-
-		String[] carss = cars.split(",");
-		for (String string : carss) {
-			if (StringUtils.isEmpty(string)) {
-				continue;
-			}
-			ShopCarDto paramCar = new ShopCarDto();
-			paramCar.setCode(string);
-			ShopCarDto shopCarDto = shopCarService.findShopCar(paramCar);
-			if (shopCarDto == null) {
-				return ResponseDto.createResp(false, ResponseCode.CAR_NOT_EXIST.getCode(),
-						ResponseCode.CAR_NOT_EXIST.getMsg(), null);
-			}
-
-			/* 不是自己的购物车 */
-			if (!shopCarDto.getMbrCode().equals(getLoginMemberCode())) {
-				return ResponseDto.createResp(false, ResponseCode.ACCESS_VALID.getCode(),
-						ResponseCode.ACCESS_VALID.getMsg(), null);
-			}
-			shopCarDtos.add(shopCarDto);
-		}
-
-		AddrsDto paramAddr = new AddrsDto();
-		paramAddr.setCode(addrCode);
-		AddrsDto addrsDto = addrsService.findAddrs(paramAddr);
-		// TODO 去除省市区
-		Area province = null;// areaHessianService.get(addrsDto.getProvinceCode());
-		Area city = null;// areaHessianService.get(addrsDto.getCityCode());
-		Area area = null;// areaHessianService.get(addrsDto.getAreCode());
-
-		// 获取下单人类型
-		String mbrType = getLoginMember().getType();
-
-		List<OrderDto> list = orderService.createByCar(shopCarDtos, addrsDto, isInvoice, invoiceTitle, invoiceInfo,
-				remarks, mbrType, province == null ? "" : province.getName(), city == null ? "" : city.getName(),
-				area == null ? "" : area.getName(), myInvite);
-		return ResponseDto.successResp(list);
-	}
-
-	/**
-	 * 
-	 *
-	 * 方法说明：提交订单
-	 *
-	 * @param skuCode
-	 * @param shopCode
-	 * @param cnt
-	 * @param addrCode
-	 * @param isInvoice
-	 * @param invoiceTitle
-	 * @param invoiceInfo
-	 * @return
-	 *
-	 * @author CreateDate: 2017年9月1日
-	 *
-	 */
-	@RequestMapping(value = { "create" })
-	@ResponseBody
-	public ResponseDto create(String skuCode, String myInvite, Integer cnt, String addrCode, Boolean isInvoice,
-			String invoiceTitle, String invoiceInfo, String remarks) {
-		logger.info("createByCar --> String skuCode={}- start", skuCode);
-//		logger.info("createByCar --> String shopCode={}- start",shopCode);
-		logger.info("createByCar --> String cnt={}- start", cnt);
-		logger.info("createByCar --> String addrCode={}- start", addrCode);
-		logger.info("createByCar --> String isInvoice={}- start", isInvoice);
-		logger.info("createByCar --> String invoiceTitle={}- start", invoiceTitle);
-		logger.info("createByCar --> String invoiceInfo={}- start", invoiceInfo);
-		logger.info("createByCar --> String invoiceInfo={}- start", invoiceInfo);
-		if (StringUtils.isEmpty(skuCode) || /* StringUtils.isEmpty(shopCode) || */ StringUtils.isEmpty(addrCode)
-				|| isInvoice == null || cnt == null || cnt == 0) {
-			return ResponseDto.createResp(false, ResponseCode.PARAM_ERROR.getCode(), ResponseCode.PARAM_ERROR.getMsg(),
-					null);
-		}
-
-		// 不能邀请自己下单
-		if (getLoginMemberCode().equals(myInvite)) {
-			return ResponseDto.createResp(false, ResponseCode.ACCESS_VALID.getCode(), "不能邀请自己下单", null);
-		}
-		ProductSkuDto paramDto = new ProductSkuDto();
-		paramDto.setCode(skuCode);
-		ProductSkuDto productSkuDto = productSkuService.findProductSku(paramDto);
-
-		AddrsDto paramAddr = new AddrsDto();
-		paramAddr.setCode(addrCode);
-		AddrsDto addrsDto = addrsService.findAddrs(paramAddr);
-		// TODO 省市区去掉
-		Area province = null;// areaHessianService.get(addrsDto.getProvinceCode());
-		Area city = null;// areaHessianService.get(addrsDto.getCityCode());
-		Area area = null;// areaHessianService.get(addrsDto.getAreCode());
-
-		// 获取下单人类型
-		String mbrType = getLoginMember().getType();
-
-		OrderDto orderDto = orderService.createOrder(productSkuDto, myInvite, cnt, addrsDto, isInvoice, invoiceTitle,
-				invoiceInfo, remarks, mbrType, province == null ? "" : province.getName(),
-				city == null ? "" : city.getName(), area == null ? "" : area.getName());
-		return ResponseDto.successResp(orderDto);
-	}
-
-	/**
-	 * 
-	 *
-	 * 方法说明：特权提交订单
-	 *
-	 * @param skuCode
-	 * @param shopCode
-	 * @param cnt
-	 * @param addrCode
-	 * @return
-	 *
-	 * @author 林进权 CreateDate: 2017年9月11日
-	 *
-	 */
-	@RequestMapping(value = { "createByRank" })
-	@ResponseBody
-	@Deprecated
-	public ResponseDto createByRank(String skuCode, String shopCode, Integer cnt, String addrCode, String remarks) {
-		logger.info("createByCar --> String skuCode={}- start", skuCode);
-		logger.info("createByCar --> String shopCode={}- start", shopCode);
-		logger.info("createByCar --> String cnt={}- start", cnt);
-		logger.info("createByCar --> String addrCode={}- start", addrCode);
-
-		// 校验不为空
-		if (StringUtils.isEmpty(skuCode) || StringUtils.isEmpty(shopCode) || StringUtils.isEmpty(addrCode)
-				|| cnt == null || cnt == 0) {
-			return ResponseDto.createResp(false, ResponseCode.PARAM_ERROR.getCode(), ResponseCode.PARAM_ERROR.getMsg(),
-					null);
-		}
-		ShopDto paramShopDto = new ShopDto();
-		paramShopDto.setCode(getLoginShopCode());
-		ShopDto shopDto = shopService.findShop(paramShopDto);
-		// 特权未买
-		if (null == shopDto || null == shopDto.getRankCode()) {
-			return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_NOT_FOUND_BUY.getCode(),
-					ResponseCode.MEMBER_RANK_APPLY_NOT_FOUND_BUY.getMsg(), null);
-		}
-
-		// 特权过期
-		if (shopDto.getRankExpireTime() == null) {
-			return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_EXTIRED.getCode(),
-					ResponseCode.MEMBER_RANK_APPLY_EXTIRED.getMsg(), null);
-		}
-
-		// 特权过期
-		long extireTimes = shopDto.getRankExpireTime().getTime() - (System.currentTimeMillis()) / (1000 * 60 * 60 * 24);
-		if (extireTimes < 0) {
-			return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_EXTIRED.getCode(),
-					ResponseCode.MEMBER_RANK_APPLY_EXTIRED.getMsg(), null);
-		}
-
-		MemberRankDto param = new MemberRankDto();
-		param.setCode(shopDto.getRankCode());
-		MemberRankDto memberRankDto = memberRankService.findMemberRank(param);
-
-		// 特权查询不到
-		if (null == memberRankDto) {
-			return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_NOT_FOUND_BUY.getCode(),
-					ResponseCode.MEMBER_RANK_APPLY_NOT_FOUND_BUY.getMsg(), null);
-		}
-
-		ProductSkuDto paramDto = new ProductSkuDto();
-		paramDto.setCode(skuCode);
-		ProductSkuDto productSkuDto = productSkuService.findProductSku(paramDto);
-
-		// 最大金额校验
-		BigDecimal totalSalePrice = productSkuDto.getSalePrice().multiply(new BigDecimal(cnt));
-		AccountDto accountDto = accountService.findAccountByMbrCode(getLoginMemberCode());
-		if (null == accountDto.getRankCashAmt() || totalSalePrice.compareTo(accountDto.getRankCashAmt()) > 0) {
-			return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_NOT_YET_AMT.getCode(),
-					ResponseCode.MEMBER_RANK_APPLY_NOT_YET_AMT.getMsg() + accountDto.getRankCashAmt() + "元", null);
-		}
-
-		// 次数>0，校验次数
-		if (memberRankDto.getScale() > 0) {
-//			FindAccWaterPage findAccWaterPage = new FindAccWaterPage();
-//			AccWaterDto accWaterDto = new AccWaterDto();
-//			accWaterDto.setAccDate(new Date());
-//			accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
-//			accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
-//			accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-//			accWaterDto.setBizType(AccWaterBizType.PAYMENT.getValue());
-//			accWaterDto.setWaterType(AccWaterType.SUBTRACT.getValue());
-//			accWaterDto.setPayType(AccWaterPayType.RANK.getValue());
-//			accWaterDto.setAccCode(accountDto.getCode());
-//			//accWaterDto.setOpCode(getLoginMemberCode());
-//			findAccWaterPage.setParam(accWaterDto);
-//			List<AccWaterDto> list = accWaterService.findAccWaters(findAccWaterPage);
-			List<AccWaterDto> list = findAccwatersByRank();
-			if (null != list && list.size() > 0) {
-				if (list.size() >= memberRankDto.getScale()) {
-					return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_NOT_YET_TIMES.getCode(),
-							ResponseCode.MEMBER_RANK_APPLY_NOT_YET_TIMES.getMsg(), null);
-				}
-			}
-		}
-
-		// 校验库存
-		if (productSkuDto.getCnt() < cnt) {
-			return ResponseDto.createResp(false, ResponseCode.MEMBER_RANK_APPLY_NOT_YET_STORAGE.getCode(),
-					ResponseCode.MEMBER_RANK_APPLY_NOT_YET_STORAGE.getMsg(), null);
-		}
-
-		AddrsDto paramAddr = new AddrsDto();
-		paramAddr.setCode(addrCode);
-		AddrsDto addrsDto = addrsService.findAddrs(paramAddr);
-		Area province = areaHessianService.get(addrsDto.getProvinceCode());
-		Area city = areaHessianService.get(addrsDto.getCityCode());
-		Area area = areaHessianService.get(addrsDto.getAreCode());
-
-		// 获取下单人类型
-		String mbrType = getLoginUserRole();
-
-		// 创建订单
-		OrderDto orderDto = orderService.createOrder(productSkuDto, shopCode, cnt, addrsDto, false, null, null, remarks,
-				mbrType, province == null ? "" : province.getName(), city == null ? "" : city.getName(),
-				area == null ? "" : area.getName());
-		// 流水
-		orderService.payment(builPaymentDto(orderDto));
-		return ResponseDto.successResp(orderDto);
-	}
-
-	/**
-	 * 
-	 *
 	 * 方法说明：B端订单列表
 	 *
 	 * @param shopCode
@@ -447,69 +232,21 @@ public class OrderController extends BaseController {
 	 * @author CreateDate: 2017年9月2日
 	 *
 	 */
-	@RequestMapping(value = { "list_b" })
+	@RequestMapping(value = { "list" })
 	@ResponseBody
-	public ResponseDto list_b(String status, Integer pageNo, Integer pageSize) {
-		logger.info("list_b --> String status={}- start", status);
-
-		OrderDto param = new OrderDto();
-		if (StringUtils.isNotEmpty(status)) {
-			param.setStatus(status);
-		}
-		param.setMyInvite(getLoginMemberCode());
-		FindOrderPage findOrderPage = new FindOrderPage();
-		findOrderPage.setParam(param);
-		if (pageNo != null) {
-			findOrderPage.setStart((pageNo - 1) * pageSize);
-		}
-		if (pageSize != null) {
-			findOrderPage.setLimit(pageSize);
-		}
-		// 团队订单，只取下级的，不管订单状态
-		Page<OrderDto> page = orderService.findOrderPage(findOrderPage);
-
-		if (page.getRows().size() == 0) {
-			return ResponseDto.createResp(false, ResponseCode.NO_DATA.getCode(), ResponseCode.NO_DATA.getMsg(), null);
-		}
-		/* 获取订单详情 */
-		for (OrderDto orderDto : page.getRows()) {
-			OrderDetailDto paramDe = new OrderDetailDto();
-			paramDe.setOrderNo(orderDto.getOrderNo());
-			FindOrderDetailPage findOrderDetailPage = new FindOrderDetailPage();
-			findOrderDetailPage.setParam(paramDe);
-			orderDto.setDetailDtos(orderDetailService.findOrderDetails(findOrderDetailPage));
-		}
-		return ResponseDto.successResp(page);
-	}
-
-	/***
-	 * 
-	 *
-	 * 方法说明：C端订单列表
-	 *
-	 * @param status
-	 * @param pageNo
-	 * @param pageSize
-	 * @return
-	 *
-	 * @author CreateDate: 2017年9月6日
-	 *
-	 */
-	@RequestMapping(value = { "list_c" })
-	@ResponseBody
-	public ResponseDto list_c(String status, Integer pageNo, Integer pageSize) {
+	public ResponseDto list(String status, Integer pageNo, Integer pageSize) {
 		logger.info("list --> String status={}- start", status);
 
-		MemberDto memberDto = getLoginMember();
-		if (memberDto == null) {
-			return ResponseDto.createResp(false, ResponseCode.ACCESS_VALID.getCode(),
-					ResponseCode.ACCESS_VALID.getMsg(), null);
-		}
 		OrderDto param = new OrderDto();
-		param.setMbrCode(memberDto.getCode());
 		if (StringUtils.isNotEmpty(status)) {
-			param.setStatus(status);
+			if (status.contains(",")) {
+				param.setStatuss(Arrays.asList(status.split(",")));
+			} else {
+				param.setStatus(status);
+			}
 		}
+
+		param.setMbrCode(getLoginMemberCode());
 		FindOrderPage findOrderPage = new FindOrderPage();
 		findOrderPage.setParam(param);
 		if (pageNo != null) {
@@ -519,29 +256,14 @@ public class OrderController extends BaseController {
 			findOrderPage.setLimit(pageSize);
 		}
 		Page<OrderDto> page = orderService.findOrderPage(findOrderPage);
-		if (page.getRows().size() == 0) {
-			return ResponseDto.createResp(false, ResponseCode.NO_DATA.getCode(), ResponseCode.NO_DATA.getMsg(), null);
-		}
-		/* 获取订单详情 */
-		for (OrderDto orderDto : page.getRows()) {
-			OrderDetailDto paramDe = new OrderDetailDto();
-			paramDe.setOrderNo(orderDto.getOrderNo());
-			FindOrderDetailPage findOrderDetailPage = new FindOrderDetailPage();
-			findOrderDetailPage.setParam(paramDe);
-			orderDto.setDetailDtos(orderDetailService.findOrderDetails(findOrderDetailPage));
-		}
 		return ResponseDto.successResp(page);
 	}
 
 	/**
 	 * 
 	 *
-	 * 方法说明：确认收货
+	 * 方法说明：确认收款
 	 *
-	 * @param code
-	 * @return
-	 *
-	 * @author CreateDate: 2017年9月2日
 	 *
 	 */
 	@RequestMapping(value = { "receipt" })
@@ -562,8 +284,8 @@ public class OrderController extends BaseController {
 		OrderDto parmDto = new OrderDto();
 		parmDto.setCode(code);
 		OrderDto orderDto = orderService.findOrder(parmDto);
-		if (orderDto.getStatus().equals(OrderStatus.YQR.getValue())) {
-			orderService.complete(orderDto);
+		if (orderDto.getStatus().equals(OrderStatus.DQR.getValue())) {
+			orderService.payment(builPaymentDto(orderDto));
 		}
 		return ResponseDto.successResp(null);
 	}
@@ -608,7 +330,7 @@ public class OrderController extends BaseController {
 		paymentDto.setOperator(getLoginMemberCode());
 		paymentDto.setPayer(orderDto.getMbrCode());
 		paymentDto.setPaymentDate(new Date());
-		paymentDto.setPaymentMethod(AccWaterPayType.RANK.getValue());
+		paymentDto.setPaymentMethod(orderDto.getPayType());
 		paymentDto.setSn(NoUtil.generateNo(NoUtil.JY));
 		paymentDto.setStatus(PaymentStatus.SUCCESS.getValue());
 		paymentDto.setType(PaymentType.OFFLINE.getValue());
@@ -720,7 +442,7 @@ public class OrderController extends BaseController {
 		accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
 		accWaterDto.setBizType(AccWaterBizType.PAYMENT.getValue());
 		accWaterDto.setWaterType(AccWaterType.SUBTRACT.getValue());
-		accWaterDto.setPayType(AccWaterPayType.RANK.getValue());
+//		accWaterDto.setPayType(AccWaterPayType.RANK.getValue());
 		accWaterDto.setAccCode(accountDto.getCode());
 
 		// 一年内的购买记录
@@ -733,96 +455,4 @@ public class OrderController extends BaseController {
 		return accWaterService.findAccWaters(findAccWaterPage);
 	}
 
-	public static void main(String[] args) {
-		EvlDto evlDto = new EvlDto();
-		evlDto.setGrade(1);
-		evlDto.setImgs("/eoms/a.jpg,/eomg/b.png");
-		evlDto.setSkuCode("aaaaaaaa");
-		evlDto.setInfo("评价");
-		List<EvlDto> list = new ArrayList<EvlDto>();
-		list.add(evlDto);
-		evlDto = new EvlDto();
-		evlDto.setGrade(1);
-		evlDto.setImgs("/eoms/a.jpg,/eomg/b.png");
-		evlDto.setSkuCode("aaaaaaaa");
-		evlDto.setInfo("评价");
-		list.add(evlDto);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("orderCode", "orderCode");
-		map.put("evlDtos", list);
-		System.out.println(JSONObject.toJSON(map));
-
-//		String json = "{'evlDtos':[{'grade':1,'imgs':'/eoms/a.jpg,/eomg/b.png','info':'评价','skuCode':'aaaaaaaa'},{'grade':1,'imgs':'/eoms/a.jpg,/eomg/b.png','info':'评价','skuCode':'aaaaaaaa'}],'orderCode':'LJ_06788b89f5924e0aaa8b738b92829698'}";
-
-	}
-
-	/**
-	 * 补充收货地址和赠品信息，在用户开通会员之后 需要修改赠品订单上的收货地址
-	 */
-	@RequestMapping(value = { "replenishAddrAndGift" })
-	@ResponseBody
-	public ResponseDto replenishAddrAndGift(String receiveName, String receivePhone, String giftCode,
-			AddrsDto addrsDto) {
-		logger.debug("replenishAddrAndGift --> (={},{},{},{}) - start", receiveName, receivePhone, giftCode, addrsDto);
-		// 校验必填
-		if (null == addrsDto
-//				|| StringUtils.isEmpty(addrsDto.getProvinceCode())
-//				|| StringUtils.isEmpty(addrsDto.getCityCode()) 
-//				|| StringUtils.isEmpty(addrsDto.getAreCode())
-				|| StringUtils.isEmpty(addrsDto.getAddrDetail()) || StringUtils.isEmpty(receiveName)
-				|| StringUtils.isEmpty(receivePhone)) {
-			return ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR.getCode(), "资料未填写完整！");
-		}
-
-		// 获取礼品
-		ProductGiftDto productGiftDto = new ProductGiftDto();
-		productGiftDto.setCode(giftCode);
-		ProductGiftDto giftDto = productGiftService.findProductGift(productGiftDto);
-		if (giftDto == null) {
-			return ResponseDto.getErrorResponse(ResponseCode.PRODCUT_SOLD_OUT);
-		}
-
-		// 地址
-		String mbrCode = getLoginMemberCode();
-		addrsDto.setMbrCode(mbrCode);
-		addrsDto.setReciverName(receiveName);
-		addrsDto.setReciverPhone(receivePhone);
-		addrsDto.setCreateTime(new Date());
-		addrsDto.setDelFlag("0");
-		addrsDto.setIsDefault(AddrsIsDefault.Y.getValue());
-		addrsService.addAddrs(addrsDto);
-
-		FindOrderPage findOrderPage = new FindOrderPage();
-		OrderDto paramOrder = new OrderDto();
-		paramOrder.setMbrCode(mbrCode);
-		paramOrder.setGiftType(true);
-		findOrderPage.setParam(paramOrder);
-		List<OrderDto> orders = orderService.findOrders(findOrderPage);
-		if (orders.isEmpty() || orders.size() <= 0) {
-			return ResponseDto.getErrorResponse(ResponseCode.MEMBER_RANK_APPLY_NOT_FOUND_BUY);
-		}
-
-		/* 补充收货地址 */
-//		Area province = areaHessianService.get(addrsDto.getProvinceCode());
-//		Area city = areaHessianService.get(addrsDto.getCityCode());
-//		Area area = areaHessianService.get(addrsDto.getAreCode());
-
-		OrderDto order = orders.get(0);
-
-		OrderDto orderDto = new OrderDto();
-		orderDto.setCode(order.getCode());
-		orderDto.setRevicerName(addrsDto.getReciverName());
-		orderDto.setRevicePhone(addrsDto.getReciverPhone());
-		orderDto.setAddrInfo(addrsDto.getAddrDetail());
-//		String areaName = province.getName() + city.getName() + area.getName();
-//		orderDto.setAreaName(areaName);
-		orderDto.setReciverZip(addrsDto.getReciverZip() == null ? "" : addrsDto.getReciverZip());
-		orderDto.setRemarks(giftDto.getName());
-		orderDto.setGiftCode(giftCode);
-		orderService.updateOrder(orderDto);
-
-		logger.debug("replenishAddrAndGift --> (={}) - end");
-		return ResponseDto.successResp(null);
-	}
 }

@@ -22,4 +22,8 @@ public class PublicConstants {
 	public static final String ACTIVITY_H5 = "eoms-web/a/cm/activity/viewH5";
 	/** 默认邀请开会员返利200 */
 	public static BigDecimal DEFAULT_REBATE_AMOUNT = new BigDecimal(200);
+	/**
+	 * 抢单队列key
+	 */
+	public static final String ORDER_GRAB_LIST = "ORDER_GRAB_LIST";
 }

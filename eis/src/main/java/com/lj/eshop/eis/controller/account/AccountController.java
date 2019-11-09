@@ -18,22 +18,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lj.base.core.encryption.MD5;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.pagination.PageSortType;
+import com.lj.business.common.CommonConstant;
+import com.lj.distributecache.RedisCache;
 import com.lj.eshop.dto.AccWaterDto;
 import com.lj.eshop.dto.AccountDto;
 import com.lj.eshop.dto.FindAccWaterPage;
 import com.lj.eshop.dto.FindWithdrawPage;
-import com.lj.eshop.dto.MbrbankDto;
 import com.lj.eshop.dto.MessageDto;
 import com.lj.eshop.dto.WithdrawDto;
 import com.lj.eshop.eis.controller.BaseController;
 import com.lj.eshop.eis.dto.ResponseCode;
 import com.lj.eshop.eis.dto.ResponseDto;
 import com.lj.eshop.eis.dto.WithdrawApplyDto;
-import com.lj.eshop.eis.utils.encryption.EncryptionUtils;
 import com.lj.eshop.emus.AccWaterBizType;
-import com.lj.eshop.emus.AccWaterPayType;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
 import com.lj.eshop.emus.MessageTemplate;
@@ -49,7 +49,7 @@ import com.lj.eshop.service.IWithdrawService;
  * <p>
  * 详细描述：
  * 
- * @Company: 
+ * @Company:
  * @author lhy CreateDate: 2017年9月4日
  */
 @RestController
@@ -71,6 +71,8 @@ public class AccountController extends BaseController {
 	IMbrbankService mbrbankService;
 	@Autowired
 	IMessageService messageService;
+	@Autowired
+	private RedisCache redisCache;
 
 	/***
 	 * 方法说明：虚拟账户首页查询。
@@ -102,6 +104,8 @@ public class AccountController extends BaseController {
 		BigDecimal incomeAmt = accWaterService.findIncomeAmt(findAccWaterPage);
 
 		resAcct.setIncomeAmt(incomeAmt);// 累计收益
+		resAcct.setIsSetPwd(StringUtils.isNotBlank(accountDto.getPayPwd()));
+		resAcct.setIsGrab(CommonConstant.Y.equals(redisCache.get("grab:" + getLoginMemberCode())));
 		log.info("AccountController.index end ");
 		return ResponseDto.successResp(resAcct);
 	}
@@ -118,33 +122,34 @@ public class AccountController extends BaseController {
 	@ResponseBody
 	public ResponseDto withdrawApply(WithdrawApplyDto withdrawDto) {
 		log.debug("AccountController.index [withdrawDto:]" + withdrawDto);
-		if (StringUtils.isBlank(withdrawDto.getBankCardCode())) {
-			return ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR);
-		}
+		/*
+		 * if (StringUtils.isBlank(withdrawDto.getBankCardCode())) { return
+		 * ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR); }
+		 */
 		if (BigDecimal.ZERO.compareTo(withdrawDto.getAmt()) >= 0) {// 提现金额必须大于0
 			return ResponseDto.getErrorResponse(ResponseCode.ACC_AMT_MUST_MORE_THAN_ZERO);
 		}
 		String mbrCode = getLoginMemberCode();
-		// 校验密码 B端才校验
-//		if (member.getType().equals(MemberType.SHOP.getValue())) {
+		// 校验密码
+
 		ResponseDto checkResult = checkPaypwd(withdrawDto.getPayPwd());
 		if (checkResult != null) {
 			return checkResult;
 		}
-//		}
 
-		MbrbankDto findBank = new MbrbankDto();
-		findBank.setCode(withdrawDto.getBankCardCode());
-		MbrbankDto mbrbank = mbrbankService.findMbrbank(findBank);// 先找到提现的银行卡
-
+		/*
+		 * MbrbankDto findBank = new MbrbankDto();
+		 * findBank.setCode(withdrawDto.getBankCardCode()); MbrbankDto mbrbank =
+		 * mbrbankService.findMbrbank(findBank);// 先找到提现的银行卡
+		 */
 		WithdrawDto apply = new WithdrawDto();
 		apply.setAmt(withdrawDto.getAmt());// 申请金额
 		apply.setMbrCode(mbrCode);// 申请提现人
-		apply.setBankAccNo(mbrbank.getBankAccNo());// 提现银行信息
-		apply.setMbrName(mbrbank.getAccName());
-		apply.setBankName(mbrbank.getBankName());
-		apply.setBranchBank(mbrbank.getBranchBank());
-		apply.setPhone(mbrbank.getPhone());
+//		apply.setBankAccNo(mbrbank.getBankAccNo());// 提现银行信息
+		apply.setMbrName(getLoginMember().getName());
+//		apply.setBankName(mbrbank.getBankName());
+//		apply.setBranchBank(mbrbank.getBranchBank());
+		apply.setPhone(getLoginMember().getPhone());
 		withdrawService.addWithdraw(apply);
 
 		// 5.发送通知信息 成功才发
@@ -179,7 +184,7 @@ public class AccountController extends BaseController {
 			return ResponseDto.getErrorResponse(ResponseCode.PAY_PWD_LOCK.getCode(), msg);
 		}
 		// 2.过了锁定时间周期错误则重置错误错误次数为1 ，并记录当前错误时间
-		if (!accountDto.getPayPwd().equals(EncryptionUtils.md5SavePwd(inputPayPwd))) {
+		if (!accountDto.getPayPwd().equals(MD5.encryptByMD5(inputPayPwd))) {
 			AccountDto updAcc = new AccountDto();
 			updAcc.setCode(accountDto.getCode());
 			updAcc.setWrongTime(new Date());
@@ -256,7 +261,7 @@ public class AccountController extends BaseController {
 			findAccWaterPage.setParam(param);
 		}
 		param.setAccCode(accountDto.getCode());
-		param.setPayType(AccWaterPayType.VIRTUAL.getValue());// 平台虚户的出入账单
+//		param.setPayType(AccWaterPayType.VIRTUAL.getValue());// 平台虚户的出入账单
 		param.setStatus(AccWaterStatus.SUCCESS.getValue());
 		if (pageNo != null) {
 			findAccWaterPage.setStart((pageNo - 1) * pageSize);

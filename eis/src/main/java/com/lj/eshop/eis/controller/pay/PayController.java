@@ -28,10 +28,8 @@ import com.lj.eshop.eis.dto.PayReqDto;
 import com.lj.eshop.eis.dto.PayRespDto;
 import com.lj.eshop.eis.dto.ResponseDto;
 import com.lj.eshop.eis.service.impl.PayService;
-import com.lj.eshop.emus.AccWaterPayType;
 import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.DelFlag;
-import com.lj.eshop.emus.OrderStatus;
 import com.lj.eshop.emus.PaymentStatus;
 import com.lj.eshop.emus.PaymentType;
 import com.lj.eshop.service.IAccountService;
@@ -99,9 +97,9 @@ public class PayController extends BaseController {
 			return ResponseDto.getErrorResponse(ErrorCode.ORDER_PAYMENT_ERROR, "订单不存在");
 		}
 
-		if (!orderDto.getStatus().equals(OrderStatus.YQR.getValue())) {
-			return ResponseDto.getErrorResponse(ErrorCode.ORDER_PAYMENT_ERROR, "订单已支付");
-		}
+//		if (!orderDto.getStatus().equals(OrderStatus.YQR.getValue())) {
+//			return ResponseDto.getErrorResponse(ErrorCode.ORDER_PAYMENT_ERROR, "订单已支付");
+//		}
 		// 校验订单价格
 		if (orderDto.getAmt().compareTo(accountDto.getRankCashAmt()) > 0) {
 			return ResponseDto.getErrorResponse(ErrorCode.ORDER_PAYMENT_ERROR, "订单价格超出会员可用余额");
@@ -133,7 +131,7 @@ public class PayController extends BaseController {
 		paymentDto.setOperator(getLoginMemberCode());
 		paymentDto.setPayer(orderDto.getMbrCode());
 		paymentDto.setPaymentDate(new Date());
-		paymentDto.setPaymentMethod(AccWaterPayType.RANK.getValue());
+//		paymentDto.setPaymentMethod(AccWaterPayType.RANK.getValue());
 		paymentDto.setSn(NoUtil.generateNo(NoUtil.JY));
 		paymentDto.setStatus(PaymentStatus.SUCCESS.getValue());
 		paymentDto.setType(PaymentType.OFFLINE.getValue());

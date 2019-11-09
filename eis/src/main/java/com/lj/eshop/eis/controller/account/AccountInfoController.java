@@ -33,10 +33,6 @@ import com.lj.eshop.service.IAccountInfoService;
 @RestController
 @RequestMapping("/acctInfo")
 public class AccountInfoController extends BaseController {
-	/** 提现密码锁定时长 （毫秒） 1小时 */
-	private static final int PAY_PWD_LOCK_TIME_MILLISECOND = 3600000;
-	/** 提现密码连续错误 最多次数 **/
-	private static final int PAY_PWD_WRONG_MAX_CNT = 5;
 
 	@Autowired
 	IAccountInfoService accountInfoService;
@@ -67,6 +63,7 @@ public class AccountInfoController extends BaseController {
 				|| StringUtils.isBlank(param.getPid()) || StringUtils.isBlank(param.getType())) {
 			return ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR);
 		}
+		param.setMbrCode(getLoginMemberCode());
 		accountInfoService.addAccountInfo(param);
 		return ResponseDto.successResp();
 	}
@@ -76,6 +73,10 @@ public class AccountInfoController extends BaseController {
 	public ResponseDto edit(AccountInfoDto param) {
 		if (StringUtils.isBlank(param.getCode())) {
 			return ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR);
+		}
+		AccountInfoDto accountInfoDto = accountInfoService.findAccountInfo(param);
+		if (accountInfoDto == null) {
+			return ResponseDto.getErrorResponse("", "数据不存在");
 		}
 		accountInfoService.updateAccountInfo(param);
 		return ResponseDto.successResp();

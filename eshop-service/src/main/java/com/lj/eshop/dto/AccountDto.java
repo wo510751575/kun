@@ -4,65 +4,89 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class AccountDto implements Serializable { 
+public class AccountDto implements Serializable {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2032123592185964192L;
 
 	/** */
-    private String code;
+	private String code;
 
-    /** 账号*/
-    private String accNo;
+	/** 账号 */
+	private String accNo;
 
-    /** 会员编码*/
-    private String mbrCode;
+	/** 会员编码 */
+	private String mbrCode;
 
-    /** 可用金额*/
-    private BigDecimal cashAmt;
-    
-    /** 特权可用金额*/
-    private BigDecimal rankCashAmt;
+	/** 可用金额 */
+	private BigDecimal cashAmt;
 
-    /** 总提现金额*/
-    private BigDecimal totalWithdrawAmt;
+	/** 特权可用金额 */
+	private BigDecimal rankCashAmt;
 
-    /** 账户类型 0：资金账户 1：其他*/
-    private String type;
+	/** 总提现金额 */
+	private BigDecimal totalWithdrawAmt;
 
-    /** 状态 0：激活 1：正常 2：冻结*/
-    private String status;
+	/** 账户类型 0：资金账户 1：其他 */
+	private String type;
 
-    /** 赠送金额*/
-    private BigDecimal freeAmt;
+	/** 状态 0：激活 1：正常 2：冻结 */
+	private String status;
 
-    /** 提现密码*/
-    private String payPwd;
+	/** 赠送金额 */
+	private BigDecimal freeAmt;
 
-    /** 更新时间*/
-    private Date updateTime;
+	/** 提现密码 */
+	private String payPwd;
 
-    /** */
-    private String creater;
+	/** 更新时间 */
+	private Date updateTime;
 
-    /** */
-    private Date createTime;
-    /** 累计收益 */
-    private BigDecimal incomeAmt;
-    
-    /** 提现密码连续输入错误次数*/
-    private Integer wrongCnt;
+	/** */
+	private String creater;
 
-    /** 提现密码输入错误的最新时间*/
-    private Date wrongTime;
-    /**
-     * 历史花销
-     */
-    private BigDecimal payedAmount;
-    
-    /**
+	/** */
+	private Date createTime;
+	/** 累计收益 */
+	private BigDecimal incomeAmt;
+
+	/** 提现密码连续输入错误次数 */
+	private Integer wrongCnt;
+
+	/** 提现密码输入错误的最新时间 */
+	private Date wrongTime;
+	/**
+	 * 历史花销
+	 */
+	private BigDecimal payedAmount;
+	/**
+	 * 是否已设置支付密码
+	 */
+	private Boolean isSetPwd;
+	/**
+	 * 是否抢单
+	 */
+	private Boolean isGrab;
+
+	public Boolean getIsGrab() {
+		return isGrab;
+	}
+
+	public void setIsGrab(Boolean isGrab) {
+		this.isGrab = isGrab;
+	}
+
+	public Boolean getIsSetPwd() {
+		return isSetPwd;
+	}
+
+	public void setIsSetPwd(Boolean isSetPwd) {
+		this.isSetPwd = isSetPwd;
+	}
+
+	/**
 	 * @return the payedAmount
 	 */
 	public BigDecimal getPayedAmount() {
@@ -75,13 +99,14 @@ public class AccountDto implements Serializable {
 	public void setPayedAmount(BigDecimal payedAmount) {
 		this.payedAmount = payedAmount;
 	}
-    /**
+
+	/**
 	 * @return the totalWithdrawAmt
 	 */
 	public BigDecimal getTotalWithdrawAmt() {
 		if (totalWithdrawAmt != null) {
-			totalWithdrawAmt= totalWithdrawAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-		} 
+			totalWithdrawAmt = totalWithdrawAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 		return totalWithdrawAmt;
 	}
 
@@ -97,8 +122,8 @@ public class AccountDto implements Serializable {
 	 */
 	public BigDecimal getFreeAmt() {
 		if (freeAmt != null) {
-			freeAmt= freeAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-		} 
+			freeAmt = freeAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 		return freeAmt;
 	}
 
@@ -110,99 +135,98 @@ public class AccountDto implements Serializable {
 	}
 
 	public String getCode() {
-        return code;
-    }
+		return code;
+	}
 
-    public void setCode(String code) {
-        this.code = code == null ? null : code.trim();
-    }
+	public void setCode(String code) {
+		this.code = code == null ? null : code.trim();
+	}
 
-    public String getAccNo() {
-        return accNo;
-    }
+	public String getAccNo() {
+		return accNo;
+	}
 
-    public void setAccNo(String accNo) {
-        this.accNo = accNo == null ? null : accNo.trim();
-    }
+	public void setAccNo(String accNo) {
+		this.accNo = accNo == null ? null : accNo.trim();
+	}
 
-    public String getMbrCode() {
-        return mbrCode;
-    }
+	public String getMbrCode() {
+		return mbrCode;
+	}
 
-    public void setMbrCode(String mbrCode) {
-        this.mbrCode = mbrCode == null ? null : mbrCode.trim();
-    }
+	public void setMbrCode(String mbrCode) {
+		this.mbrCode = mbrCode == null ? null : mbrCode.trim();
+	}
 
-    public BigDecimal getCashAmt() {
-    	if (cashAmt != null) {
-    		cashAmt= cashAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-		} 
-    	return cashAmt;
-    }
+	public BigDecimal getCashAmt() {
+		if (cashAmt != null) {
+			cashAmt = cashAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
+		return cashAmt;
+	}
 
-    public void setCashAmt(BigDecimal cashAmt) {
-        this.cashAmt = cashAmt;
-    }
+	public void setCashAmt(BigDecimal cashAmt) {
+		this.cashAmt = cashAmt;
+	}
 
+	public String getType() {
+		return type;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public void setType(String type) {
+		this.type = type == null ? null : type.trim();
+	}
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public void setStatus(String status) {
+		this.status = status == null ? null : status.trim();
+	}
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+	public String getPayPwd() {
+		return payPwd;
+	}
 
-    public String getPayPwd() {
-        return payPwd;
-    }
+	public void setPayPwd(String payPwd) {
+		this.payPwd = payPwd == null ? null : payPwd.trim();
+	}
 
-    public void setPayPwd(String payPwd) {
-        this.payPwd = payPwd == null ? null : payPwd.trim();
-    }
+	public Date getUpdateTime() {
+		return updateTime;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public String getCreater() {
+		return creater;
+	}
 
-    public String getCreater() {
-        return creater;
-    }
+	public void setCreater(String creater) {
+		this.creater = creater == null ? null : creater.trim();
+	}
 
-    public void setCreater(String creater) {
-        this.creater = creater == null ? null : creater.trim();
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
 	/**
 	 * @return the incomeAmt
 	 */
 	public BigDecimal getIncomeAmt() {
-		if(incomeAmt!=null){
-			incomeAmt=incomeAmt.setScale(2,BigDecimal.ROUND_HALF_UP);
+		if (incomeAmt != null) {
+			incomeAmt = incomeAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 		}
 		return incomeAmt;
 	}
-	
+
 	/**
 	 * @param incomeAmt the incomeAmt to set
 	 */
@@ -211,9 +235,9 @@ public class AccountDto implements Serializable {
 	}
 
 	public BigDecimal getRankCashAmt() {
-		if(rankCashAmt!=null){
-			rankCashAmt=rankCashAmt.setScale(2,BigDecimal.ROUND_HALF_UP);
-		} 
+		if (rankCashAmt != null) {
+			rankCashAmt = rankCashAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 		return rankCashAmt;
 	}
 
@@ -248,8 +272,5 @@ public class AccountDto implements Serializable {
 	public void setWrongTime(Date wrongTime) {
 		this.wrongTime = wrongTime;
 	}
-	
-	
-    
-    
+
 }

@@ -27,6 +27,8 @@ import com.lj.base.core.util.AssertUtils;
 import com.lj.base.core.util.GUID;
 import com.lj.base.core.util.StringUtils;
 import com.lj.base.exception.TsfaServiceException;
+import com.lj.business.common.CommonConstant;
+import com.lj.distributecache.RedisCache;
 import com.lj.eshop.constant.ErrorCode;
 import com.lj.eshop.constant.NoUtil;
 import com.lj.eshop.dao.IOrderDao;
@@ -36,7 +38,6 @@ import com.lj.eshop.dto.AccountDto;
 import com.lj.eshop.dto.AddrsDto;
 import com.lj.eshop.dto.CatalogSummaryDto;
 import com.lj.eshop.dto.EvlProductDto;
-import com.lj.eshop.dto.FindAccWaterPage;
 import com.lj.eshop.dto.FindOrderDetailPage;
 import com.lj.eshop.dto.FindOrderPage;
 import com.lj.eshop.dto.FindOrderRetireDetailPage;
@@ -51,10 +52,8 @@ import com.lj.eshop.dto.ProductDto;
 import com.lj.eshop.dto.ProductRankPriceDto;
 import com.lj.eshop.dto.ProductSkuDto;
 import com.lj.eshop.dto.ShopCarDto;
-import com.lj.eshop.dto.ShopDto;
 import com.lj.eshop.emus.AccWaterAccType;
 import com.lj.eshop.emus.AccWaterBizType;
-import com.lj.eshop.emus.AccWaterPayType;
 import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
@@ -124,6 +123,8 @@ public class OrderServiceImpl implements IOrderService {
 	private IMessageService messageService;
 	@Autowired
 	private IEvlProductService evlProductService;
+	@Autowired
+	private RedisCache redisCache;
 
 	@Override
 	public void addOrder(OrderDto orderDto) throws TsfaServiceException {
@@ -564,7 +565,7 @@ public class OrderServiceImpl implements IOrderService {
 		AssertUtils.notNullAndEmpty(orderDto.getOrderNo(), "订单编号不能为空");
 //		AssertUtils.notNullAndEmpty(orderDto.getShopCode(), "店铺编号不能为空");
 		try {
-			if (!orderDto.getStatus().equals(OrderStatus.YQR.getValue())) {
+			if (!orderDto.getStatus().equals(OrderStatus.DQR.getValue())) {
 				return;
 			}
 
@@ -633,7 +634,7 @@ public class OrderServiceImpl implements IOrderService {
 				accWaterDto.setAccNo(accountDto.getAccNo());
 				accWaterDto.setAccCode(accountDto.getCode());
 				accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-				accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
+//				accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
 				accWaterDto.setBeforeAmt(beforeAmt);
 				accWaterDto.setAfterAmt(afterAmt);
 				accWaterDto.setBizType(AccWaterBizType.COMMISSION.getValue());
@@ -674,37 +675,11 @@ public class OrderServiceImpl implements IOrderService {
 			if (orderDto.getGiftType()) {
 				return;
 			}
-			/* 库存回归 */
-			OrderDetailDto param = new OrderDetailDto();
-			param.setOrderNo(orderDto.getOrderNo());
-			FindOrderDetailPage findOrderDetailPage = new FindOrderDetailPage();
-			findOrderDetailPage.setParam(param);
-			List<OrderDetailDto> detailDtos = orderDetailService.findOrderDetails(findOrderDetailPage);
-			for (OrderDetailDto orderDetailDto : detailDtos) {
-				/* 获取商品 */
-				ProductDto paramPro = new ProductDto();
-				paramPro.setCode(orderDetailDto.getProductCode());
-				ProductDto productDto = productService.findProduct(paramPro);
-
-				/* 获取商品规格 */
-				ProductSkuDto paramSku = new ProductSkuDto();
-				paramSku.setCode(orderDetailDto.getSkuCode());
-				ProductSkuDto productSkuDto = productSkuService.findProductSku(paramSku);
-
-				/* 增加商品库存 */
-				productDto.setCnt(productDto.getCnt() + orderDetailDto.getCnt());
-				productService.updateProduct(productDto);
-
-				/* 增加规格商品库存 */
-				productSkuDto.setCnt(productSkuDto.getCnt() + orderDetailDto.getCnt());
-				productSkuService.updateProductSku(productSkuDto);
-
-			}
-
 			/* 状态流转至已取消 */
 			orderDto.setStatus(OrderStatus.CANCEL.getValue());
 			this.updateOrder(orderDto);
-
+			// 设置取消抢单
+			redisCache.set("grab:" + orderDto.getMbrCode(), CommonConstant.N);
 		} catch (TsfaServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw e;
@@ -729,62 +704,36 @@ public class OrderServiceImpl implements IOrderService {
 
 			if (orderDto.getAmt().compareTo(paymentDto.getAmount()) <= 0) {
 
-				/* 状态流转至待发货 */
-				orderDto.setStatus(OrderStatus.DQR.getValue());
+				/* 状态流转至完成 */
+				orderDto.setStatus(OrderStatus.COMPLETED.getValue());
 				orderDto.setPayType(paymentDto.getPaymentMethod());
 				orderDto.setPayTime(new Date());
 				this.updateOrder(orderDto);
+
+				// 设置取消抢单
+				redisCache.set("grab:" + orderDto.getMbrCode(), CommonConstant.N);
 
 				/* 获取账户 */
 				AccountDto parmAccountDto = new AccountDto();
 				parmAccountDto.setCode(paymentDto.getAccCode());
 				AccountDto accountDto = accountService.findAccount(parmAccountDto);
 
-				if (paymentDto.getPaymentMethod().equals(AccWaterPayType.RANK.getValue())) {
-					if (accountDto.getRankCashAmt().compareTo(orderDto.getAmt()) < 0) {
-						logger.error("特权额度不足！");
-						throw new TsfaServiceException(ErrorCode.ORDER_PAYMENT_ERROR, "特权额度不足！");
-					}
-					BigDecimal beforeAmt = accountDto.getRankCashAmt();
-					accountDto.setRankCashAmt(accountDto.getRankCashAmt().subtract(orderDto.getAmt()));
-					BigDecimal afterAmt = accountDto.getRankCashAmt();
-					accountService.updateAccount(accountDto);
-
-					/* 记录账户流水 */
-					AccWaterDto accWaterDto = new AccWaterDto();
-					accWaterDto.setAccDate(new Date());
-					accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
-					accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
-					accWaterDto.setAmt(paymentDto.getAmount());
-					accWaterDto.setAccNo(accountDto.getAccNo());
-					accWaterDto.setAccCode(accountDto.getCode());
-					accWaterDto.setBeforeAmt(beforeAmt);
-					accWaterDto.setAfterAmt(afterAmt);
-					accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-					accWaterDto.setPayType(paymentDto.getPaymentMethod());
-					accWaterDto.setBizType(AccWaterBizType.PAYMENT.getValue());
-					accWaterDto.setWaterType(AccWaterType.SUBTRACT.getValue());
-					accWaterDto.setTranOrderNo(orderDto.getOrderNo());
-					accWaterService.addAccWater(accWaterDto);
-				} else {
-
-					/* 记录账户流水 */
-					AccWaterDto accWaterDto = new AccWaterDto();
-					accWaterDto.setAccDate(new Date());
-					accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
-					accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
-					accWaterDto.setAmt(paymentDto.getAmount());
-					accWaterDto.setAccNo(accountDto.getAccNo());
-					accWaterDto.setAccCode(accountDto.getCode());
-					accWaterDto.setBeforeAmt(new BigDecimal(0));
-					accWaterDto.setAfterAmt(paymentDto.getAmount());
-					accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-					accWaterDto.setPayType(paymentDto.getPaymentMethod());
-					accWaterDto.setBizType(AccWaterBizType.PAYMENT.getValue());
-					accWaterDto.setWaterType(AccWaterType.SUBTRACT.getValue());
-					accWaterDto.setTranOrderNo(orderDto.getOrderNo());
-					accWaterService.addAccWater(accWaterDto);
-				}
+				/* 记录账户流水 TODO 计算佣金提成 */
+				AccWaterDto accWaterDto = new AccWaterDto();
+				accWaterDto.setAccDate(new Date());
+				accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
+				accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
+				accWaterDto.setAmt(paymentDto.getAmount());
+				accWaterDto.setAccNo(accountDto.getAccNo());
+				accWaterDto.setAccCode(accountDto.getCode());
+				accWaterDto.setBeforeAmt(new BigDecimal(0));
+				accWaterDto.setAfterAmt(paymentDto.getAmount().multiply(new BigDecimal(0.009)));
+				accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
+				accWaterDto.setPayType(paymentDto.getPaymentMethod());
+				accWaterDto.setBizType(AccWaterBizType.COMMISSION.getValue());
+				accWaterDto.setWaterType(AccWaterType.ADD.getValue());
+				accWaterDto.setTranOrderNo(orderDto.getOrderNo());
+				accWaterService.addAccWater(accWaterDto);
 
 				/* 消息通知 */
 				sendMessageByOrder(orderDto, MessageTemplate.B_SERVICE_ORDER_BILL_PAYMENTED);
@@ -915,101 +864,88 @@ public class OrderServiceImpl implements IOrderService {
 				AccountDto accountDto = accountService.findAccountByMbrCode(orderDto.getMbrCode());
 
 				/* 特权订单,返回特权额度/其它订单返回到账户余额 */
-				if (orderDto.getPayType().equals(AccWaterPayType.RANK.getValue())) {
-					BigDecimal beforeAmt = accountDto.getRankCashAmt();
-					accountDto.setRankCashAmt(accountDto.getRankCashAmt().add(returnAmt));
-					BigDecimal afterAmt = accountDto.getRankCashAmt();
-					/* 减去历史花销 */
-					accountDto.setPayedAmount(accountDto.getPayedAmount().subtract(returnAmt));
-					accountService.updateAccount(accountDto);
-
-					/* 记录账户流水 */
-					AccWaterDto accWaterDto = new AccWaterDto();
-					accWaterDto.setAccDate(new Date());
-					accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
-					accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
-					accWaterDto.setAmt(returnAmt);
-					accWaterDto.setAccNo(accountDto.getAccNo());
-					accWaterDto.setAccCode(accountDto.getCode());
-					accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-					accWaterDto.setPayType(AccWaterPayType.RANK.getValue());
-					accWaterDto.setBeforeAmt(beforeAmt);
-					accWaterDto.setAfterAmt(afterAmt);
-					accWaterDto.setBizType(AccWaterBizType.REFUND.getValue());
-					accWaterDto.setOpCode(orderRetireDto.getAuditor());
-					accWaterDto.setWaterType(AccWaterType.ADD.getValue());
-					accWaterDto.setTranOrderNo(orderDto.getOrderNo());
-					accWaterService.addAccWater(accWaterDto);
-
-				} else {
-					BigDecimal beforeAmt = accountDto.getCashAmt();
-					accountDto.setCashAmt(accountDto.getCashAmt().add(returnAmt));
-					BigDecimal afterAmt = accountDto.getCashAmt();
-					/* 减去历史花销 */
-					accountDto.setPayedAmount(accountDto.getPayedAmount().subtract(returnAmt));
-					accountService.updateAccount(accountDto);
-
-					/* 记录账户流水 */
-					AccWaterDto accWaterDto = new AccWaterDto();
-					accWaterDto.setAccDate(new Date());
-					accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
-					accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
-					accWaterDto.setAmt(returnAmt);
-					accWaterDto.setAccNo(accountDto.getAccNo());
-					accWaterDto.setAccCode(accountDto.getCode());
-					accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-					accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
-					accWaterDto.setBeforeAmt(beforeAmt);
-					accWaterDto.setAfterAmt(afterAmt);
-					accWaterDto.setBizType(AccWaterBizType.REFUND.getValue());
-					accWaterDto.setOpCode(orderRetireDto.getAuditor());
-					accWaterDto.setWaterType(AccWaterType.ADD.getValue());
-					accWaterDto.setTranOrderNo(orderDto.getOrderNo());
-					accWaterService.addAccWater(accWaterDto);
-
-					/* 获取店主 */
-					ShopDto parmShopDto = new ShopDto();
-					parmShopDto.setCode(orderDto.getShopCode());
-					ShopDto shopDto = shopService.findShop(parmShopDto);
-
-					/* 获取店主账户-减去提成 */
-					AccountDto accountDtoShop = accountService.findAccountByMbrCode(shopDto.getMbrCode());
-					// 查找是否分配过提成
-					AccWaterDto paramAccWater = new AccWaterDto();
-					paramAccWater.setAccSource(AccWaterSource.COMMISSION.getValue());
-					paramAccWater.setAccType(AccWaterAccType.AUTO.getValue());
-					paramAccWater.setAccCode(accountDtoShop.getCode());
-					paramAccWater.setStatus(AccWaterStatus.SUCCESS.getValue());
-					paramAccWater.setPayType(AccWaterPayType.VIRTUAL.getValue());
-					paramAccWater.setBizType(AccWaterBizType.COMMISSION.getValue());
-					paramAccWater.setWaterType(AccWaterType.ADD.getValue());
-					paramAccWater.setTranOrderNo(orderDto.getOrderNo());
-					FindAccWaterPage findAccWaterPage = new FindAccWaterPage();
-					findAccWaterPage.setParam(paramAccWater);
-					List<AccWaterDto> datas = accWaterService.findAccWaters(findAccWaterPage);
-					if (datas != null && datas.size() > 0) {// 订单分配过提成才退提成
-						BigDecimal beforeAmtShop = accountDtoShop.getCashAmt();
-						accountDtoShop.setCashAmt(accountDtoShop.getCashAmt().subtract(gapPrice));
-						BigDecimal afterAmtShop = accountDtoShop.getCashAmt();
-						accountService.updateAccount(accountDtoShop);
-						/* 记录账户流水 */
-						accWaterDto = new AccWaterDto();
-						accWaterDto.setAccDate(new Date());
-						accWaterDto.setAccSource(AccWaterSource.COMMISSION.getValue());
-						accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
-						accWaterDto.setAmt(gapPrice);
-						accWaterDto.setAccNo(accountDtoShop.getAccNo());
-						accWaterDto.setAccCode(accountDtoShop.getCode());
-						accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
-						accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
-						accWaterDto.setBeforeAmt(beforeAmtShop);
-						accWaterDto.setAfterAmt(afterAmtShop);
-						accWaterDto.setBizType(AccWaterBizType.COMMISSION.getValue());
-						accWaterDto.setWaterType(AccWaterType.SUBTRACT.getValue());
-						accWaterDto.setTranOrderNo(orderDto.getOrderNo());
-						accWaterService.addAccWater(accWaterDto);
-					}
-				}
+				/*
+				 * if (orderDto.getPayType().equals(AccWaterPayType.RANK.getValue())) {
+				 * BigDecimal beforeAmt = accountDto.getRankCashAmt();
+				 * accountDto.setRankCashAmt(accountDto.getRankCashAmt().add(returnAmt));
+				 * BigDecimal afterAmt = accountDto.getRankCashAmt(); 减去历史花销
+				 * accountDto.setPayedAmount(accountDto.getPayedAmount().subtract(returnAmt));
+				 * accountService.updateAccount(accountDto);
+				 * 
+				 * 记录账户流水 AccWaterDto accWaterDto = new AccWaterDto();
+				 * accWaterDto.setAccDate(new Date());
+				 * accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
+				 * accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
+				 * accWaterDto.setAmt(returnAmt); accWaterDto.setAccNo(accountDto.getAccNo());
+				 * accWaterDto.setAccCode(accountDto.getCode());
+				 * accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue()); //
+				 * accWaterDto.setPayType(AccWaterPayType.RANK.getValue());
+				 * accWaterDto.setBeforeAmt(beforeAmt); accWaterDto.setAfterAmt(afterAmt);
+				 * accWaterDto.setBizType(AccWaterBizType.REFUND.getValue());
+				 * accWaterDto.setOpCode(orderRetireDto.getAuditor());
+				 * accWaterDto.setWaterType(AccWaterType.ADD.getValue());
+				 * accWaterDto.setTranOrderNo(orderDto.getOrderNo());
+				 * accWaterService.addAccWater(accWaterDto);
+				 * 
+				 * } else { BigDecimal beforeAmt = accountDto.getCashAmt();
+				 * accountDto.setCashAmt(accountDto.getCashAmt().add(returnAmt)); BigDecimal
+				 * afterAmt = accountDto.getCashAmt(); 减去历史花销
+				 * accountDto.setPayedAmount(accountDto.getPayedAmount().subtract(returnAmt));
+				 * accountService.updateAccount(accountDto);
+				 * 
+				 * 记录账户流水 AccWaterDto accWaterDto = new AccWaterDto();
+				 * accWaterDto.setAccDate(new Date());
+				 * accWaterDto.setAccSource(AccWaterSource.ORDER.getValue());
+				 * accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
+				 * accWaterDto.setAmt(returnAmt); accWaterDto.setAccNo(accountDto.getAccNo());
+				 * accWaterDto.setAccCode(accountDto.getCode());
+				 * accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
+				 * accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
+				 * accWaterDto.setBeforeAmt(beforeAmt); accWaterDto.setAfterAmt(afterAmt);
+				 * accWaterDto.setBizType(AccWaterBizType.REFUND.getValue());
+				 * accWaterDto.setOpCode(orderRetireDto.getAuditor());
+				 * accWaterDto.setWaterType(AccWaterType.ADD.getValue());
+				 * accWaterDto.setTranOrderNo(orderDto.getOrderNo());
+				 * accWaterService.addAccWater(accWaterDto);
+				 * 
+				 * 获取店主 ShopDto parmShopDto = new ShopDto();
+				 * parmShopDto.setCode(orderDto.getShopCode()); ShopDto shopDto =
+				 * shopService.findShop(parmShopDto);
+				 * 
+				 * 获取店主账户-减去提成 AccountDto accountDtoShop =
+				 * accountService.findAccountByMbrCode(shopDto.getMbrCode()); // 查找是否分配过提成
+				 * AccWaterDto paramAccWater = new AccWaterDto();
+				 * paramAccWater.setAccSource(AccWaterSource.COMMISSION.getValue());
+				 * paramAccWater.setAccType(AccWaterAccType.AUTO.getValue());
+				 * paramAccWater.setAccCode(accountDtoShop.getCode());
+				 * paramAccWater.setStatus(AccWaterStatus.SUCCESS.getValue());
+				 * paramAccWater.setPayType(AccWaterPayType.VIRTUAL.getValue());
+				 * paramAccWater.setBizType(AccWaterBizType.COMMISSION.getValue());
+				 * paramAccWater.setWaterType(AccWaterType.ADD.getValue());
+				 * paramAccWater.setTranOrderNo(orderDto.getOrderNo()); FindAccWaterPage
+				 * findAccWaterPage = new FindAccWaterPage();
+				 * findAccWaterPage.setParam(paramAccWater); List<AccWaterDto> datas =
+				 * accWaterService.findAccWaters(findAccWaterPage); if (datas != null &&
+				 * datas.size() > 0) {// 订单分配过提成才退提成 BigDecimal beforeAmtShop =
+				 * accountDtoShop.getCashAmt();
+				 * accountDtoShop.setCashAmt(accountDtoShop.getCashAmt().subtract(gapPrice));
+				 * BigDecimal afterAmtShop = accountDtoShop.getCashAmt();
+				 * accountService.updateAccount(accountDtoShop); 记录账户流水 accWaterDto = new
+				 * AccWaterDto(); accWaterDto.setAccDate(new Date());
+				 * accWaterDto.setAccSource(AccWaterSource.COMMISSION.getValue());
+				 * accWaterDto.setAccType(AccWaterAccType.AUTO.getValue());
+				 * accWaterDto.setAmt(gapPrice);
+				 * accWaterDto.setAccNo(accountDtoShop.getAccNo());
+				 * accWaterDto.setAccCode(accountDtoShop.getCode());
+				 * accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
+				 * accWaterDto.setPayType(AccWaterPayType.VIRTUAL.getValue());
+				 * accWaterDto.setBeforeAmt(beforeAmtShop);
+				 * accWaterDto.setAfterAmt(afterAmtShop);
+				 * accWaterDto.setBizType(AccWaterBizType.COMMISSION.getValue());
+				 * accWaterDto.setWaterType(AccWaterType.SUBTRACT.getValue());
+				 * accWaterDto.setTranOrderNo(orderDto.getOrderNo());
+				 * accWaterService.addAccWater(accWaterDto); } }
+				 */
 
 				/* 状态流转至退货成功 */
 				orderDto.setStatus(OrderStatus.RETURNS.getValue());
@@ -1029,7 +965,9 @@ public class OrderServiceImpl implements IOrderService {
 				orderRetireService.updateOrderRetire(orderRetireDto);
 			}
 
-		} catch (TsfaServiceException e) {
+		} catch (
+
+		TsfaServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
@@ -1039,157 +977,36 @@ public class OrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public OrderDto createOrder(ProductSkuDto paramSku, String myInvite, Integer cnt, AddrsDto addrsDto,
-			boolean isInvoice, String invoiceTitle, String invoiceInfo, String remarks, String mbrType, String province,
-			String city, String area) {
-		logger.debug("createByCar(ProductSkuDto paramSku={}) - start", paramSku);
-		logger.debug("createByCar(AddrsDto addrsDto={}) - start", addrsDto);
-		AssertUtils.notNull(paramSku);
-		AssertUtils.notNull(addrsDto);
-		AssertUtils.notNull(isInvoice, "发票标记不能为空");
-		AssertUtils.notNullAndEmpty(addrsDto.getCode(), "收货地址编号不能为空");
-		AssertUtils.notNullAndEmpty(paramSku.getCode(), "规格编号不能为空");
-		AssertUtils.notNullAndEmpty(addrsDto.getMbrCode(), "下单人编号不能为空");
-		AssertUtils.notNull(cnt, "数量不能为空");
+	public OrderDto createOrder(String mbrCode, BigDecimal amt, String payType) {
+		logger.debug("createOrder(String mbrCode={}, BigDecimal amt={}) - start", mbrCode, amt);
+		AssertUtils.notNullAndEmpty(mbrCode, "下单人编号不能为空");
+		AssertUtils.notNullAndEmpty(amt, "订单金额不能为空");
 
 		OrderDto orderDto = new OrderDto();
 		try {
-			/* 获取店铺 */
-			/*
-			 * ShopDto paramShop = new ShopDto(); paramShop.setCode(shopCode); ShopDto
-			 * shopDto= shopService.findShop(paramShop);
-			 * if(shopDto.getStatus().equals(ShopStatus.STOP.getValue())){
-			 * logger.error("店铺已关闭！"); throw new
-			 * TsfaServiceException(ErrorCode.SHOP_STOP_ERROR,"店铺已关闭！"); }
-			 */
-
-			/* 库存不足直接返回 */
-			if (paramSku.getCnt() == 0) {
-				logger.error("库存不足！");
-				throw new TsfaServiceException(ErrorCode.PRODUCT_LOWSTOCK_ERROR, "库存不足！");
-			} else if (paramSku.getCnt() - cnt < 0) {
-				logger.error("库存不足！");
-				throw new TsfaServiceException(ErrorCode.PRODUCT_LOWSTOCK_ERROR, "库存不足！");
-			}
-
-			/* 获取商品 */
-			ProductDto paramPro = new ProductDto();
-			paramPro.setCode(paramSku.getProductCode());
-			ProductDto productDto = productService.findProduct(paramPro);
 
 			MemberDto param = new MemberDto();
-			param.setCode(addrsDto.getMbrCode());
+			param.setCode(mbrCode);
 			MemberDto member = memberService.findMember(param);
-			// 获取商品售价-根据特权
-			BigDecimal salePrice = paramSku.getSalePrice();
-			BigDecimal gapPrice = new BigDecimal(0);
-			if (paramSku.getRankPriceDtos() != null && paramSku.getRankPriceDtos().size() > 0) {
-				for (ProductRankPriceDto rankPriceDto : paramSku.getRankPriceDtos()) {
-
-					if (MemberType.CLIENT.getValue().equalsIgnoreCase(mbrType)) {
-						// 有邀请人
-						if (StringUtils.isNotEmpty(myInvite)) {
-							MemberDto memb = new MemberDto();
-							memb.setCode(myInvite);
-							MemberDto memberReturn = memberService.findMember(memb);
-							if (memberReturn != null
-									&& rankPriceDto.getRankCode().equals(memberReturn.getMemberRankCode())) {
-								gapPrice = paramSku.getSalePrice().subtract(rankPriceDto.getRankPrice());
-								break;
-							}
-						}
-					} else {
-						if (rankPriceDto.getRankCode().equals(member.getMemberRankCode())) {
-							salePrice = rankPriceDto.getRankPrice();
-							break;
-						}
-					}
-				}
-			}
 
 			/* 创建订单 */
-			orderDto.setAmt(salePrice.multiply(new BigDecimal(cnt)));
+			orderDto.setAmt(amt);
 			orderDto.setMbrCode(member.getCode());
 			orderDto.setMbrName(member.getName());
 			orderDto.setMbrPhone(member.getPhone());
-			/* 收货地址 */
-			orderDto.setRevicerName(addrsDto.getReciverName());
-			orderDto.setRevicePhone(addrsDto.getReciverPhone());
-			orderDto.setAddrInfo(addrsDto.getAddrDetail());
-			String areaName = province + city + area;
-			orderDto.setAreaName(areaName);
-			orderDto.setReciverZip(addrsDto.getReciverZip() == null ? "" : addrsDto.getReciverZip());
-			orderDto.setStatus(OrderStatus.CANCEL.getValue());
+			orderDto.setStatus(OrderStatus.DQR.getValue());
 			orderDto.setMerchantCode(member.getMerchantCode());
-			orderDto.setRemarks(remarks);
-			if (isInvoice) {
-				orderDto.setIsInvoice(OrderInvoice.Y.getValue());
-				orderDto.setInvoiceTitle(invoiceTitle);
-				orderDto.setInvoiceInfo(invoiceInfo);
-			} else {
-				orderDto.setIsInvoice(OrderInvoice.N.getValue());
-			}
-//			orderDto.setShopCode(shopCode);
-//			orderDto.setShopName(shopDto.getShopName());
 			orderDto.setOrderNo(NoUtil.generateNo(NoUtil.JY));
-			orderDto.setMbrType(mbrType);
-			orderDto.setMyInvite(myInvite); // 邀请人
+			orderDto.setMbrType(member.getType());
+			orderDto.setMyInvite(member.getMyInvite()); // 邀请人
+			orderDto.setPayType(payType);
 			this.addOrder(orderDto);
 
-			/* 创建订单子项 */
-			OrderDetailDto detailDto = new OrderDetailDto();
-
-			/* 获取商品供应商 */
-//			SupplyDto paramSupply = new SupplyDto();
-//			paramSupply.setCode(productDto.getSupplyCode());
-//			SupplyDto supplyDto = supplyService.findSupply(paramSupply);
-
-			detailDto.setProductCode(productDto.getCode());
-			detailDto.setProductName(productDto.getName());
-			detailDto.setSupplyCode(productDto.getSupplyCode());
-			detailDto.setSupplyName(productDto.getSupplyName());
-			detailDto.setCnt(cnt);
-			/* C端售价*数量 */
-			detailDto.setAmt(orderDto.getAmt());
-			detailDto.setSalePrice(salePrice); // C端单个售价
-//			BigDecimal disCount = new BigDecimal(supplyDto.getDiscountOff()); // 供应商折扣（0-100的数字）
-//			detailDto.setOrgPrice(paramSku.getSalePrice().multiply(disCount).divide(new BigDecimal(100)).add(paramSku.getSalePrice())); // 小B进货单价（按供应商折扣计算）
-			detailDto.setGapPrice(gapPrice); // 小B提成单价（按供应商折扣计算）
-			detailDto.setOrderNo(orderDto.getOrderNo());
-			detailDto.setSkuCode(paramSku.getCode());
-			orderDetailService.addOrderDetail(detailDto);
-
-			/* 扣除商品库存 */
-			productDto.setCnt(productDto.getCnt() - cnt);
-			productService.updateProduct(productDto);
-
-			/* 扣除规格商品库存 */
-			paramSku.setCnt(paramSku.getCnt() - cnt);
-			productSkuService.updateProductSku(paramSku);
-
 			/* 消息通知 */
-			sendMessageByOrder(orderDto, MessageTemplate.B_SERVICE_ORDER_BILL_NON_PAYMENT);
-			sendMessageByOrder(orderDto, MessageTemplate.C_SERVICE_ORDER_BILL_NON_PAYMENT, orderDto.getMbrCode());
-			/* APP手机通知 */
-//				String senContent = "您的客户${nickName}购买了一个新商品！";	
-//				AddNotifyInfo addNotifyInfo = new AddNotifyInfo();
-//				addNotifyInfo.setMerchantNo(merchantNo);
-//				addNotifyInfo.setMemberNo(memberNoGm);
-//				addNotifyInfo.setMemberName(memberNameGm);
-//				addNotifyInfo.setMemberType(MemberType.GUID.toString());
-//				addNotifyInfo.setMemberNoSender(memberNoSender);
-//				addNotifyInfo.setMemberNameSender(memberNameSender);
-//				addNotifyInfo.setMemberTypeSender(MemberType.);
-//				addNotifyInfo.setMobile(mobileGm);
-//				addNotifyInfo.setSendType(SendType.SINGLE.toString());
-//				addNotifyInfo.setContent(senContent.replace("${nickName}", nickName));
-//				addNotifyInfo.setSysType(MsgSystemType.ALL.toString());
-			// notifyService.sendMsgInfo(addNotifyInfo);
+//			sendMessageByOrder(orderDto, MessageTemplate.B_SERVICE_ORDER_BILL_NON_PAYMENT);
+//			sendMessageByOrder(orderDto, MessageTemplate.C_SERVICE_ORDER_BILL_NON_PAYMENT, orderDto.getMbrCode());
 
 			/* return */
-			List<OrderDetailDto> detailList = new ArrayList<OrderDetailDto>();
-			detailList.add(detailDto);
-			orderDto.setDetailDtos(detailList);
 			logger.debug("createOrder(returnOrder) - end - return={}", orderDto);
 
 		} catch (TsfaServiceException e) {

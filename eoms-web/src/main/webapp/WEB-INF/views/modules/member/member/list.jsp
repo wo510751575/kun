@@ -34,7 +34,7 @@
 		    });
 			
 			$("#btnImport").click(function(){
-				$.jBox($("#importBox").html(), {title:"店主会员导入导入数据", buttons:{"关闭":true}, 
+				$.jBox($("#importBox").html(), {title:"代理商导入数据", buttons:{"关闭":true}, 
 					bottomText:"导入文件不能超过10M，仅允许导入“xls”或“xlsx”格式文件！"});
 			});
 			
@@ -159,7 +159,7 @@
  				value="<fmt:formatDate value="${memberPage.endTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,minDate:'#F{$dp.$D(\'beginDate\')}'});"/>&nbsp;&nbsp; 
  			</li> 
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
-			<li class="btns"><input id="btnImport" class="btn btn-primary" type="button" value="店主会员导入"/></li>
+			<li class="btns"><input id="btnImport" class="btn btn-primary" type="button" value="代理商导入"/></li>
 			<li class="btns"><input id="btnCopy" class="btn btn-primary" type="button" value="绑定会员"/></li>
 			<li class="clearfix"></li>
 		</ul>
