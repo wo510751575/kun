@@ -150,14 +150,14 @@
 			<li><label>邀请人手机号：</label>
 		    	<input type="text" name="param.myInvitePhone" value="${memberPage.param.myInvitePhone}" class="input-medium" maxlength="100" placeholder="邀请人电话">
 			</li>
- 			<li> 
+ 			<%-- <li> 
  				<label>录入时间：</label> 
  				<input id="beginDate" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
  				value="<fmt:formatDate value="${memberPage.startTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,maxDate:'#F{$dp.$D(\'endDate\')}'});"/> 
  				-
 				<input id="endDate" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate" 
  				value="<fmt:formatDate value="${memberPage.endTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,minDate:'#F{$dp.$D(\'beginDate\')}'});"/>&nbsp;&nbsp; 
- 			</li> 
+ 			</li>  --%>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="btns"><input id="btnImport" class="btn btn-primary" type="button" value="代理商导入"/></li>
 			<li class="btns"><input id="btnCopy" class="btn btn-primary" type="button" value="绑定会员"/></li>
@@ -172,17 +172,8 @@
 			<th>性别</th>
 			<th>状态</th>
 			<th>手机号码</th>
-<!-- 			<th>微信号</th> -->
-<!-- 			<th>类型</th> -->
-			<th>会员等级</th>
-			<th>头像</th>
-			<th>省</th>
-			<th>市</th>
-			<th>区</th>
 			<th>邀请人</th>
 			<th>邀请人手机号</th>
-			<th>评分等级</th>
-			<th>来源</th>
 			<th>录入时间</th>
 			<th>操作</th>
 			</tr>
@@ -211,63 +202,8 @@
 						</c:forEach>
 					</td>
 					<td> ${item.phone } </td>
-					<%-- <td> ${item.wxNo } </td>
-					<td>  
-						<c:forEach items="${types}" var="p">
-							<c:choose> 
-								<c:when test="${p.value == item.type}">${p.chName}</c:when>
-								<c:otherwise></c:otherwise>
-							</c:choose>
-						</c:forEach>
-					
-					 </td> --%>
-					 <td>
-					 <c:choose>
-					 	<c:when test="${item.memberRankCode eq '1' }">微商会员</c:when>
-						<c:otherwise></c:otherwise>
-					 </c:choose>
-					 </td>
-					<td> 
-					<c:if test="${!empty item.avotor }">
-						<div class="lafen-group">
-						<c:choose>
-			    		<c:when test="${fn:startsWith(item.avotor, 'http')}">
-   							<img class="img-small" src="${item.avotor}" alt="">
-			    			<div class="img-big">
-			    				<img  src="${item.avotor }" alt="">
-			    			</div>
-						</c:when>
-						<c:otherwise>
-							<img class="img-small" src="${fns:getUploadUrl()}${item.avotor}" alt="">
-			    			<div class="img-big">
-			    				<img  src="${fns:getUploadUrl()}${item.avotor}" alt="">
-			    			</div>
-						</c:otherwise>
-			    		</c:choose>
-			    		</div>
-					</c:if>
-					</td>
-					<td> ${item.province } </td>
-					<td> ${item.city } </td>
-					<td> ${item.area } </td>
 					<td> ${item.myInviteName} </td>
 					<td> ${item.myInvitePhone} </td>
-					<td>  
-						<c:forEach items="${grades}" var="p">
-							<c:choose> 
-								<c:when test="${p.value == item.grade}">${p.chName}</c:when>
-								<c:otherwise></c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</td>
-					<td>  
-						<c:forEach items="${sourceFroms}" var="p">
-							<c:choose> 
-								<c:when test="${p.value == item.sourceFrom}">${p.chName}</c:when>
-								<c:otherwise></c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</td>
 					<td> <fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd"/></td>
 					<shiro:hasPermission name="member:member:edit"><td nowrap>
 						<a href="${ctx}/member/member/form?code=${item.code}">修改</a>

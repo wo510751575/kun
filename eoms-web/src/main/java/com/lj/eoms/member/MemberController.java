@@ -37,7 +37,6 @@ import com.lj.base.core.pagination.PageSortType;
 import com.lj.base.mvc.web.httpclient.HttpClientUtils;
 import com.lj.cc.clientintf.LocalCacheSystemParamsFromCC;
 import com.lj.eoms.dto.ShopMemberDto;
-import com.lj.eoms.entity.sys.Area;
 import com.lj.eoms.service.AreaHessianService;
 import com.lj.eoms.utils.UserUtils;
 import com.lj.eoms.utils.Validator;
@@ -45,7 +44,6 @@ import com.lj.eoms.utils.excel.ExportExcel;
 import com.lj.eoms.utils.excel.ImportExcel;
 import com.lj.eshop.dto.FindMemberPage;
 import com.lj.eshop.dto.MemberDto;
-import com.lj.eshop.emus.Gender;
 import com.lj.eshop.emus.MemberGrade;
 import com.lj.eshop.emus.MemberSex;
 import com.lj.eshop.emus.MemberSourceFrom;
@@ -244,7 +242,6 @@ public class MemberController extends BaseController {
 
 			List<ShopMemberDto> list = ei.getDataList(ShopMemberDto.class);
 			logger.info("importExcel>>", list);
-			List<Area> provinceAreas = areaService.selectProvince();
 
 			for (ShopMemberDto dto : list) {
 				try {
@@ -257,12 +254,6 @@ public class MemberController extends BaseController {
 						failureMsg.append("<br/>客户手机号： " + dto.getMobile() + "格式不正确; ");
 						failureNum++;
 						continue;
-					}
-
-					/* 校验性别 */
-					List<String> items = Lists.newArrayList();
-					for (Gender gender : Gender.values()) {
-						items.add(gender.getName());
 					}
 
 					if (checkMobile(dto.getMobile())) {
