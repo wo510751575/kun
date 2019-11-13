@@ -26,7 +26,7 @@ import com.lj.eshop.service.IMerchantSettingService;
  * 
  * <p>
  * 
- * @Company: 
+ * @Company:
  * @author 彭俊霖
  * 
  *         CreateDate: 2017年9月11日
@@ -55,13 +55,14 @@ public class MerchantSettingController extends BaseController {
 				getLoginMerchantCode());
 		MerchantSettingDto company = merchantSettingService
 				.findSettingsByName(MerchantSetting.OFFLINE_COMPANY.getValue(), getLoginMerchantCode());
-		MerchantSettingDto bgm = merchantSettingService.findSettingsByName(MerchantSetting.OFFLINE_BGM.getValue(),
-				getLoginMerchantCode());
+
+		MerchantSettingDto bankCard = merchantSettingService
+				.findSettingsByName(MerchantSetting.OFFLINE_BANKCARD.getValue(), getLoginMerchantCode());
 
 		returnMap.put("account", account == null ? "" : account.getValue());
 		returnMap.put("amt", amt == null ? "" : amt.getValue());
 		returnMap.put("company", company == null ? "" : company.getValue());
-		returnMap.put("bgm", bgm == null ? "" : bgm.getValue());
+		returnMap.put("bankCard", bankCard == null ? "" : bankCard.getValue());
 		logger.debug("list --> list(={}) - end", returnMap);
 		return ResponseDto.successResp(returnMap);
 	}

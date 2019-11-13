@@ -16,7 +16,7 @@ import java.io.Serializable;
  * <p>
  * 详细描述：
  * 
- * @Company: 
+ * @Company:
  * @author lhy
  * 
  *         CreateDate: 2017年9月2日
@@ -34,41 +34,63 @@ public class MobilePhoneLoginDto implements Serializable {
 	private String authCode;
 	/** 登录密码 */
 	private String password;
+	/** 设备号 */
+	private String imei;
+
+	public String getImei() {
+		return imei;
+	}
+
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
 	/**
 	 * @return the mobilePhone
 	 */
 	public String getMobilePhone() {
 		return mobilePhone;
 	}
+
 	/**
 	 * @param mobilePhone the mobilePhone to set
 	 */
 	public void setMobilePhone(String mobilePhone) {
 		this.mobilePhone = mobilePhone;
 	}
+
 	/**
 	 * @return the authCode
 	 */
 	public String getAuthCode() {
 		return authCode;
 	}
+
 	/**
 	 * @param authCode the authCode to set
 	 */
 	public void setAuthCode(String authCode) {
 		this.authCode = authCode;
 	}
+
 	/**
 	 * @return the password
 	 */
 	public String getPassword() {
 		return password;
 	}
+
 	/**
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public String toString() {
+		return "MobilePhoneLoginDto [mobilePhone=" + mobilePhone + ", authCode=" + authCode + ", password=" + password
+				+ ", imei=" + imei + "]";
 	}
 
 }

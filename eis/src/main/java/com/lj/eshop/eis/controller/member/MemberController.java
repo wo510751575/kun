@@ -43,9 +43,10 @@ public class MemberController extends BaseController {
 
 	@RequestMapping(value = { "register" })
 	@ResponseBody
-	public ResponseDto register(MemberDto param, String authCode) {
+	public ResponseDto register(MemberDto param, String authCode, String imei) {
 		if (StringUtils.isEmpty(param.getPhone()) || StringUtils.isEmpty(authCode)
-				|| StringUtils.isEmpty(param.getPassword()) || StringUtils.isEmpty(param.getShareCode())) {
+				|| StringUtils.isEmpty(param.getPassword()) || StringUtils.isEmpty(param.getShareCode())
+				|| StringUtils.isEmpty(imei)) {
 			return ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR);
 		}
 		// 校验验证码
@@ -64,6 +65,7 @@ public class MemberController extends BaseController {
 
 		param.setStatus(MemberStatus.NORMAL.getValue());
 		param.setMerchantCode(shareDto.getMerchantCode());
+		param.setWxNo(imei);
 		memberService.addMember(param);
 		return ResponseDto.successResp();
 	}
@@ -71,6 +73,9 @@ public class MemberController extends BaseController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseDto mobilePhoneLogin(MobilePhoneLoginDto dto) {
+		if (StringUtils.isEmpty(dto.getImei())) {
+			return ResponseDto.getErrorResponse(ResponseCode.PARAM_ERROR);
+		}
 		TokenDto tk = userLoginService.mobilePhoneLogin(dto);
 		return ResponseDto.successResp(tk);
 	}

@@ -104,6 +104,11 @@ public class UserLoginService implements IUserLoginService {
 			// 校验存在否以及 状态。
 			MemberDto loginMbr = ms.get(0);
 
+			// 校验设备手机号
+			if (StringUtils.isNotEmpty(loginMbr.getWxNo()) && !dto.getImei().equals(loginMbr.getWxNo())) {
+				throw new TsfaServiceException("0", "登录设备异常，请联系管理员！");
+			}
+
 			// 校验密码
 			if (StringUtils.isNotEmpty(dto.getPassword())) {
 				if (!loginMbr.getPassword().equals(MD5.encryptByMD5(dto.getPassword()))) {

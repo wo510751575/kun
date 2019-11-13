@@ -19,7 +19,9 @@ public class MemberDto implements Serializable {
 	/** 手机号码 */
 	private String phone;
 
-	/** 微信号 */
+	/**
+	 * 微信号 --用来存储设备号
+	 */
 	private String wxNo;
 
 	/** 状态 0:正常 2:注销 3冻结 */

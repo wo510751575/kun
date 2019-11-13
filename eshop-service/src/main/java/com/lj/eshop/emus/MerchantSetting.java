@@ -9,10 +9,10 @@ package com.lj.eshop.emus;
  * <p>
  * 详细描述：
  * 
- * @Company: 
- * @author 
+ * @Company:
+ * @author
  * 
- *         CreateDate: 2017年9月21日
+ * 		CreateDate: 2017年9月21日
  */
 public enum MerchantSetting {
 
@@ -25,14 +25,14 @@ public enum MerchantSetting {
 	/** 微信apiKey */
 	WEIXIN_APIKEY("weixin.apiKey", "微信apiKey"),
 
-	/** 背景图 */
-	OFFLINE_BGM("offline.bgm", "商户背景图"),
+	/** 银行信息 */
+	OFFLINE_BANKCARD("offline.bankCard", "银行信息"),
 	/** 商户银行账号 */
 	OFFLINE_ACCOUNT("offline.account", "商户银行账号"),
 	/** 商户银行限额 */
 	OFFLINE_AMT("offline.amt", "商户银行限额"),
 	/** 商户公司名称 */
-	OFFLINE_COMPANY("offline.amt", "商户公司名称"),
+	OFFLINE_COMPANY("offline.name", "商户公司名称"),
 
 	;
 
