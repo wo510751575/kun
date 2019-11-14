@@ -167,7 +167,7 @@ public class OrderServiceImpl implements IOrderService {
 			} else {
 				order.setGiftType(orderDto.getGiftType());
 			}
-			order.setGiftCode(orderDto.getGiftCode());
+			order.setOfficeId(orderDto.getOfficeId());
 			orderDao.insertSelective(order);
 			/* 回写code，创建订单所需 */
 			orderDto.setCode(order.getCode());
@@ -243,7 +243,7 @@ public class OrderServiceImpl implements IOrderService {
 			if (orderDto.getGiftType() != null) {
 				order.setGiftType(orderDto.getGiftType());
 			}
-			order.setGiftCode(orderDto.getGiftCode());
+			order.setOfficeId(orderDto.getOfficeId());
 			AssertUtils.notUpdateMoreThanOne(orderDao.updateByPrimaryKeySelective(order));
 			logger.debug("updateOrder(OrderDto) - end - return"); //$NON-NLS-1$
 		} catch (TsfaServiceException e) {
@@ -297,7 +297,7 @@ public class OrderServiceImpl implements IOrderService {
 			findOrderReturn.setReciverZip(order.getReciverZip());
 			findOrderReturn.setMyInvite(order.getMyInvite());
 			findOrderReturn.setGiftType(order.getGiftType());
-			findOrderReturn.setGiftCode(order.getGiftCode());
+			findOrderReturn.setOfficeId(order.getOfficeId());
 			logger.debug("findOrder(OrderDto) - end - return value={}", findOrderReturn); //$NON-NLS-1$
 			return findOrderReturn;
 		} catch (TsfaServiceException e) {

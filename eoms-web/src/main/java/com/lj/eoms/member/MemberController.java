@@ -32,6 +32,7 @@ import com.lj.base.core.pagination.Page;
 import com.lj.base.core.pagination.PageSortType;
 import com.lj.cc.clientintf.LocalCacheSystemParamsFromCC;
 import com.lj.eoms.dto.ShopMemberDto;
+import com.lj.eoms.entity.sys.User;
 import com.lj.eoms.utils.UserUtils;
 import com.lj.eoms.utils.Validator;
 import com.lj.eoms.utils.excel.ExportExcel;
@@ -78,8 +79,14 @@ public class MemberController extends BaseController {
 			member = new MemberDto();
 		}
 
-		if (null != UserUtils.getUser().getMerchant()) {
+		User user = UserUtils.getUser();
+		if (null != user.getMerchant()) {
 			member.setMerchantCode(UserUtils.getUser().getMerchant().getCode());// 这里设置用户所属商户
+
+			if ("3".equals(user.getOffice().getGrade())) {
+				// 小组增加过滤
+				member.setOfficeId(user.getOffice().getId());
+			}
 			List<String> types = new ArrayList<String>();// 查询的类型 1,2,3
 			types.add(MemberType.CLIENT.getValue());
 			types.add(MemberType.SHOP.getValue());

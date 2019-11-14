@@ -77,15 +77,14 @@ public class Order {
 	private String myInvite;
 	/** 赠品单标识 */
 	private Boolean giftType;
-	/** 赠品编号 */
-	private String giftCode;
+	private String officeId;
 
-	public String getGiftCode() {
-		return giftCode;
+	public String getOfficeId() {
+		return officeId;
 	}
 
-	public void setGiftCode(String giftCode) {
-		this.giftCode = giftCode;
+	public void setOfficeId(String officeId) {
+		this.officeId = officeId;
 	}
 
 	public Boolean getGiftType() {

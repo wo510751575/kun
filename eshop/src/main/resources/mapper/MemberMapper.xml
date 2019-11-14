@@ -26,12 +26,14 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="member_rank_name" jdbcType="VARCHAR" property="memberRankName" />
     <result column="share_code" jdbcType="VARCHAR" property="shareCode" />
-    
+    <result column="office_id" jdbcType="VARCHAR" property="officeId" />
+    <result column="office_name" jdbcType="VARCHAR" property="officeName" />
   </resultMap>
   <sql id="Base_Column_List">
     m.code, m.name, m.phone, m.wx_no, m.status, m.type, m.avotor, m.province, m.city, m.area, m.my_invite, 
     m.grade, m.create_time, m.creater, m.open_id, m.sex, m.source_from, m.merchant_code,
-    m.open_member_date, m.close_member_date, m.member_rank_code, m.password,m.share_code
+    m.open_member_date, m.close_member_date, m.member_rank_code, m.password,m.share_code,m.office_id,
+    m.office_name
   </sql>
   
   <sql id="apply_Column_List">
@@ -79,6 +81,9 @@
 					</if>
 					<if test="param.myInvitePhone != null and param.myInvitePhone !='' ">
 						<![CDATA[and (SELECT p.phone FROM t_member p WHERE p.code = my.member_code) =#{param.myInvitePhone}]]>
+					</if>
+					<if test="param.officeId != null and param.officeId !='' ">
+						<![CDATA[and m.office_id =#{param.officeId}]]>
 					</if>
 				</if>
 			</if> 
@@ -228,6 +233,12 @@
       <if test="shareCode != null">
         share_code,
       </if>
+      <if test="officeId != null">
+        office_id,
+      </if>
+      <if test="officeName != null">
+        office_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="code != null">
@@ -299,6 +310,12 @@
       <if test="shareCode != null">
         #{shareCode,jdbcType=VARCHAR},
       </if>
+      <if test="officeId != null">
+        #{officeId,jdbcType=VARCHAR},
+      </if>
+      <if test="officeName != null">
+        #{officeName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lj.eshop.domain.Member">
@@ -369,6 +386,12 @@
       </if>
       <if test="shareCode != null">
         share_code = #{shareCode,jdbcType=VARCHAR},
+      </if>
+      <if test="officeId != null">
+        office_id = #{officeId,jdbcType=VARCHAR},
+      </if>
+      <if test="officeName != null">
+        office_name = #{officeName,jdbcType=VARCHAR},
       </if>
     </set>
     where code = #{code,jdbcType=VARCHAR}

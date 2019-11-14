@@ -171,7 +171,7 @@
 			<thead><tr>
 			<th>会员名称</th>
 			<!-- <th>openId</th> -->
-			<th>性别</th>
+			<th>支付宝点位</th>
 			<th>状态</th>
 			<th>手机号码</th>
 			<th>邀请人</th>
@@ -186,12 +186,7 @@
 					<td title="${item.name}"><a class="view_btn" data-code="${item.code}">${item.name}</a></td>
 					<%-- <td> ${item.openId } </td> --%>
 					<td>  
-						<c:forEach items="${sexs}" var="p">
-							<c:choose> 
-								<c:when test="${p.value == item.sex}">${p.chName}</c:when>
-								<c:otherwise></c:otherwise>
-							</c:choose>
-						</c:forEach>
+						${item.grade}
 					</td>
 					<td> 
 						<c:forEach items="${statuss}" var="p">

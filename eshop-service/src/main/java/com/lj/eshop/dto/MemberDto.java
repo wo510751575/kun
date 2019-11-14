@@ -94,6 +94,24 @@ public class MemberDto implements Serializable {
 	 * 邀请码
 	 */
 	private String shareCode;
+	private String officeId;
+	private String officeName;
+
+	public String getOfficeName() {
+		return officeName;
+	}
+
+	public void setOfficeName(String officeName) {
+		this.officeName = officeName;
+	}
+
+	public String getOfficeId() {
+		return officeId;
+	}
+
+	public void setOfficeId(String officeId) {
+		this.officeId = officeId;
+	}
 
 	public String getShareCode() {
 		return shareCode;

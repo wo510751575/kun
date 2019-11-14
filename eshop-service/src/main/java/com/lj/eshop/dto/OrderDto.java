@@ -108,13 +108,20 @@ public class OrderDto implements Serializable {
 	private String myInvite;
 	/** 赠品单标识，赠品为true */
 	private Boolean giftType;
-	/** 赠品编号 */
-	private String giftCode;
 	/** 会员礼品对象-返回用 */
 	private ProductGiftDto productGiftDto;
 	/** 邀请人信息 */
 	private MemberDto myInviteDto;
 	private List<String> statuss;
+	private String officeId;
+
+	public String getOfficeId() {
+		return officeId;
+	}
+
+	public void setOfficeId(String officeId) {
+		this.officeId = officeId;
+	}
 
 	public List<String> getStatuss() {
 		return statuss;
@@ -138,14 +145,6 @@ public class OrderDto implements Serializable {
 
 	public void setProductGiftDto(ProductGiftDto productGiftDto) {
 		this.productGiftDto = productGiftDto;
-	}
-
-	public String getGiftCode() {
-		return giftCode;
-	}
-
-	public void setGiftCode(String giftCode) {
-		this.giftCode = giftCode;
 	}
 
 	public Boolean getGiftType() {
@@ -562,9 +561,9 @@ public class OrderDto implements Serializable {
 				+ ", endTime=" + endTime + ", payTime=" + payTime + ", shippingTime=" + shippingTime + ", shopLogo="
 				+ shopLogo + ", revicerName=" + revicerName + ", revicePhone=" + revicePhone + ", addrInfo=" + addrInfo
 				+ ", areaName=" + areaName + ", reciverZip=" + reciverZip + ", likeOrderNo=" + likeOrderNo
-				+ ", mbrCodes=" + mbrCodes + ", myInvite=" + myInvite + ", giftType=" + giftType + ", giftCode="
-				+ giftCode + ", productGiftDto=" + productGiftDto + ", myInviteDto=" + myInviteDto + ", detailDtos="
-				+ detailDtos + "]";
+				+ ", mbrCodes=" + mbrCodes + ", myInvite=" + myInvite + ", giftType=" + giftType + ", productGiftDto="
+				+ productGiftDto + ", myInviteDto=" + myInviteDto + ", statuss=" + statuss + ", officeId=" + officeId
+				+ ", detailDtos=" + detailDtos + "]";
 	}
 
 }

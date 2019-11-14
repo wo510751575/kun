@@ -23,12 +23,18 @@ import com.ape.common.utils.StringUtils;
 import com.ape.common.web.BaseController;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.lj.base.core.encryption.MD5;
 import com.lj.cc.clientintf.LocalCacheSystemParamsFromCC;
 import com.lj.eoms.entity.sys.Office;
 import com.lj.eoms.entity.sys.Role;
 import com.lj.eoms.entity.sys.User;
 import com.lj.eoms.service.sys.SystemService;
 import com.lj.eoms.utils.UserUtils;
+import com.lj.eoms.utils.Validator;
+import com.lj.eshop.dto.MemberDto;
+import com.lj.eshop.emus.MemberStatus;
+import com.lj.eshop.emus.MemberType;
+import com.lj.eshop.service.IMemberService;
 
 /**
  * 用户Controller
@@ -41,8 +47,8 @@ public class UserController extends BaseController {
 	private SystemService systemService;
 	@Resource
 	private LocalCacheSystemParamsFromCC localCacheSystemParams;
-//	@Resource
-//	private IMerchantService merchantService;
+	@Resource
+	private IMemberService memberService;
 
 	@ModelAttribute
 	public User get(@RequestParam(required = false) String id) {
@@ -103,10 +109,19 @@ public class UserController extends BaseController {
 		if (!beanValidator(model, user)) {
 			return form(user, model);
 		}
+
+		if ("2".equals(user.getUserType())) {
+			if (!Validator.isMobile(user.getLoginName())) {
+				addMessage(model, "保存失败，组长必须用手机号做登录名");
+				return form(user, model);
+			}
+		}
+
 		if (!"true".equals(checkLoginName(user.getOldLoginName(), user.getLoginName()))) {
 			addMessage(model, "保存用户'" + user.getLoginName() + "'失败，登录名已存在");
 			return form(user, model);
 		}
+
 		// 角色数据有效性验证，过滤不在授权内的角色
 		List<Role> roleList = Lists.newArrayList();
 		List<String> roleIdList = user.getRoleIdList();
@@ -119,6 +134,19 @@ public class UserController extends BaseController {
 		user.setLayout("_darkblue");
 		// 保存用户信息
 		systemService.saveUser(user);
+
+		// 组长，同步到t_member
+		if ("2".equals(user.getUserType())) {
+			MemberDto param = new MemberDto();
+			param.setCode(user.getId());
+			MemberDto memberDto = memberService.findMember(param);
+			if (memberDto == null) {
+				addMember(user);
+			} else {
+				updateMember(user, memberDto);
+			}
+		}
+
 		// 清除当前用户缓存
 		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())) {
 			UserUtils.clearCache();
@@ -126,6 +154,30 @@ public class UserController extends BaseController {
 
 		addMessage(redirectAttributes, "保存用户'" + user.getLoginName() + "'成功");
 		return "redirect:" + adminPath + "/sys/user/list?repage";
+	}
+
+	private void updateMember(User user, MemberDto memberDto) {
+		MemberDto dto = new MemberDto();
+		dto.setCode(memberDto.getCode());
+		if (StringUtils.isNotBlank(user.getNewPassword())) {
+			dto.setPassword(MD5.encryptByMD5(user.getNewPassword()));
+		}
+		dto.setPhone(user.getLoginName());
+		memberService.updateMember(dto);
+	}
+
+	private void addMember(User user) {
+		MemberDto memberDto = new MemberDto();
+		memberDto.setCode(user.getId());
+		memberDto.setName(user.getName());
+		memberDto.setPhone(user.getLoginName());
+		memberDto.setPassword(MD5.encryptByMD5(user.getPassword()));
+		memberDto.setOfficeId(user.getOffice().getId());
+		memberDto.setOfficeName(user.getOffice().getName());
+		memberDto.setMerchantCode(user.getCompany().getId());
+		memberDto.setType(MemberType.CLIENT.getValue());
+		memberDto.setStatus(MemberStatus.NORMAL.getValue());
+		memberService.addMember(memberDto);
 	}
 
 	@RequiresPermissions("sys:user:edit")

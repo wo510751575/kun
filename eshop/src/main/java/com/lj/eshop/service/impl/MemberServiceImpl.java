@@ -85,6 +85,8 @@ public class MemberServiceImpl implements IMemberService {
 			member.setMemberRankCode(memberDto.getMemberRankCode());
 			member.setPassword(MD5.encryptByMD5(memberDto.getPassword()));
 			member.setShareCode(ShareCodeUtil.toSerialCode(new Date().getTime()).substring(0, 6));
+			member.setOfficeId(memberDto.getOfficeId());
+			member.setOfficeName(memberDto.getOfficeName());
 			memberDao.insertSelective(member);
 			memberDto.setCode(member.getCode());
 			memberDto.setCreateTime(member.getCreateTime());
@@ -170,6 +172,8 @@ public class MemberServiceImpl implements IMemberService {
 			member.setMemberRankCode(memberDto.getMemberRankCode());
 			member.setPassword(memberDto.getPassword());
 			member.setShareCode(memberDto.getShareCode());
+			member.setOfficeId(memberDto.getOfficeId());
+			member.setOfficeName(memberDto.getOfficeName());
 			AssertUtils.notUpdateMoreThanOne(memberDao.updateByPrimaryKeySelective(member));
 			logger.debug("updateMember(MemberDto) - end - return");
 		} catch (TsfaServiceException e) {
@@ -219,6 +223,8 @@ public class MemberServiceImpl implements IMemberService {
 			findMemberReturn.setMemberRankName(member.getMemberRankName());
 			findMemberReturn.setPassword(member.getPassword());
 			findMemberReturn.setShareCode(member.getShareCode());
+			findMemberReturn.setOfficeId(member.getOfficeId());
+			findMemberReturn.setOfficeName(member.getOfficeName());
 			logger.debug("findMember(MemberDto) - end - return value={}", findMemberReturn);
 			return findMemberReturn;
 		} catch (TsfaServiceException e) {

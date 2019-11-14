@@ -76,6 +76,25 @@ public class Member {
 	 */
 	private String shareCode;
 
+	private String officeId;
+	private String officeName;
+
+	public String getOfficeName() {
+		return officeName;
+	}
+
+	public void setOfficeName(String officeName) {
+		this.officeName = officeName;
+	}
+
+	public String getOfficeId() {
+		return officeId;
+	}
+
+	public void setOfficeId(String officeId) {
+		this.officeId = officeId;
+	}
+
 	public String getShareCode() {
 		return shareCode;
 	}
@@ -322,7 +341,7 @@ public class Member {
 				+ creater + ", openId=" + openId + ", sex=" + sex + ", sourceFrom=" + sourceFrom + ", merchantCode="
 				+ merchantCode + ", openMemberDate=" + openMemberDate + ", closeMemberDate=" + closeMemberDate
 				+ ", memberRankCode=" + memberRankCode + ", password=" + password + ", memberRankName=" + memberRankName
-				+ ", shareCode=" + shareCode + "]";
+				+ ", shareCode=" + shareCode + ", officeId=" + officeId + "]";
 	}
 
 }

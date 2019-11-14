@@ -25,6 +25,7 @@ import com.lj.base.core.pagination.PageSortType;
 import com.lj.base.core.util.StringUtils;
 import com.lj.distributecache.IQueue;
 import com.lj.distributecache.RedisCache;
+import com.lj.eoms.entity.sys.User;
 import com.lj.eoms.utils.UserUtils;
 import com.lj.eshop.constant.NoUtil;
 import com.lj.eshop.constant.PublicConstants;
@@ -87,7 +88,13 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = { "list", "" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public String list(OrderDto param, Integer pageNo, Integer pageSize, Model model) {
 		try {
-			param.setMerchantCode(UserUtils.getUser().getMerchant().getCode());
+			User user = UserUtils.getUser();
+
+			if ("3".equals(user.getOffice().getGrade())) {
+				// 小组增加过滤
+				param.setOfficeId(user.getOffice().getId());
+			}
+			param.setMerchantCode(user.getMerchant().getCode());
 			param.setGiftType(null);
 			FindOrderPage findOrderPage = new FindOrderPage();
 			findOrderPage.setSortBy("create_time");

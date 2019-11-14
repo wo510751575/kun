@@ -169,23 +169,13 @@
 			<div class="controls">
 				<input type="text" name="myInvite" value="${data.myInvite}" maxlength="50" class=" input-xlarge" />
 			</div>
-		</div>
+		</div>--%>
 		 <div class="control-group">
-			<label class="control-label">评分等级:</label>
+			<label class="control-label">支付宝点位:</label>
 			<div class="controls">
-				<select name="grade" >
-					<option></option>
-						<c:forEach items="${grades}" var="p">
-								<c:choose >
-									<c:when test="${p.value eq data.grade}">
-										<option value="${p.value }" selected="selected">${p.chName}</option>
-									</c:when>
-									<c:otherwise><option value="${p.value }">${p.chName}</option></c:otherwise>
-								</c:choose>
-							</c:forEach>
-				</select>
+				<input type="text" name="grade" value="${data.grade}" maxlength="50" class=" input-xlarge" />
 			</div>
-		</div> --%>
+		</div> 
 		<div class="control-group">
 			<label class="control-label">录入时间:</label>
 			<div class="controls">
