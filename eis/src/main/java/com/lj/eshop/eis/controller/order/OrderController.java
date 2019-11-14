@@ -17,10 +17,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.util.DateUtils;
 import com.lj.base.core.util.StringUtils;
+import com.lj.base.exception.TsfaServiceException;
 import com.lj.business.common.CommonConstant;
 import com.lj.distributecache.IQueue;
 import com.lj.distributecache.RedisCache;
-import com.lj.eoms.service.AreaHessianService;
 import com.lj.eshop.constant.NoUtil;
 import com.lj.eshop.constant.PublicConstants;
 import com.lj.eshop.dto.AccWaterDto;
@@ -44,23 +44,19 @@ import com.lj.eshop.emus.AccWaterSource;
 import com.lj.eshop.emus.AccWaterStatus;
 import com.lj.eshop.emus.AccWaterType;
 import com.lj.eshop.emus.DelFlag;
+import com.lj.eshop.emus.MemberStatus;
 import com.lj.eshop.emus.OrderStatus;
 import com.lj.eshop.emus.PaymentStatus;
 import com.lj.eshop.emus.PaymentType;
 import com.lj.eshop.service.IAccWaterService;
 import com.lj.eshop.service.IAccountService;
-import com.lj.eshop.service.IAddrsService;
 import com.lj.eshop.service.IEvlProductService;
-import com.lj.eshop.service.IMemberRankService;
 import com.lj.eshop.service.IMemberService;
 import com.lj.eshop.service.IOrderDetailService;
 import com.lj.eshop.service.IOrderService;
 import com.lj.eshop.service.IPaymentService;
-import com.lj.eshop.service.IProductGiftService;
 import com.lj.eshop.service.IProductService;
 import com.lj.eshop.service.IProductSkuService;
-import com.lj.eshop.service.IShopCarService;
-import com.lj.eshop.service.IShopService;
 
 /**
  * 
@@ -81,19 +77,11 @@ import com.lj.eshop.service.IShopService;
 public class OrderController extends BaseController {
 
 	@Autowired
-	private IShopCarService shopCarService;
-	@Autowired
-	private IShopService shopService;
-	@Autowired
 	private IOrderService orderService;
-	@Autowired
-	private IAddrsService addrsService;
 	@Autowired
 	private IProductSkuService productSkuService;
 	@Autowired
 	private IOrderDetailService orderDetailService;
-	@Autowired
-	private IMemberRankService memberRankService;
 	@Autowired
 	private IAccWaterService accWaterService;
 	@Autowired
@@ -105,11 +93,7 @@ public class OrderController extends BaseController {
 	@Autowired
 	private IEvlProductService evlProductService;
 	@Autowired
-	private AreaHessianService areaHessianService;
-	@Autowired
 	private IMemberService memberService;
-	@Autowired
-	private IProductGiftService productGiftService;
 	@Resource
 	private IQueue queue;
 	@Autowired
@@ -121,6 +105,15 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = "/grab")
 	public ResponseDto grab() {
 		try {
+
+			MemberDto memberDto = new MemberDto();
+			memberDto.setCode(getLoginMemberCode());
+			MemberDto loginMbr = memberService.findMember(memberDto);
+			// 如果用户已被冻结，不允许抢单
+			if (!MemberStatus.NORMAL.getValue().equals(loginMbr.getStatus())) {
+				throw new TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
+						ResponseCode.USER_UNNORMAL.getMsg());
+			}
 
 			String flag = redisCache.get("grab:" + getLoginMemberCode());
 			if (CommonConstant.Y.equals(flag)) {

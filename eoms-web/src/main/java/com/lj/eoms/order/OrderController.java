@@ -1,8 +1,11 @@
 package com.lj.eoms.order;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -106,6 +109,24 @@ public class OrderController extends BaseController {
 			model.addAttribute("page", page);
 			model.addAttribute("orderStatus", OrderStatus.values());
 			model.addAttribute("payTypes", AccWaterPayType.values());
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			BigDecimal orderAmt = orderService.findAmtSum(findOrderPage);
+			param.setStatus(OrderStatus.CANCEL.getValue());
+			int kdCount = orderService.findOrderPageCount(findOrderPage);
+
+			param.setStatus(OrderStatus.COMPLETED.getValue());
+			int successCount = orderService.findOrderPageCount(findOrderPage);
+
+			BigDecimal successCalc = new BigDecimal(successCount).divide(new BigDecimal(pageDto.getTotal()))
+					.setScale(2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+
+			map.put("orderCount", pageDto.getTotal());
+			map.put("orderAmt", orderAmt);
+			map.put("kdCount", kdCount);
+			map.put("successCalc", successCalc + "%");
+
+			model.addAttribute("data", map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -112,17 +112,37 @@
 					</c:forEach>
                 </select>
 			</li>
-			
-<!-- 			<li> -->
-<!-- 				<label>录入时间：</label> -->
-<!-- 				<input id="beginDate" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate" -->
-<%-- 				value="<fmt:formatDate value="${paramMember.startTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/> --%>
-<!-- 				--  -->
-<!-- 				<input id="endDate" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate" -->
-<%-- 				value="<fmt:formatDate value="${paramMember.endTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>&nbsp;&nbsp; --%>
-<!-- 			</li> -->
+			<li><label>收款帐号：</label>
+				<select style="width: 177px;" name="payType">
+                    <option value="">全部</option>
+                    <c:forEach items="${payTypes}" var="item">
+						<option value="${item.value}"
+							<c:if test="${item.value eq param.payType}">selected="selected"</c:if>>${item.chName}</option>
+					</c:forEach>
+                </select>
+			</li>
+			<li>
+				<label>下单时间：</label>
+				<input id="beginDate" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
+				value="<fmt:formatDate value="${paramMember.startTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
+				-- 
+				<input id="endDate" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
+				value="<fmt:formatDate value="${paramMember.endTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>&nbsp;&nbsp;
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
+		</ul>
+		<ul class="ul-form">
+			<div class="control-group">
+				<label class="control-label">订单总数:</label>
+				<span class="label label-success">${data.orderCount}</span> 
+				<label class="control-label">订单总金额:</label>
+				<span class="label label-success">${data.orderAmt}</span>
+				<label class="control-label">空单数量:</label>
+				<span class="label label-success">${data.kdCount}</span>
+				<label class="control-label">成单率:</label>
+				<span class="label label-success">${data.successCalc}</span>
+			</div>
 		</ul>
 	</form>
 	<tags:message content="${message}"/>
@@ -170,8 +190,8 @@
 				<shiro:hasPermission name="order:order:edit"><td nowrap>
 						<!--待支付状态 -->
 						<c:if test="${item.status=='0'}">
-							<a href="${ctx}/order/order/payment?code=${item.code}&orderNo=${item.orderNo}" onclick="return confirmx('是否确认已收款？', this.href)">已收款</a>
-							<a href="${ctx}/order/order/cancel?code=${item.code}" onclick="return confirmx('是否确认取消订单？', this.href)">取消</a>
+							<a href="${ctx}/order/order/payment?code=${item.code}&orderNo=${item.orderNo}" onclick="return confirmx('是否确认补单？', this.href)">补单</a>
+							<a href="${ctx}/order/order/cancel?code=${item.code}" onclick="return confirmx('是否确认消单？', this.href)">消单</a>
 						</c:if>
 <%-- 						<a  href="${ctx}/order/order/view?code=${item.code}" >详情</a> --%>
 				</td></shiro:hasPermission>

@@ -7,9 +7,7 @@
 package com.lj.eoms.member;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -26,18 +24,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ape.common.config.Global;
 import com.ape.common.web.BaseController;
 import com.google.common.collect.Lists;
 import com.lj.base.core.encryption.MD5;
 import com.lj.base.core.pagination.Page;
 import com.lj.base.core.pagination.PageSortType;
-import com.lj.base.mvc.web.httpclient.HttpClientUtils;
 import com.lj.cc.clientintf.LocalCacheSystemParamsFromCC;
 import com.lj.eoms.dto.ShopMemberDto;
-import com.lj.eoms.service.AreaHessianService;
 import com.lj.eoms.utils.UserUtils;
 import com.lj.eoms.utils.Validator;
 import com.lj.eoms.utils.excel.ExportExcel;
@@ -50,10 +44,6 @@ import com.lj.eshop.emus.MemberSourceFrom;
 import com.lj.eshop.emus.MemberStatus;
 import com.lj.eshop.emus.MemberType;
 import com.lj.eshop.service.IMemberService;
-import com.lj.eshop.service.IPaymentService;
-import com.lj.eshop.service.IShopBgImgService;
-import com.lj.eshop.service.IShopService;
-import com.lj.eshop.service.IShopStyleService;
 
 /**
  * 
@@ -76,16 +66,6 @@ public class MemberController extends BaseController {
 	public static final String VIEW = "modules/member/member/view";
 	@Autowired
 	private IMemberService memberService;
-	@Autowired
-	private IShopService shopService;
-	@Autowired
-	private IPaymentService paymentService;
-	@Autowired
-	private IShopBgImgService shopBgImgService;
-	@Autowired
-	private IShopStyleService shopStyleService;
-	@Autowired
-	private AreaHessianService areaService;
 	@Resource
 	private LocalCacheSystemParamsFromCC localCacheSystemParams;
 
@@ -178,25 +158,7 @@ public class MemberController extends BaseController {
 	@RequiresPermissions("member:member:edit")
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public String edit(MemberDto memberDto, RedirectAttributes redirectAttributes) {
-
-		// 把会员信息同步更新到热文会员
-		String url = localCacheSystemParams.getSystemParam("cc", "rw", "rwRegistUrl");
-		Map<String, String> map = new HashMap<>();
-		map.put("code", memberDto.getCode());
-		map.put("name", memberDto.getName());
-		map.put("phone", memberDto.getPhone() == null ? memberDto.getCode() : memberDto.getPhone());
-		String result = HttpClientUtils.postToWeb(url, map);
-		if (com.lj.base.core.util.StringUtils.isNotEmpty(result)) {
-			JSONObject obj = (JSONObject) JSON.parse(result);
-			String rs = (String) obj.get("returnObject");
-			if (!"OK".equalsIgnoreCase(rs)) {
-				addMessage(redirectAttributes, "同步客户'" + memberDto.getName() + "'到热文失败");
-				return "redirect:" + adminPath + "/member/member/";
-			}
-		} else {
-			addMessage(redirectAttributes, "同步客户'" + memberDto.getName() + "'到热文失败");
-			return "redirect:" + adminPath + "/member/member/";
-		}
+		memberService.updateMember(memberDto);
 		addMessage(redirectAttributes, "修改客户'" + memberDto.getName() + "'成功");
 		return "redirect:" + adminPath + "/member/member/";
 	}
@@ -206,12 +168,13 @@ public class MemberController extends BaseController {
 	@RequestMapping(value = "/status")
 	public String status(MemberDto memberDto, RedirectAttributes redirectAttributes) {
 		if (MemberStatus.NORMAL.getValue().equals(memberDto.getStatus())) {
-			addMessage(redirectAttributes, "取消冻结客户成功");
+			addMessage(redirectAttributes, "激活成功");
 		} else if (MemberStatus.CANCEL.getValue().equals(memberDto.getStatus())) {
 			addMessage(redirectAttributes, "注销客户成功");
 		} else if (MemberStatus.FREEZE.getValue().equals(memberDto.getStatus())) {
 			addMessage(redirectAttributes, "冻结客户成功");
 		}
+		memberService.updateMember(memberDto);
 		return "redirect:" + adminPath + "/member/member/";
 	}
 

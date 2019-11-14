@@ -54,12 +54,12 @@
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
-		<div class="control-group">
+		<%-- <div class="control-group">
 			<label class="control-label">机构编码:</label>
 			<div class="controls">
 				<form:input path="code" htmlEscape="false" maxlength="50"/>
 			</div>
-		</div>
+		</div> --%>
 		<div class="control-group">
 			<label class="control-label">机构类型:</label>
 			<div class="controls">
@@ -99,7 +99,7 @@
 					title="用户" url="/sys/office/treeData?type=3" allowClear="true" notAllowSelectParent="true"/>
 			</div>
 		</div>
-		<div class="control-group">
+		<%-- <div class="control-group">
 			<label class="control-label">联系地址:</label>
 			<div class="controls">
 				<form:input path="address" htmlEscape="false" maxlength="50"/>
@@ -134,7 +134,7 @@
 			<div class="controls">
 				<form:input path="email" htmlEscape="false" maxlength="50"/>
 			</div>
-		</div>
+		</div> --%>
 		<div class="control-group">
 			<label class="control-label">备注:</label>
 			<div class="controls">

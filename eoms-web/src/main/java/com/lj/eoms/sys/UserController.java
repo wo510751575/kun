@@ -1,6 +1,5 @@
 package com.lj.eoms.sys;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ape.common.config.Global;
 import com.ape.common.persistence.Page;
 import com.ape.common.utils.StringUtils;
 import com.ape.common.web.BaseController;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.lj.base.mvc.web.httpclient.HttpClientUtils;
 import com.lj.cc.clientintf.LocalCacheSystemParamsFromCC;
 import com.lj.eoms.entity.sys.Office;
 import com.lj.eoms.entity.sys.Role;
@@ -126,23 +122,6 @@ public class UserController extends BaseController {
 		// 清除当前用户缓存
 		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())) {
 			UserUtils.clearCache();
-		}
-
-		// 把会员信息同步更新到热文会员
-		try {
-			String url = localCacheSystemParams.getSystemParam("cc", "rw", "rwRegistUrl");
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("code", user.getId());
-			map.put("name", user.getLoginName());
-			String result = HttpClientUtils.postToWeb(url, map);
-			logger.info("同步到热文：result={}", result);
-			JSONObject obj = (JSONObject) JSON.parse(result);
-			String rs = (String) obj.get("returnObject");
-			if (!"OK".equalsIgnoreCase(rs)) {
-				logger.info("同步客户到热文成功！！！！！！！！");
-			}
-		} catch (Exception e) {
-			logger.error("同步客户到热文失败={}", e);
 		}
 
 		addMessage(redirectAttributes, "保存用户'" + user.getLoginName() + "'成功");

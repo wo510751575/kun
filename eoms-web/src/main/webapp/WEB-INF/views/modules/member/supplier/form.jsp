@@ -156,7 +156,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">供应商整体折扣:</label>
+			<label class="control-label">供应商点位:</label>
 			<div class="controls">
 				<input type="text" id="discountOff" name="discountOff" value="${data.discountOff}" class="required  digits input-xlarge" />
 				<span class="help-inline"><font color="red">*</font> </span>

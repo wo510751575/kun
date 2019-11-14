@@ -104,6 +104,11 @@ public class UserLoginService implements IUserLoginService {
 			// 校验存在否以及 状态。
 			MemberDto loginMbr = ms.get(0);
 
+			if (!MemberStatus.NORMAL.getValue().equals(loginMbr.getStatus())) {
+				throw new TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
+						ResponseCode.USER_UNNORMAL.getMsg());
+			}
+
 			// 校验设备手机号
 			if (StringUtils.isNotEmpty(loginMbr.getWxNo()) && !dto.getImei().equals(loginMbr.getWxNo())) {
 				throw new TsfaServiceException("0", "登录设备异常，请联系管理员！");
@@ -117,10 +122,6 @@ public class UserLoginService implements IUserLoginService {
 				}
 			}
 
-			if (!MemberStatus.NORMAL.getValue().equals(loginMbr.getStatus())) {
-				throw new TsfaServiceException(ResponseCode.USER_UNNORMAL.getCode(),
-						ResponseCode.USER_UNNORMAL.getMsg());
-			}
 			TokenDto token = login(loginMbr.getType(), loginMbr, null);
 			token.setMerchantCode(loginMbr.getMerchantCode());
 			return token;

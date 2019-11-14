@@ -41,7 +41,7 @@
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
-		<div class="control-group">
+		<%-- <div class="control-group">
 			<label class="control-label">头像:</label>
 			<div class="controls">
 				<c:choose>
@@ -58,23 +58,16 @@
 						<c:otherwise>无头像</c:otherwise>
 					</c:choose>
 				
-				<%-- <input type="text" name="avotor" value="${data.avotor}" maxlength="50" class="input-xlarge" /> --%>
+				<input type="text" name="avotor" value="${data.avotor}" maxlength="50" class="input-xlarge" />
 			</div>
-		</div>
+		</div>--%>
 		<div class="control-group">
-			<label class="control-label">客户微信号:</label>
+			<label class="control-label">设备号:</label>
 			<div class="controls">
-				<c:choose>
-					<c:when test="${empty data.wxNo}">
-						<input type="text" name="wxNo" value="${data.wxNo}" maxlength="50" class="input-xlarge" /> 
-					</c:when>
-					<c:otherwise>
-						<input type="text" readonly="readonly" value="${data.wxNo}" maxlength="50" class="input-xlarge" /> *不可修改
-					</c:otherwise>
-				</c:choose>
+				<input type="text" name="wxNo" value="${data.wxNo}" maxlength="50" class="input-xlarge" />
 			</div>
-		</div>
-	 	<div class="control-group">
+		</div> 
+	 	<%-- <div class="control-group">
 			<label class="control-label">手机号码:</label>
 			<div class="controls">
 				<input type="text" name="phone" value="${data.phone}" maxlength="50" class="input-xlarge" />
@@ -86,7 +79,7 @@
 				<input type="text" name="tel" readonly="readonly" value="${data.openId}" maxlength="50" class="input-xlarge" />
 				<span class="help-inline"><font color="#555">*系统内容不可修改</font> </span>
 			</div>
-		</div>
+		</div> --%>
 		<div class="control-group">
 			<label class="control-label">性别:</label>
 			<div class="controls">
@@ -103,7 +96,7 @@
 					</select>
 			</div>
 		</div>
-		<div class="control-group">
+		<%-- <div class="control-group">
 			<label class="control-label">来源:</label>
 			<div class="controls">
 				<select name="sourceFrom">
@@ -118,7 +111,7 @@
 					</c:forEach>
 				</select>
 			</div>
-		</div>
+		</div> --%>
 		<div class="control-group">
 			<label class="control-label">状态:</label>
 			<div class="controls">
@@ -136,7 +129,7 @@
 				<span class="help-inline"><font color="#555"> *如需修改请前往列表修改</font> </span>
 			</div>
 		</div>
-		<div class="control-group">
+		<%-- <div class="control-group">
 			<label class="control-label">客户类型:</label>
 			<div class="controls">
 				<select name="type" disabled="disabled"  class="required">
@@ -177,7 +170,7 @@
 				<input type="text" name="myInvite" value="${data.myInvite}" maxlength="50" class=" input-xlarge" />
 			</div>
 		</div>
-		<div class="control-group">
+		 <div class="control-group">
 			<label class="control-label">评分等级:</label>
 			<div class="controls">
 				<select name="grade" >
@@ -192,7 +185,7 @@
 							</c:forEach>
 				</select>
 			</div>
-		</div>
+		</div> --%>
 		<div class="control-group">
 			<label class="control-label">录入时间:</label>
 			<div class="controls">

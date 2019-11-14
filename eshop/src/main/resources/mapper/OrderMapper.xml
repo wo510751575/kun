@@ -134,6 +134,12 @@
 				<if test="param.myInvite != null and param.myInvite !='' ">
 					<![CDATA[and o.my_invite =#{param.myInvite}]]>
 				</if>
+				<if test="param.giftType != null ">
+					<![CDATA[and o.gift_type =#{param.giftType}]]>
+				</if>
+				<if test="param.payType != null and param.payType !='' ">
+					<![CDATA[and o.pay_type =#{param.payType}]]>
+				</if>
 			</if>
 			
 			<if test="inStatuss != null and inStatuss.size > 0">
@@ -142,10 +148,6 @@
 				  	#{item}  
 				 </foreach>  
 		  	</if>
-		  	<if test="param.giftType != null ">
-				<![CDATA[and o.gift_type =#{param.giftType}]]>
-			</if>
-		  	
 		</where>
 	</sql>
 	

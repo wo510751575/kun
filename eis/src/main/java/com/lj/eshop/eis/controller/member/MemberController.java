@@ -19,7 +19,6 @@ import com.lj.eshop.eis.utils.AuthCodeUtils;
 import com.lj.eshop.emus.CodeCheckBizType;
 import com.lj.eshop.emus.MemberStatus;
 import com.lj.eshop.service.IMemberService;
-import com.lj.eshop.service.IOrderService;
 
 /**
  * 
@@ -36,8 +35,6 @@ public class MemberController extends BaseController {
 
 	@Autowired
 	private IMemberService memberService;
-	@Autowired
-	private IOrderService orderService;
 	@Autowired
 	public IUserLoginService userLoginService;
 

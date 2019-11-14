@@ -948,7 +948,7 @@ public class OrderServiceImpl implements IOrderService {
 				 */
 
 				/* 状态流转至退货成功 */
-				orderDto.setStatus(OrderStatus.RETURNS.getValue());
+//				orderDto.setStatus(OrderStatus.RETURNS.getValue());
 				this.updateOrder(orderDto);
 
 				/* 审核通过 */

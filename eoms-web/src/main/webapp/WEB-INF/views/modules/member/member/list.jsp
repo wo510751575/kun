@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>客户管理</title>
+	<title>人员管理</title>
 	<meta name="decorator" content="default"/>
 	<%@include file="/WEB-INF/views/include/treetable.jsp" %>
 	<script type="text/javascript">
@@ -18,7 +18,7 @@
 				var code = $(this).attr("data-code");
 				
 				// 正常打开	
-				top.$.jBox.open("iframe:${ctx}/member/member/form?code="+code+"&isView="+true,"客户详情", 680, 360,{//宽高
+				top.$.jBox.open("iframe:${ctx}/member/member/form?code="+code+"&isView="+true,"人员详情", 680, 360,{//宽高
 					id:9527,
 					draggable: true,
 					showClose: true,
@@ -116,8 +116,8 @@
 	</div>
 	
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/member/member/">客户列表</a></li>
-		<%-- <shiro:hasPermission name="member:member:edit"><li><a href="${ctx}/member/member/form">客户添加</a></li></shiro:hasPermission> --%>
+		<li class="active"><a href="${ctx}/member/member/">人员列表</a></li>
+		<%-- <shiro:hasPermission name="member:member:edit"><li><a href="${ctx}/member/member/form">人员添加</a></li></shiro:hasPermission> --%>
 	</ul>
 		<form id="searchForm" action="${ctx}/member/member/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -147,17 +147,19 @@
 			<li><label>邀请人：</label>
 		    	<input type="text" name="param.myInviteName" value="${memberPage.param.myInviteName}" class="input-medium" maxlength="100" placeholder="邀请人">
 			</li>
-			<li><label>邀请人手机号：</label>
+			</ul>
+			<ul class="ul-form">
+			<li><label>邀请手机：</label>
 		    	<input type="text" name="param.myInvitePhone" value="${memberPage.param.myInvitePhone}" class="input-medium" maxlength="100" placeholder="邀请人电话">
 			</li>
- 			<%-- <li> 
- 				<label>录入时间：</label> 
+ 			<li> 
+ 				<label>注册时间：</label> 
  				<input id="beginDate" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate"
  				value="<fmt:formatDate value="${memberPage.startTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,maxDate:'#F{$dp.$D(\'endDate\')}'});"/> 
  				-
 				<input id="endDate" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-mini Wdate" 
  				value="<fmt:formatDate value="${memberPage.endTime}" pattern="yyyy-MM-dd"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,minDate:'#F{$dp.$D(\'beginDate\')}'});"/>&nbsp;&nbsp; 
- 			</li>  --%>
+ 			</li> 
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="btns"><input id="btnImport" class="btn btn-primary" type="button" value="代理商导入"/></li>
 			<li class="btns"><input id="btnCopy" class="btn btn-primary" type="button" value="绑定会员"/></li>
@@ -208,11 +210,11 @@
 					<shiro:hasPermission name="member:member:edit"><td nowrap>
 						<a href="${ctx}/member/member/form?code=${item.code}">修改</a>
 						<c:if test="${item.status=='0'}">
-								<a href="${ctx}/member/member/status?code=${item.code}&status=1" onclick="return confirmx('确定注销客户吗？', this.href)">注销</a>
-								<a href="${ctx}/member/member/status?code=${item.code}&status=2" onclick="return confirmx('确定冻结客户吗？', this.href)">冻结</a>
+<%-- 								<a href="${ctx}/member/member/status?code=${item.code}&status=1" onclick="return confirmx('确定注销人员吗？', this.href)">注销</a> --%>
+								<a href="${ctx}/member/member/status?code=${item.code}&status=2" onclick="return confirmx('确定冻结吗？', this.href)">冻结</a>
 						</c:if>
 						<c:if test="${item.status=='2'}">
-								<a href="${ctx}/member/member/status?code=${item.code}&status=0" onclick="return confirmx('确定取消冻结客户吗？', this.href)">取消冻结</a>
+								<a href="${ctx}/member/member/status?code=${item.code}&status=0" onclick="return confirmx('确定解冻吗？', this.href)">解冻</a>
 						</c:if>
 					</td>
 					</shiro:hasPermission>

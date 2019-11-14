@@ -63,7 +63,7 @@
 		<table id="treeTable" class="table table-striped table-bordered table-condensed hide">
 			<thead><tr><th>名称</th><th>供应商编码</th><th style="text-align:center;">联系电话</th>
 			<th style="text-align:center;">邮箱</th>
-			<th style="text-align:center;">传真</th>
+			<th style="text-align:center;">点位</th>
 			<th style="text-align:center;">结算方式</th>
 			<th style="text-align:center;">T周期</th>
 			<th style="text-align:center;">状态</th>
@@ -74,7 +74,7 @@
 					<td title="${item.supplyName}"><a class="view_btn" data-code="${item.code}">${item.supplyName}</a></td>
 					<td> ${item.supplyCode } </td>
 					<td> ${item.tel } </td>
-					<td> ${item.email } </td>
+					<td> ${item.discountOff} </td>
 					<td> ${item.fax } </td>
 					<td>
 						<c:forEach items="${payTypes}" var="p">
