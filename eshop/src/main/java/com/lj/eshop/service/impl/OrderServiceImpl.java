@@ -672,9 +672,6 @@ public class OrderServiceImpl implements IOrderService {
 			if (orderDto.getStatus().equals(OrderStatus.CANCEL.getValue())) {
 				return;
 			}
-			if (orderDto.getGiftType()) {
-				return;
-			}
 			/* 状态流转至已取消 */
 			orderDto.setStatus(OrderStatus.CANCEL.getValue());
 			this.updateOrder(orderDto);
@@ -736,8 +733,8 @@ public class OrderServiceImpl implements IOrderService {
 				accWaterService.addAccWater(accWaterDto);
 
 				/* 消息通知 */
-				sendMessageByOrder(orderDto, MessageTemplate.B_SERVICE_ORDER_BILL_PAYMENTED);
-				sendMessageByOrder(orderDto, MessageTemplate.C_SERVICE_ORDER_BILL_PAYMENTED, orderDto.getMbrCode());
+//				sendMessageByOrder(orderDto, MessageTemplate.B_SERVICE_ORDER_BILL_PAYMENTED);
+//				sendMessageByOrder(orderDto, MessageTemplate.C_SERVICE_ORDER_BILL_PAYMENTED, orderDto.getMbrCode());
 			}
 		} catch (TsfaServiceException e) {
 			logger.error(e.getMessage(), e);

@@ -208,7 +208,7 @@ public class MbrSecCenterController extends BaseController {
 		AccountDto findAcct = accountService.findAccountByMbrCode(mbrCode);
 		AccountDto updateAcct = new AccountDto();
 		updateAcct.setMbrCode(mbrCode);
-		updateAcct.setPayPwd(MD5.encryptByMD5BySalt(accountDto.getPayPwd()));
+		updateAcct.setPayPwd(MD5.encryptByMD5(accountDto.getPayPwd()));
 		updateAcct.setCode(findAcct.getCode());
 		accountService.updateAccount(updateAcct);
 

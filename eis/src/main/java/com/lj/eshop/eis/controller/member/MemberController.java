@@ -63,6 +63,8 @@ public class MemberController extends BaseController {
 		param.setStatus(MemberStatus.NORMAL.getValue());
 		param.setMerchantCode(shareDto.getMerchantCode());
 		param.setWxNo(imei);
+		param.setOfficeId(shareDto.getOfficeId());
+		param.setOfficeName(shareDto.getOfficeName());
 		memberService.addMember(param);
 		return ResponseDto.successResp();
 	}

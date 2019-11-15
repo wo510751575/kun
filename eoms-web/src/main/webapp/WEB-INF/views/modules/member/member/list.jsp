@@ -170,7 +170,7 @@
 		<table id="treeTable" class="table table-striped table-bordered table-condensed hide">
 			<thead><tr>
 			<th>会员名称</th>
-			<!-- <th>openId</th> -->
+			<th>组名</th>
 			<th>支付宝点位</th>
 			<th>状态</th>
 			<th>手机号码</th>
@@ -184,7 +184,7 @@
 			<c:forEach items="${page.list}" var="item">
 				<tr id="${item.code}">
 					<td title="${item.name}"><a class="view_btn" data-code="${item.code}">${item.name}</a></td>
-					<%-- <td> ${item.openId } </td> --%>
+					<td> ${item.officeName } </td>
 					<td>  
 						${item.grade}
 					</td>

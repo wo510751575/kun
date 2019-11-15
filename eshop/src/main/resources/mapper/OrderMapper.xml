@@ -31,16 +31,10 @@
     <result column="reciver_zip" jdbcType="VARCHAR" property="reciverZip" />
     <result column="my_invite" jdbcType="VARCHAR" property="myInvite" />
     <result column="gift_type" jdbcType="VARCHAR" property="giftType" />
-    <result column="gift_code" jdbcType="VARCHAR" property="giftCode" />
+    <result column="office_id" jdbcType="VARCHAR" property="officeId" />
   </resultMap>
   
   <resultMap id="FindResultMap" type="com.lj.eshop.dto.OrderDto" extends="BaseResultMap">
-  	<!-- 礼品相关信息 -->
-  		<association property="productGiftDto" column="gift_code" javaType="com.lj.eshop.dto.ProductGiftDto" >
-            <result property="giftCode" column="pg_gift_code"/>
-            <result property="giftName" column="gift_name"/>
-            <result property="name" column="name"/>
-        </association>
         <!-- 邀请人相关信息 -->
         <association property="myInviteDto" column="my_invite" javaType="com.lj.eshop.dto.MemberDto" >
             <result column="myInviteAvotor" jdbcType="VARCHAR" property="avotor" />
@@ -67,10 +61,7 @@
     o.code, o.amt, o.mbr_code, o.mbr_name, o.mbr_phone, o.mbr_type, 
     o.status, o.remarks, o.is_invoice, o.invoice_title, o.invoice_info, o.create_time, o.update_time, 
     o.order_no, o.shop_code,o.express_no,o.express_name,o.pay_type,o.merchant_code,o.shop_name,o.pay_time,o.shipping_time,
-    o.revicer_name, o.revice_phone,o.addr_info,o.area_name,o.reciver_zip,o.my_invite,o.gift_type,o.gift_code
-  </sql>
-  <sql id="gift_Column_List">
-    ,pg.gift_code pg_gift_code,pg.gift_name,pg.name
+    o.revicer_name, o.revice_phone,o.addr_info,o.area_name,o.reciver_zip,o.my_invite,o.gift_type,o.office_id
   </sql>
   <sql id="myInvite_Column_List">
     ,my.avotor myInviteAvotor,my.name myInviteName,my.phone myInvitePhone
@@ -212,9 +203,7 @@
 		parameterType="com.lj.eshop.dto.FindOrderPage">
 		SELECT
 		<include refid="Base_Column_List" />
-		<include refid="gift_Column_List" />
 		FROM t_order o
-		LEFT JOIN t_product_gift pg ON pg.`code` = o.gift_code
 		<include refid="findPage_condition" />
 		<if test="sortBy==null or sortBy=='' ">
 			ORDER BY o.update_time desc,o.create_time  desc,code
@@ -244,7 +233,6 @@
 		parameterType="com.lj.eshop.dto.FindOrderPage">
 		select count(o.code)
 		FROM t_order o
-		LEFT JOIN t_product_gift pg ON pg.`code` = o.gift_code
 		LEFT JOIN t_member my ON my.`code` = o.my_invite
 		<include refid="findPage_condition" />
 	</select>
@@ -427,8 +415,8 @@
       <if test="giftType != null">
         gift_type,
       </if>
-      <if test="giftCode != null">
-        gift_code,
+      <if test="officeId != null">
+        office_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -519,8 +507,8 @@
       <if test="giftType != null">
          #{giftType,jdbcType=VARCHAR},
       </if>
-      <if test="giftCode != null">
-         #{giftCode,jdbcType=VARCHAR},
+      <if test="officeId != null">
+         #{officeId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -608,8 +596,8 @@
       <if test="giftType != null">
         gift_type = #{giftType,jdbcType=VARCHAR},
       </if>
-      <if test="giftCode != null">
-        gift_code = #{giftCode,jdbcType=VARCHAR},
+      <if test="officeId != null">
+        office_id = #{officeId,jdbcType=VARCHAR},
       </if>
     </set>
     where code = #{code,jdbcType=VARCHAR}
