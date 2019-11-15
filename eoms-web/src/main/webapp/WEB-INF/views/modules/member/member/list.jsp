@@ -202,7 +202,8 @@
 					<td> ${item.myInviteName} </td>
 					<td> ${item.myInvitePhone} </td>
 					<td> <fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd"/></td>
-					<shiro:hasPermission name="member:member:edit"><td nowrap>
+					<td nowrap>
+					<shiro:hasPermission name="member:member:edit">
 						<a href="${ctx}/member/member/form?code=${item.code}">修改</a>
 						<c:if test="${item.status=='0'}">
 <%-- 								<a href="${ctx}/member/member/status?code=${item.code}&status=1" onclick="return confirmx('确定注销人员吗？', this.href)">注销</a> --%>
@@ -211,8 +212,9 @@
 						<c:if test="${item.status=='2'}">
 								<a href="${ctx}/member/member/status?code=${item.code}&status=0" onclick="return confirmx('确定解冻吗？', this.href)">解冻</a>
 						</c:if>
-					</td>
 					</shiro:hasPermission>
+					<a href="${ctx}/member/member/form?code=${item.code}&isView=true">查看</a>
+					</td>
 				</tr>
 			</c:forEach></tbody>
 		</table>

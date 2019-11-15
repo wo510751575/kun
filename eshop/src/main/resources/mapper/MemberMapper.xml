@@ -37,7 +37,7 @@
   </sql>
   
   <sql id="apply_Column_List">
-    	,my.member_name myInviteName,(SELECT p.phone FROM t_member p WHERE p.code = my.member_code) myInvitePhone
+    	,my.name myInviteName,my.phone myInvitePhone
   </sql>
   
   <resultMap id="FindResultMap" type="com.lj.eshop.dto.MemberDto" extends="BaseResultMap">
@@ -77,7 +77,7 @@
 						<![CDATA[and m.wx_no =#{param.wxNoAll}]]>
 					</if>
 					<if test="param.myInviteName != null and param.myInviteName !='' ">
-						<![CDATA[and my.member_name like CONCAT('%',#{param.myInviteName},'%' )]]>
+						<![CDATA[and my.name like CONCAT('%',#{param.myInviteName},'%' )]]>
 					</if>
 					<if test="param.myInvitePhone != null and param.myInvitePhone !='' ">
 						<![CDATA[and (SELECT p.phone FROM t_member p WHERE p.code = my.member_code) =#{param.myInvitePhone}]]>
@@ -103,7 +103,7 @@
 		</where>
 		
 		<if test="sortBy!=null ">
-			 ORDER BY ${sortBy} ${sortDir}
+			 ORDER BY m.${sortBy} ${sortDir}
 		</if>
 	</sql>
 	<!-- 不分页查询 -->
@@ -113,8 +113,7 @@
 		<include refid="Base_Column_List" />
 		<include refid="apply_Column_List" />
 		FROM t_member m
-		LEFT JOIN t_member_rank_apply mra ON mra.member_code = m.`code`
-		LEFT JOIN t_member_rank_apply my ON my.member_code = mra.my_invite
+		LEFT JOIN t_member my ON my.code = m.my_invite
 		<include refid="findPage_condition" />
 	</select>
 	
@@ -125,8 +124,7 @@
 		<include refid="Base_Column_List" />
 		<include refid="apply_Column_List" />
 		FROM t_member m
-		LEFT JOIN t_member_rank_apply mra ON mra.member_code = m.`code` AND mra.del_flag =0
-		LEFT JOIN t_member_rank_apply my ON my.member_code = mra.my_invite AND my.del_flag =0
+		LEFT JOIN t_member my ON my.code = m.my_invite
 		<include refid="findPage_condition" />
 		limit ${start} , ${limit}
 	</select>
@@ -135,8 +133,7 @@
 		parameterType="com.lj.eshop.dto.FindMemberPage">
 		select count(m.code)
 		FROM t_member m
-		LEFT JOIN t_member_rank_apply mra ON mra.member_code = m.`code`
-		LEFT JOIN t_member_rank_apply my ON my.member_code = mra.my_invite
+		LEFT JOIN t_member my ON my.code = m.my_invite
 		<include refid="findPage_condition" />
 	</select>
   

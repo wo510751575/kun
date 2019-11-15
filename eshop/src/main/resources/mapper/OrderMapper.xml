@@ -125,11 +125,14 @@
 				<if test="param.myInvite != null and param.myInvite !='' ">
 					<![CDATA[and o.my_invite =#{param.myInvite}]]>
 				</if>
-				<if test="param.giftType != null ">
-					<![CDATA[and o.gift_type =#{param.giftType}]]>
+				<if test="param.officeId != null ">
+					<![CDATA[and o.office_id =#{param.officeId}]]>
 				</if>
 				<if test="param.payType != null and param.payType !='' ">
 					<![CDATA[and o.pay_type =#{param.payType}]]>
+				</if>
+				<if test="param.giftType != null and param.giftType !='' ">
+					<![CDATA[and o.gift_type =#{param.giftType}]]>
 				</if>
 			</if>
 			

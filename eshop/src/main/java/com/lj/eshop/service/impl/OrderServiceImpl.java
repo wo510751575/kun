@@ -715,6 +715,11 @@ public class OrderServiceImpl implements IOrderService {
 				parmAccountDto.setCode(paymentDto.getAccCode());
 				AccountDto accountDto = accountService.findAccount(parmAccountDto);
 
+				/* 获取会员点数 */
+				MemberDto mParam = new MemberDto();
+				mParam.setCode(paymentDto.getMbrCode());
+				MemberDto memberDto = memberService.findMember(mParam);
+
 				/* 记录账户流水 TODO 计算佣金提成 */
 				AccWaterDto accWaterDto = new AccWaterDto();
 				accWaterDto.setAccDate(new Date());
@@ -723,8 +728,9 @@ public class OrderServiceImpl implements IOrderService {
 				accWaterDto.setAmt(paymentDto.getAmount());
 				accWaterDto.setAccNo(accountDto.getAccNo());
 				accWaterDto.setAccCode(accountDto.getCode());
-				accWaterDto.setBeforeAmt(new BigDecimal(0));
-				accWaterDto.setAfterAmt(paymentDto.getAmount().multiply(new BigDecimal(0.009)));
+				accWaterDto.setBeforeAmt(accountDto.getCashAmt());
+				BigDecimal calc = new BigDecimal(memberDto.getGrade());
+				accWaterDto.setAfterAmt(paymentDto.getAmount().multiply(calc));
 				accWaterDto.setStatus(AccWaterStatus.SUCCESS.getValue());
 				accWaterDto.setPayType(paymentDto.getPaymentMethod());
 				accWaterDto.setBizType(AccWaterBizType.COMMISSION.getValue());

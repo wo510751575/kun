@@ -6,6 +6,8 @@
  */
 package com.lj.eoms.member;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,14 +39,29 @@ import com.lj.eoms.utils.UserUtils;
 import com.lj.eoms.utils.Validator;
 import com.lj.eoms.utils.excel.ExportExcel;
 import com.lj.eoms.utils.excel.ImportExcel;
+import com.lj.eshop.dto.AccWaterDto;
+import com.lj.eshop.dto.AccountDto;
+import com.lj.eshop.dto.AccountInfoDto;
+import com.lj.eshop.dto.FindAccWaterPage;
+import com.lj.eshop.dto.FindAccountInfoPage;
 import com.lj.eshop.dto.FindMemberPage;
+import com.lj.eshop.dto.FindOrderPage;
 import com.lj.eshop.dto.MemberDto;
+import com.lj.eshop.dto.OrderDto;
+import com.lj.eshop.emus.AccWaterBizType;
+import com.lj.eshop.emus.AccWaterStatus;
+import com.lj.eshop.emus.AccWaterType;
 import com.lj.eshop.emus.MemberGrade;
 import com.lj.eshop.emus.MemberSex;
 import com.lj.eshop.emus.MemberSourceFrom;
 import com.lj.eshop.emus.MemberStatus;
 import com.lj.eshop.emus.MemberType;
+import com.lj.eshop.emus.OrderStatus;
+import com.lj.eshop.service.IAccWaterService;
+import com.lj.eshop.service.IAccountInfoService;
+import com.lj.eshop.service.IAccountService;
 import com.lj.eshop.service.IMemberService;
+import com.lj.eshop.service.IOrderService;
 
 /**
  * 
@@ -69,6 +86,14 @@ public class MemberController extends BaseController {
 	private IMemberService memberService;
 	@Resource
 	private LocalCacheSystemParamsFromCC localCacheSystemParams;
+	@Autowired
+	private IOrderService orderService;
+	@Autowired
+	private IAccountInfoService accountInfoService;
+	@Autowired
+	private IAccWaterService accWaterService;
+	@Autowired
+	private IAccountService accountService;
 
 	/** 列表 */
 	@RequiresPermissions("member:member:view")
@@ -156,6 +181,53 @@ public class MemberController extends BaseController {
 		model.addAttribute("types", MemberType.values());
 		model.addAttribute("sourceFroms", MemberSourceFrom.values());
 		if (isView != null && isView) {
+			// 接单总数量，接单总金额，接单成功率，补单率，收款码列表，收入金额
+			FindOrderPage findOrderPage = new FindOrderPage();
+			OrderDto orderP = new OrderDto();
+			orderP.setMbrCode(code);
+			findOrderPage.setParam(orderP);
+			int totalCount = orderService.findOrderPageCount(findOrderPage);
+			model.addAttribute("totalCount", totalCount);
+
+			BigDecimal totalAmt = orderService.findAmtSum(findOrderPage);
+			model.addAttribute("totalAmt", totalAmt);
+
+			orderP.setStatus(OrderStatus.COMPLETED.getValue());
+			int successCount = orderService.findOrderPageCount(findOrderPage);
+
+			BigDecimal successCalc = totalCount == 0 ? BigDecimal.ZERO
+					: new BigDecimal(successCount).divide(new BigDecimal(totalCount)).setScale(2, RoundingMode.HALF_UP)
+							.multiply(new BigDecimal(100));
+			model.addAttribute("successCalc", successCalc);
+
+			// 补单
+			orderP.setGiftType(true);
+			int bdCount = orderService.findOrderPageCount(findOrderPage);
+			BigDecimal bdCalc = totalCount == 0 ? BigDecimal.ZERO
+					: new BigDecimal(bdCount).divide(new BigDecimal(totalCount)).setScale(2, RoundingMode.HALF_UP)
+							.multiply(new BigDecimal(100));
+			model.addAttribute("bdCalc", bdCalc);
+
+			// 收款码
+			FindAccountInfoPage findAccountInfoPage = new FindAccountInfoPage();
+			AccountInfoDto paramA = new AccountInfoDto();
+			paramA.setMbrCode(code);
+			findAccountInfoPage.setParam(paramA);
+			List<AccountInfoDto> accList = accountInfoService.findAccountInfos(findAccountInfoPage);
+			model.addAttribute("accList", accList);
+
+			// 总收入
+			AccountDto account = accountService.findAccountByMbrCode(code);
+			FindAccWaterPage findAccWaterPage = new FindAccWaterPage();
+			AccWaterDto paramAw = new AccWaterDto();
+			paramAw.setWaterType(AccWaterType.ADD.getValue());
+			paramAw.setStatus(AccWaterStatus.SUCCESS.getValue());
+			paramAw.setAccCode(account.getCode());
+			paramAw.setBizType(AccWaterBizType.COMMISSION.getValue());
+			findAccWaterPage.setParam(paramAw);
+			BigDecimal incomeAmt = accWaterService.findIncomeAmt(findAccWaterPage);
+			model.addAttribute("incomeAmt", incomeAmt);
+
 			return VIEW;
 		}
 		return FORM;

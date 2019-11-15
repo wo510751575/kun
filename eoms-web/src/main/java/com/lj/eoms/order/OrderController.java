@@ -125,8 +125,9 @@ public class OrderController extends BaseController {
 			param.setStatus(OrderStatus.COMPLETED.getValue());
 			int successCount = orderService.findOrderPageCount(findOrderPage);
 
-			BigDecimal successCalc = new BigDecimal(successCount).divide(new BigDecimal(pageDto.getTotal()))
-					.setScale(2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+			BigDecimal successCalc = pageDto.getTotal() == 0 ? BigDecimal.ZERO
+					: new BigDecimal(successCount).divide(new BigDecimal(pageDto.getTotal()))
+							.setScale(2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
 
 			map.put("orderCount", pageDto.getTotal());
 			map.put("orderAmt", orderAmt);
